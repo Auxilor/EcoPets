@@ -1,0 +1,79 @@
+name: EcoPets
+version: ${projectVersion}
+main: com.willfp.ecopets.EcoPetsPlugin
+api-version: 1.17
+authors: [ Auxilor ]
+website: willfp.com
+load: STARTUP
+depend:
+  - eco
+  - ProtocolLib
+  - PlaceholderAPI
+softdepend:
+  - AureliumSkills
+  - Vault
+  - mcMMO
+  - Jobs
+  - TMMobcoins
+  - EcoEnchants
+  - EcoBosses
+  - Talismans
+  - EcoArmor
+  - EcoItems
+  - Boosters
+  - EcoSkills
+  - Reforges
+commands:
+  ecopets:
+    description: Base Command
+    permission: ecopets.command.ecopets
+  pets:
+    aliases:
+      - pet
+    description: Open the pets menu
+    permission: ecopets.command.skills
+
+permissions:
+  ecopets.*:
+    description: All ecopets permissions
+    default: op
+    children:
+      ecopets.command.*: true
+  ecopets.command.*:
+    description: All commands
+    default: op
+    children:
+      ecopets.command.ecopets: true
+      ecopets.command.reload: true
+      ecopets.command.pets: true
+      ecopets.command.give: true
+      ecopets.command.giveegg: true
+
+  ecopets.command.reload:
+    description: Allows reloading the config
+    default: op
+  ecopets.command.ecopets:
+    description: Allows the use of /ecopets.
+    default: true
+  ecopets.command.pets:
+    description: Allows the use of /pets.
+    default: true
+  ecopets.command.give:
+    description: Allows the use of /ecopets give.
+    default: op
+  ecopets.command.giveegg:
+    description: Allows the use of /ecopets giveegg.
+    default: op
+
+  ecopets.xpmultiplier.50percent:
+    description: Gives the player 50% more skill experience
+    default: false
+  ecopets.xpmultiplier.double:
+    description: Gives the player 2x skill experience
+    default: false
+  ecopets.xpmultiplier.triple:
+    description: Gives the player 3x skill experience
+    default: false
+  ecopets.xpmultiplier.quadruple:
+    description: Gives the player 4x skill experience
+    default: false
