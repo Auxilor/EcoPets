@@ -205,6 +205,13 @@ class Pet(
 
         PlayerPlaceholder(
             plugin,
+            id
+        ) {
+            it.getPetLevel(this).toString()
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
             "${id}_current_xp"
         ) {
             NumberUtils.format(it.getPetXP(this))
