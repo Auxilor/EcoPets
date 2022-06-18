@@ -27,7 +27,10 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
         if (args.size == 3){
             player = Bukkit.getPlayer(args[2])!!
         }
-        if (!(player is Player)) return;
+        if (!(player is Player)) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
+            return
+        }
         val pet = Pets.getByID(args[0])
 
         if (pet == null) {
