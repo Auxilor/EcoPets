@@ -9,18 +9,28 @@ import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.util.NumberUtils
-import com.willfp.eco.util.toNiceString
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
+import kotlin.properties.Delegates
 
 class PetLevelGUI(
     plugin: EcoPlugin,
-    pet: Pet
+    private val pet: Pet
 ) {
     private val menu: Menu
+    private val pageKey = "page"
+    private var levelsPerPage by Delegates.notNull<Int>()
+    private var pages by Delegates.notNull<Int>()
+
+    private fun getPage(menu: Menu, player: Player): Int {
+        val page = menu.getState(player, pageKey) ?: 1
+
+        return min(pages, max(page, 1))
+    }
 
     init {
         val maskPattern = plugin.configYml.getStrings("level-gui.mask.pattern").toTypedArray()
@@ -51,10 +61,8 @@ class PetLevelGUI(
             }
         }
 
-        val pages = ceil(pet.maxLevel.toDouble() / progressionSlots.size).toInt()
-        val levelsPerPage = progressionSlots.size
-
-        val pageKey = "page"
+        levelsPerPage = progressionSlots.size
+        pages = ceil(pet.maxLevel.toDouble() / levelsPerPage).toInt()
 
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
             setTitle(pet.name)
@@ -71,7 +79,7 @@ class PetLevelGUI(
                     value.second,
                     slot(ItemStack(Material.BLACK_STAINED_GLASS_PANE)) {
                         setUpdater { player, menu, _ ->
-                            val page = menu.getState<Int>(player, pageKey) ?: 1
+                            val page = getPage(menu, player)
 
                             val slotLevel = ((page - 1) * levelsPerPage) + level
 
@@ -126,11 +134,14 @@ class PetLevelGUI(
                 ) {
                     onLeftClick { event, _, menu ->
                         val player = event.whoClicked as Player
-                        var page = menu.getState(player, pageKey) ?: 1
-                        page--
-                        menu.addState(player, pageKey, page)
-                        if (page == 0) {
-                            PetsGUI.open(event.whoClicked as Player)
+                        val page = getPage(menu, player)
+
+                        val newPage = max(0, page - 1)
+
+                        if (newPage == 0) {
+                            PetsGUI.open(player)
+                        } else {
+                            menu.addState(player, pageKey, newPage)
                         }
                     }
                 }
@@ -145,7 +156,11 @@ class PetLevelGUI(
                 ) {
                     onLeftClick { event, _, menu ->
                         val player = event.whoClicked as Player
-                        val newPage = max(pages, (menu.getState(player, pageKey) ?: 1) + 1)
+
+                        val page = getPage(menu, player)
+
+                        val newPage = min(pages, page + 1)
+
                         menu.addState(player, pageKey, newPage)
                     }
                 }

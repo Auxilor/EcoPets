@@ -116,11 +116,11 @@ class Pet(
         .setSkullTexture(config.getString("entity-texture"))
         .build()
 
-    val levelGUI = PetLevelGUI(plugin, this)
-
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = levelXpRequirements.size
+
+    val levelGUI = PetLevelGUI(plugin, this)
 
     private val baseItem: ItemStack = Items.lookup(config.getString("icon")).item
 

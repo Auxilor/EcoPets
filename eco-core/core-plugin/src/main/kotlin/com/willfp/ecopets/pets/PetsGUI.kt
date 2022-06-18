@@ -13,13 +13,25 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.checkerframework.checker.units.qual.m
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 
 object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
     private const val pageKey = "page"
+
+    private fun getPage(menu: Menu, player: Player): Int {
+        val pages = ceil(Pets.values()
+            .filter { player.getPetLevel(it) > 0 }
+            .size.toDouble() / petAreaSlots.size).toInt()
+
+        val page = menu.getState(player, pageKey) ?: 1
+
+        return max(min(pages, page + 1), 1)
+    }
 
     @JvmStatic
     @ConfigUpdater
@@ -53,6 +65,19 @@ object PetsGUI {
             }
         }
 
+        val petIconBuilder = { player: Player, menu: Menu, index: Int ->
+            val page = getPage(menu, player)
+
+            val unlockedPets = Pets.values()
+                .sortedByDescending { player.getPetLevel(it) }
+                .filter { player.getPetLevel(it) > 0 }
+
+            val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+
+            val pet = unlockedPets.getOrNull(pagedIndex)
+            pet?.getIcon(player) ?: ItemStack(Material.AIR)
+        }
+
         return menu(plugin.configYml.getInt("gui.rows")) {
             setTitle(plugin.langYml.getString("menu.title"))
 
@@ -77,24 +102,15 @@ object PetsGUI {
             for ((index, pair) in petAreaSlots.withIndex()) {
                 val (row, column) = pair
 
-                setSlot(row, column, slot(ItemStack(Material.AIR)) {
-                    setUpdater { player, menu, _ ->
-                        val page = menu.getState<Int>(player, pageKey) ?: 1
-
-                        val unlockedPets = Pets.values()
-                            .sortedByDescending { player.getPetLevel(it) }
-                            .filter { player.getPetLevel(it) > 0 }
-
-                        val pagedIndex = ((page - 1) * petAreaSlots.size) + index
-
-                        val pet = unlockedPets.getOrNull(pagedIndex)
-                        pet?.getIcon(player) ?: ItemStack(Material.AIR)
+                setSlot(row, column, slot({ p, m -> petIconBuilder(p, m, index) }) {
+                    setUpdater { p, m, _ ->
+                        petIconBuilder(p, m, index)
                     }
 
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
 
-                        val page = menu.getState<Int>(player, pageKey) ?: 1
+                        val page = getPage(menu, player)
 
                         val unlockedPets = Pets.values()
                             .sortedByDescending { player.getPetLevel(it) }
@@ -128,12 +144,11 @@ object PetsGUI {
                 ) {
                     onLeftClick { event, _, menu ->
                         val player = event.whoClicked as Player
-                        var page = menu.getState(player, pageKey) ?: 1
-                        page--
-                        menu.addState(player, pageKey, page)
-                        if (page == 0) {
-                            open(event.whoClicked as Player)
-                        }
+                        val page = getPage(menu, player)
+
+                        val newPage = max(1, page - 1)
+
+                        menu.addState(player, pageKey, newPage)
                     }
                 }
             )
@@ -153,7 +168,10 @@ object PetsGUI {
                             .filter { player.getPetLevel(it) > 0 }
                             .size.toDouble() / petAreaSlots.size).toInt()
 
-                        val newPage = max(pages, (menu.getState(player, pageKey) ?: 1) + 1)
+                        val page = getPage(menu, player)
+
+                        val newPage = min(pages, page + 1)
+
                         menu.addState(player, pageKey, newPage)
                     }
                 }
