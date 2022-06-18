@@ -87,14 +87,14 @@ gui:
       pitch: 1
 
   prev-page:
-    material: arrow
+    item: arrow
     name: "&fPrevious Page"
     location:
       row: 6
       column: 4
 
   next-page:
-    material: arrow
+    item: arrow
     name: "&fNext Page"
     location:
       row: 6
