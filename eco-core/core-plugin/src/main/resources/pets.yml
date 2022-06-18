@@ -65,6 +65,7 @@ pets:
     xp-gain-methods:
       - id: melee_attack
         multiplier: 0.5
+        conditions: [ ] # You can add a list of conditions that must be met on xp gain
 
     # Custom placeholders to be used in descriptions,
     # Don't add % to the IDs, this is done automatically

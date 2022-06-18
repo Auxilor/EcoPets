@@ -151,12 +151,15 @@ class Pet(
     private val petXpGains = config.getSubsections("xp-gain-methods").mapNotNull {
         val trigger = Triggers.getById(it.getString("id")) ?: return@mapNotNull null
         val multiplier = it.getDouble("multiplier")
+        val conditions = it.getSubsections("conditions")
+            .mapNotNull { cfg -> Conditions.compile(cfg, "Pet $id XP Gain methods") }
 
-        PetXPGain(
+        trigger to PetXPGain(
             trigger,
-            multiplier
+            multiplier,
+            conditions
         )
-    }
+    }.toMap()
 
     init {
         config.injectPlaceholders(
@@ -398,12 +401,8 @@ class Pet(
         }
     }
 
-    fun canGainXPFromTrigger(trigger: Trigger): Boolean {
-        return petXpGains.any { it.trigger == trigger }
-    }
-
-    fun getTriggerXPMultiplier(trigger: Trigger): Double {
-        return petXpGains.firstOrNull { it.trigger == trigger }?.multiplier ?: 1.0
+    fun getPetXPGain(trigger: Trigger): PetXPGain? {
+        return petXpGains[trigger]
     }
 
     override fun equals(other: Any?): Boolean {
