@@ -13,10 +13,13 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import kotlin.math.ceil
+import kotlin.math.max
 
 object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
+    private const val pageKey = "page"
 
     @JvmStatic
     @ConfigUpdater
@@ -75,19 +78,31 @@ object PetsGUI {
                 val (row, column) = pair
 
                 setSlot(row, column, slot(ItemStack(Material.AIR)) {
-                    setUpdater { player, _, _ ->
-                        val unlockedPets = Pets.values().filter { player.getPetLevel(it) > 0 }
-                        val pet = unlockedPets.getOrNull(index)
+                    setUpdater { player, menu, _ ->
+                        val page = menu.getState<Int>(player, pageKey) ?: 1
+
+                        val unlockedPets = Pets.values()
+                            .sortedByDescending { player.getPetLevel(it) }
+                            .filter { player.getPetLevel(it) > 0 }
+
+                        val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+
+                        val pet = unlockedPets.getOrNull(pagedIndex)
                         pet?.getIcon(player) ?: ItemStack(Material.AIR)
                     }
 
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
+
+                        val page = menu.getState<Int>(player, pageKey) ?: 1
+
                         val unlockedPets = Pets.values()
                             .sortedByDescending { player.getPetLevel(it) }
                             .filter { player.getPetLevel(it) > 0 }
 
-                        val pet = unlockedPets.getOrNull(index) ?: return@onLeftClick
+                        val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+
+                        val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
 
                         if (player.activePet != pet) {
                             player.activePet = pet
@@ -102,6 +117,47 @@ object PetsGUI {
                     }
                 })
             }
+
+            setSlot(
+                plugin.configYml.getInt("gui.prev-page.location.row"),
+                plugin.configYml.getInt("gui.prev-page.location.column"),
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
+                        .build()
+                ) {
+                    onLeftClick { event, _, menu ->
+                        val player = event.whoClicked as Player
+                        var page = menu.getState(player, pageKey) ?: 1
+                        page--
+                        menu.addState(player, pageKey, page)
+                        if (page == 0) {
+                            open(event.whoClicked as Player)
+                        }
+                    }
+                }
+            )
+
+            setSlot(
+                plugin.configYml.getInt("gui.next-page.location.row"),
+                plugin.configYml.getInt("gui.next-page.location.column"),
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
+                        .build()
+                ) {
+                    onLeftClick { event, _, menu ->
+                        val player = event.whoClicked as Player
+
+                        val pages = ceil(Pets.values()
+                            .filter { player.getPetLevel(it) > 0 }
+                            .size.toDouble() / petAreaSlots.size).toInt()
+
+                        val newPage = max(pages, (menu.getState(player, pageKey) ?: 1) + 1)
+                        menu.addState(player, pageKey, newPage)
+                    }
+                }
+            )
 
             setSlot(plugin.configYml.getInt("gui.close.location.row"),
                 plugin.configYml.getInt("gui.close.location.column"),

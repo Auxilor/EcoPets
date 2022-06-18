@@ -86,6 +86,20 @@ gui:
       sound: ui_button_click
       pitch: 1
 
+  prev-page:
+    material: arrow
+    name: "&fPrevious Page"
+    location:
+      row: 6
+      column: 4
+
+  next-page:
+    material: arrow
+    name: "&fNext Page"
+    location:
+      row: 6
+      column: 6
+
   close:
     item: barrier
     name: "&cClose"
