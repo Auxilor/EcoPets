@@ -21,7 +21,7 @@
     </a>
 </p>
 
-[![Docs](https://i.imgur.com/6GFV1bQ.png)](https://discord.gg/ZcwpSsE/)
+[![Docs](https://i.imgur.com/4JciYrQ.png)](https://discord.gg/ZcwpSsE/)
 
 ## License
 *Click here to read [the entire license](https://github.com/Auxilor/EcoPets/blob/master/LICENSE.md).*
