@@ -20,9 +20,7 @@ import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
-import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
-import com.willfp.ecopets.pets.entity.SkullPetEntity
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.conditions.ConfiguredCondition
 import com.willfp.libreforge.effects.ConfiguredEffect
@@ -240,11 +238,7 @@ class Pet(
     }
 
     fun makePetEntity(): PetEntity {
-        if (entityTexture.startsWith("modelengine:")) {
-            return ModelEnginePetEntity(this)
-        } else {
-            return SkullPetEntity(this)
-        }
+        return PetEntity.create(this)
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {

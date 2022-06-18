@@ -8,7 +8,8 @@ import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
 
 class ModelEnginePetEntity(
-    pet: Pet
+    pet: Pet,
+    private val modelID: String
 ) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
         val stand = location.world!!.spawnEntity(location, EntityType.ARMOR_STAND) as ArmorStand
@@ -24,7 +25,7 @@ class ModelEnginePetEntity(
             stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
         }
 
-        val model = ModelEngineAPI.createActiveModel(pet.entityTexture.removePrefix("modelengine:"))
+        val model = ModelEngineAPI.createActiveModel(modelID)
         val modelled = ModelEngineAPI.createModeledEntity(stand)
         modelled.addActiveModel(model)
 

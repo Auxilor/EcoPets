@@ -1,6 +1,7 @@
 package com.willfp.ecopets
 
 import com.willfp.eco.core.command.impl.PluginCommand
+import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecopets.commands.CommandEcopets
@@ -12,6 +13,8 @@ import com.willfp.ecopets.pets.PetTriggerXPGainListener
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
+import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
+import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.Listener
 
@@ -46,6 +49,16 @@ class EcoPetsPlugin : LibReforgePlugin() {
 
     override fun handleDisableAdditional() {
         petDisplay.shutdown()
+    }
+
+    override fun loadAdditionalIntegrations(): List<IntegrationLoader> {
+        return listOf(
+            IntegrationLoader("ModelEngine") {
+                PetEntity.registerPetEntity("modelengine") { pet, id ->
+                    ModelEnginePetEntity(pet, id)
+                }
+            }
+        )
     }
 
     override fun loadPluginCommands(): List<PluginCommand> {
