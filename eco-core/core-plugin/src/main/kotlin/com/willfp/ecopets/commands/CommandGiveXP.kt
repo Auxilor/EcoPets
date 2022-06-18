@@ -13,38 +13,48 @@ import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.command.givexp", false) {
-
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
+            sender.sendMessage(plugin.langYml.getMessage("needs-player"))
+            return
+        }
+
+        if (args.size == 1) {
             sender.sendMessage(plugin.langYml.getMessage("needs-pet"))
             return
         }
-        if (args.size == 1) {
+
+        if (args.size == 2) {
             sender.sendMessage(plugin.langYml.getMessage("needs-amount"))
             return
         }
-        var player = sender
-        if (args.size == 3){
-            player = Bukkit.getPlayer(args[2])!!
-        }
-        if (!(player is Player)) {
+
+        val playerName = args[0]
+
+        val player = Bukkit.getPlayer(playerName)
+
+        if (player == null) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
             return
         }
-        val pet = Pets.getByID(args[0])
+
+        val pet = Pets.getByID(args[1])
 
         if (pet == null) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
             return
         }
+
         if (!player.hasPet(pet)) {
             sender.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
             return
         }
+
         player.givePetExperience(
             pet,
             args[1].toDouble()
         )
+
         sender.sendMessage(
             plugin.langYml.getMessage("gave-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%player%", player.savedDisplayName)
@@ -55,17 +65,16 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
         if (args.size == 1) {
-            return Pets.values().map { it.id }
-        }
-        if (args.size == 2) {
-            return listOf("10", "100", "1000", "10000")
-        }
-
-        if (args.size == 3) {
             return Bukkit.getOnlinePlayers().map { it.name }
         }
 
+        if (args.size == 2) {
+            return Pets.values().map { it.id }
+        }
 
+        if (args.size == 3) {
+            return listOf("10", "100", "1000", "10000")
+        }
 
         return emptyList()
     }
