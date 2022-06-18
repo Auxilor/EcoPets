@@ -9,6 +9,7 @@ class CommandEcopets(plugin: EcoPlugin) : PluginCommand(plugin, "ecopets", "ecop
         this.addSubcommand(CommandReload(plugin))
             .addSubcommand(CommandGive(plugin))
             .addSubcommand(CommandGiveEgg(plugin))
+            .addSubcommand(CommandGiveXP(plugin))
     }
 
     override fun onExecute(sender: CommandSender, args: List<String>) {
