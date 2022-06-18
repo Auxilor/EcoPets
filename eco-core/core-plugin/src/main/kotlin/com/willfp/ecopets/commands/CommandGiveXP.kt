@@ -38,7 +38,7 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
             return
         }
         if (!player.hasPet(pet)) {
-            sender.sendMessage(plugin.langYml.getMessage("doenst-have-pet"))
+            sender.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
             return
         }
         player.givePetExperience(
@@ -46,7 +46,7 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
             args[1].toDouble()
         )
         sender.sendMessage(
-            plugin.langYml.getMessage("give-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+            plugin.langYml.getMessage("gave-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%player%", player.savedDisplayName)
                 .replace("%xp%", args[1])
                 .replace("%pet%", pet.name)

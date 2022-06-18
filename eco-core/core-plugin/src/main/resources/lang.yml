@@ -9,7 +9,7 @@ messages:
   on-cooldown: "&cThis effect is on cooldown! &fTime left: &a%seconds% seconds"
   cannot-transmit: "&cYou can't transmit here!"
   needs-player: "&cYou must specify a player!"
-  give-xp: "&fYou have given &a%xp% &fXP to %player%'s %pet%&f!"
+  gave-xp: "&fYou have given &a%xp% &fXP to %player%'s %pet%&f!"
   needs-pet: "&cYou must specify a pet!"
   need-amount: "&cYou must specify a amount"
   invalid-player: "&cInvalid player!"
