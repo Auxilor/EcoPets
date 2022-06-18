@@ -40,10 +40,7 @@ class EcoPetsPlugin : LibReforgePlugin() {
 
     override fun handleReloadAdditional() {
         this.scheduler.runTimer(1, 1) {
-            petDisplay.tickSync()
-        }
-        this.scheduler.runAsyncTimer(1, 1) {
-            petDisplay.tickAsync()
+            petDisplay.tickAll()
         }
     }
 
