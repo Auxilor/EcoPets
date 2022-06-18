@@ -6,16 +6,13 @@ import com.willfp.eco.util.formatEco
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.inventory.EquipmentSlot
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.sin
 
 class PetDisplay(
     private val plugin: EcoPlugin
@@ -37,7 +34,6 @@ class PetDisplay(
         val pet = player.activePet
 
         if (pet != null) {
-            stand.equipment?.helmet = pet.petEntityItem
             stand.customName = plugin.configYml.getString("pet-entity.name")
                 .replace("%player%", player.displayName)
                 .replace("%pet%", pet.name)
@@ -49,7 +45,10 @@ class PetDisplay(
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
             stand.teleport(location)
-            stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
+
+            if (!pet.entityTexture.contains(":")) {
+                stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
+            }
         }
     }
 
@@ -75,24 +74,9 @@ class PetDisplay(
             }
 
             val location = getLocation(player)
-            val newStand = location.world!!.spawnEntity(location, EntityType.ARMOR_STAND) as ArmorStand
-            newStand.isVisible = false
-            newStand.isInvulnerable = true
-            newStand.isPersistent = true
-            newStand.removeWhenFarAway = false
-            newStand.isSmall = true
-            newStand.setGravity(false)
-            newStand.isCollidable = false
+            val stand = pet.makePetEntity().spawn(location)
 
-            for (slot in EquipmentSlot.values()) {
-                newStand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
-            }
-
-            newStand.equipment?.helmet = pet.petEntityItem
-            newStand.isCustomNameVisible = true
-            newStand.customName = pet.name
-
-            trackedEntities[player.uniqueId] = newStand
+            trackedEntities[player.uniqueId] = stand
         }
 
         return trackedEntities[player.uniqueId]
