@@ -2,6 +2,7 @@ package com.willfp.ecopets
 
 import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.pets.Pet
+import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.getPetLevel
 import com.willfp.ecopets.pets.getPetProgress
 import com.willfp.ecopets.pets.getPetXP
@@ -13,6 +14,8 @@ import org.bukkit.entity.Player
 
 internal object EcoPetsAPIImpl : EcoPetsAPI {
     override fun hasPet(player: OfflinePlayer, pet: Pet) = player.hasPet(pet)
+
+    override fun getActivePet(player: OfflinePlayer): Pet? = player.activePet
 
     override fun getPetLevel(player: OfflinePlayer, pet: Pet) = player.getPetLevel(pet)
 

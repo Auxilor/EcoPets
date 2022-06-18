@@ -19,6 +19,16 @@ interface EcoPetsAPI {
     ): Boolean
 
     /**
+     * Get a player's active pet.
+     *
+     * @param player The player.
+     * @return The active pet.
+     */
+    fun getActivePet(
+        player: OfflinePlayer
+    ): Pet?
+
+    /**
      * Get a player's level of a certain pet.
      *
      * @param player The player.
