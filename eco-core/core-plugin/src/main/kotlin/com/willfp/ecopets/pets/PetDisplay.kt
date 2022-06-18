@@ -15,25 +15,30 @@ import org.bukkit.inventory.EquipmentSlot
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.sin
 
-class PetDisplay(
+internal class PetDisplay(
     private val plugin: EcoPlugin
 ) : Listener {
     private var tick = 0
 
-    private val trackedEntities = mutableMapOf<UUID, ArmorStand>()
+    private val trackedEntities = Collections.synchronizedMap(mutableMapOf<UUID, ArmorStand>())
 
-    fun tickAll() {
+    fun tickSync() {
         for (player in Bukkit.getOnlinePlayers()) {
-            tickPlayer(player)
+            getOrNew(player)
         }
 
         tick++
     }
 
+    fun tickAsync() {
+        for (player in Bukkit.getOnlinePlayers()) {
+            tickPlayer(player)
+        }
+    }
+
     private fun tickPlayer(player: Player) {
-        val stand = getOrNew(player) ?: return
+        val stand = trackedEntities[player.uniqueId] ?: return
         val pet = player.activePet
 
         if (pet != null) {
