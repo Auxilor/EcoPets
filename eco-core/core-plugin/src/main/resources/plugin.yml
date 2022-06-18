@@ -23,6 +23,7 @@ softdepend:
   - Boosters
   - EcoSkills
   - Reforges
+  - ModelEngine
 commands:
   ecopets:
     description: Base Command
