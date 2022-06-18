@@ -4,6 +4,7 @@ import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
+import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
@@ -50,15 +51,22 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
             return
         }
 
+        val amount = args[2].toDoubleOrNull()
+
+        if (amount == null) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-amount"))
+            return
+        }
+
         player.givePetExperience(
             pet,
-            args[1].toDouble()
+            amount
         )
 
         sender.sendMessage(
             plugin.langYml.getMessage("gave-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%player%", player.savedDisplayName)
-                .replace("%xp%", args[1])
+                .replace("%xp%", amount.toNiceString())
                 .replace("%pet%", pet.name)
         )
     }

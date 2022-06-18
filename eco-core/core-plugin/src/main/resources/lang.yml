@@ -11,14 +11,17 @@ messages:
   needs-player: "&cYou must specify a player!"
   gave-xp: "&fYou have given &a%xp% &fXP to %player%'s %pet%&f!"
   needs-pet: "&cYou must specify a pet!"
-  need-amount: "&cYou must specify a amount"
+  need-amount: "&cYou must specify a amount!"
   invalid-player: "&cInvalid player!"
   invalid-pet: "&cInvalid pet!"
   already-has-pet: "&cPlayer already has this pet!"
-  doesnt-have-pet: "&cPlayer doesn't have this pet"
+  doesnt-have-pet: "&cPlayer doesn't have this pet!"
   gave-pet: "&fSuccessfully gave %player%&f the %pet%&f pet!"
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
+  invalid-amount: "&cInvalid amount!"
 
 menu:
   title: "Pets"
+
+infinity: "∞"

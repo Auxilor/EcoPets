@@ -311,7 +311,14 @@ class Pet(
             .map {
                 it.replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
                     .replace("%current_xp%", player.getPetXP(this).toNiceString())
-                    .replace("%required_xp%", this.getExpForLevel(player.getPetLevel(this) + 1).toNiceString())
+                    .replace("%required_xp%", this.getExpForLevel(player.getPetLevel(this) + 1).let { req ->
+                        if (req == Int.MAX_VALUE) {
+                            plugin.langYml.getFormattedString("infinity")
+                        } else {
+                            req.toNiceString()
+                        }
+                    }
+                    )
                     .replace("%description%", this.description)
                     .replace("%pet%", this.name)
                     .replace("%level%", (forceLevel ?: player.getPetLevel(this)).toString())

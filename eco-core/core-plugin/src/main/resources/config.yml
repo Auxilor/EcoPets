@@ -216,7 +216,7 @@ level-up:
     enabled: true
     message:
       - "&f"
-      - " &#d977c2You levelled up your %pet%&#d977c2 petW to &eLevel %level%&#d977c2!"
+      - " &#d977c2You levelled up your %pet%&#d977c2 pet to &eLevel %level%&#d977c2!"
       - "&f"
       - " &#d977c2&lREWARDS:"
       - " %level_up_messages%"
