@@ -23,10 +23,11 @@ class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.c
             sender.sendMessage(plugin.langYml.getMessage("needs-amount"))
             return
         }
-        var player: Player = sender as Player
+        var player = sender
         if (args.size == 3){
             player = Bukkit.getPlayer(args[2])!!
         }
+        if (!(player is Player)) return;
         val pet = Pets.getByID(args[0])
 
         if (pet == null) {
