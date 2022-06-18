@@ -45,7 +45,6 @@ class PetDisplay(
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
             stand.teleport(location)
-            stand.setRotation(player.eyeLocation.yaw, 0f)
 
             if (!pet.entityTexture.contains(":")) {
                 stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
