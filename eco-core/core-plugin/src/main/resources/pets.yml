@@ -289,11 +289,7 @@ pets:
       - 57000
 
     xp-gain-methods:
-      - id: potion_effect
-        conditions:
-          - id: has_potion_effect
-            args:
-              effect: hero_of_the_village
+      - id: win_raid
         multiplier: 50
 
     level-placeholders:
