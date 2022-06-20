@@ -32,7 +32,8 @@ commands:
     aliases:
       - pet
     description: Open the pets menu
-    permission: ecopets.command.skills
+    permission: ecopets.command.pets
+    default: true
 
 permissions:
   ecopets.*:
