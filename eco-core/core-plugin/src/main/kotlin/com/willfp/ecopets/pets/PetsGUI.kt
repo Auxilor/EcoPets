@@ -13,7 +13,6 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.checkerframework.checker.units.qual.m
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -42,8 +41,8 @@ object PetsGUI {
         val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
 
         petAreaSlots.clear()
-        for (column in topLeftColumn..bottomRightColumn) {
-            for (row in topLeftRow..bottomRightRow) {
+        for (row in topLeftRow..bottomRightRow) {
+            for (column in topLeftColumn..bottomRightColumn) {
                 petAreaSlots.add(Pair(row, column))
             }
         }
