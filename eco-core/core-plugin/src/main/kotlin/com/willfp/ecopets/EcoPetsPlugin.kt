@@ -7,6 +7,7 @@ import com.willfp.eco.util.toSingletonList
 import com.willfp.ecopets.commands.CommandEcopets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.config.PetsYml
+import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
 import com.willfp.ecopets.pets.PetTriggerXPGainListener
@@ -73,7 +74,8 @@ class EcoPetsPlugin : LibReforgePlugin() {
             PetLevelListener(this),
             PetTriggerXPGainListener,
             SpawnEggHandler(this),
-            petDisplay
+            petDisplay,
+            DiscoverRecipeListener(this)
         )
     }
 

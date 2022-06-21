@@ -3,6 +3,8 @@
 # by Auxilor
 #
 
+discover-recipes: true
+
 gui:
   rows: 6
 
