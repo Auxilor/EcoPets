@@ -107,7 +107,7 @@ class Pet(
                 "${this.id}_spawn_egg",
                 egg,
                 config.getStrings("spawn-egg.recipe"),
-                config.getString("spawn-egg.recipe-permission")
+                config.getStringOrNull("spawn-egg.recipe-permission")
             )
         }
     }
