@@ -157,7 +157,8 @@ class Pet(
         trigger to PetXPGain(
             trigger,
             multiplier,
-            conditions
+            conditions,
+            it.getSubsection("filters")
         )
     }.toMap()
 
