@@ -289,36 +289,31 @@ pets:
       - 57000
 
     xp-gain-methods:
-      - id: potion_effect
-        conditions:
-          - id: has_potion_effect
-            args:
-              effect: hero_of_the_village
+      - id: win_raid
         multiplier: 50
 
     level-placeholders:
-      - id: "health_boost"
-        value: "%level%"
+      - id: "health"
+        value: "%level%/2"
 
     effects-description:
       1:
-        - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+        - "&8» &8Gives &c+%health%❤&8 bonus health"
 
     rewards-description:
       1:
-        - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+        - "&8» &8Gives &c+%health%❤&8 bonus health"
 
     level-up-messages:
       1:
-        - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+        - "&8» &8Gives &c+%health%❤&8 bonus health"
 
     level-commands: [ ]
 
     effects:
-      - id: potion_effect
+      - id: bonus_health
         args:
-          effect: health_boost
-          level: "%level%"
+          health: "%level%/2"
 
     conditions: [ ]
 
