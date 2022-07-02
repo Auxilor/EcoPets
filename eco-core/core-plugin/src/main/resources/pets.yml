@@ -417,7 +417,7 @@ pets:
         args:
           damage_per_tick: 8
           ticks: 300
-          chance: %level%
+          chance: "%level%"
         triggers:
           - melee_attack
 
