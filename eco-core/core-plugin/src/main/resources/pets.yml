@@ -311,10 +311,9 @@ pets:
     level-commands: [ ]
 
     effects:
-      - id: potion_effect
+      - id: bonus_health
         args:
-          effect: health_boost
-          level: "%level%"
+          health: "%level%"
 
     conditions: [ ]
 
@@ -417,7 +416,7 @@ pets:
         args:
           damage_per_tick: 8
           ticks: 300
-          chance: %level%
+          chance: "%level%"
         triggers:
           - melee_attack
 
@@ -622,15 +621,15 @@ pets:
           multiplier: "%level% * 0.01 + 1"
         triggers:
           - melee_attack
-          conditions:
-            - id: in_water
+        conditions:
+          - id: in_water
       - id: multiply_velocity
         args:
           multiplier: "%level% * 1.3 + 1"
         triggers:
           - move
-          conditions:
-            - id: in_water
+        conditions:
+          - id: in_water
 
     conditions: [ ]
 
@@ -650,14 +649,9 @@ pets:
       recipe: [ ]
 
   - id: vampire
-
-    # The display name of the pet
     name: "<gradient:#A50000>Vampire</gradient:#FD2424>"
-
-    # The description of the pet
     description: "&8&oLevel up by taking damage at night."
 
-    # The xp requirements for each pet level - add new levels by adding more to this list
     level-xp-requirements:
       - 50
       - 75
