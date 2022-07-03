@@ -586,12 +586,12 @@ pets:
           - id: in_water
 
     level-placeholders:
-      - id: "damage_multiplier"
+      - id: "multiplier"
         value: "%level%"
 
     effects-description:
       1:
-        - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+        - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
         - "   &8melee damage when in water"
       2:
         - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
@@ -599,7 +599,7 @@ pets:
 
     rewards-description:
       1:
-        - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+        - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
         - "   &8melee damage when in water"
       2:
         - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
@@ -607,7 +607,7 @@ pets:
 
     level-up-messages:
       1:
-        - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+        - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
         - "   &8melee damage when in water"
       2:
         - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
