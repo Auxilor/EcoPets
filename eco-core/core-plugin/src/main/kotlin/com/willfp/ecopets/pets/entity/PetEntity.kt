@@ -3,6 +3,8 @@ package com.willfp.ecopets.pets.entity
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
+import org.bukkit.inventory.EquipmentSlot
 
 abstract class PetEntity(
     val pet: Pet
@@ -30,4 +32,23 @@ abstract class PetEntity(
             return parse(pet, texture.removePrefix("$id:"))
         }
     }
+}
+
+internal fun emptyArmorStandAt(location: Location, pet: Pet): ArmorStand {
+    val stand = location.world!!.spawnEntity(location, EntityType.ARMOR_STAND) as ArmorStand
+
+    stand.isVisible = false
+    stand.isInvulnerable = true
+    stand.isSmall = true
+    stand.setGravity(false)
+    stand.isCollidable = false
+
+    for (slot in EquipmentSlot.values()) {
+        stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
+    }
+
+    stand.isCustomNameVisible = true
+    stand.customName = pet.name
+
+    return stand
 }
