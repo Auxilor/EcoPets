@@ -42,6 +42,7 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet): ArmorStand {
     stand.isSmall = true
     stand.setGravity(false)
     stand.isCollidable = false
+    stand.isPersistent = false
 
     for (slot in EquipmentSlot.values()) {
         stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
