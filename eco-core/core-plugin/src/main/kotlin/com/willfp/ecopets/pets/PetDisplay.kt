@@ -19,7 +19,7 @@ class PetDisplay(
 ) : Listener {
     private var tick = 0
 
-    private val trackedEntities = mutableMapOf<UUID, ArmorStand>()
+    private val trackedEntities = mutableMapOf<UUID, PetArmorStand>()
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
@@ -72,8 +72,13 @@ class PetDisplay(
     }
 
     private fun getOrNew(player: Player): ArmorStand? {
-        val existing = trackedEntities[player.uniqueId]
+        val tracked = trackedEntities[player.uniqueId]
+        val existing = tracked?.stand
+
         val pet = player.activePet
+        if (pet != tracked?.pet) {
+            tracked?.stand?.remove()
+        }
 
         if (existing == null || existing.isDead || pet == null) {
             existing?.remove()
@@ -86,15 +91,15 @@ class PetDisplay(
             val location = getLocation(player)
             val stand = pet.makePetEntity().spawn(location)
 
-            trackedEntities[player.uniqueId] = stand
+            trackedEntities[player.uniqueId] = PetArmorStand(stand, pet)
         }
 
-        return trackedEntities[player.uniqueId]
+        return trackedEntities[player.uniqueId]?.stand
     }
 
     fun shutdown() {
         for (stand in trackedEntities.values) {
-            stand.remove()
+            stand.stand.remove()
         }
 
         trackedEntities.clear()
@@ -102,7 +107,12 @@ class PetDisplay(
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-        trackedEntities[event.player.uniqueId]?.remove()
+        trackedEntities[event.player.uniqueId]?.stand?.remove()
         trackedEntities.remove(event.player.uniqueId)
     }
+
+    private data class PetArmorStand(
+        val stand: ArmorStand,
+        val pet: Pet
+    )
 }
