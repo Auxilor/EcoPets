@@ -55,7 +55,17 @@ class PetDisplay(
     private fun getLocation(player: Player): Location {
         val offset = player.eyeLocation.direction.clone().normalize()
             .multiply(-1)
-            .apply { y = abs(y) }
+            .apply {
+                y = abs(y)
+
+                if (abs(x) < 0.5) {
+                    x = 0.5
+                }
+
+                if (abs(z) < 0.5) {
+                    z = 0.5
+                }
+            }
             .rotateAroundY(PI / 6)
 
         return player.eyeLocation.clone().add(offset)
