@@ -9,6 +9,7 @@ messages:
   on-cooldown: "&cThis effect is on cooldown! &fTime left: &a%seconds% seconds"
   cannot-transmit: "&cYou can't transmit here!"
   needs-player: "&cYou must specify a player!"
+  requires-player: "&cYou must specify a player!"
   gave-xp: "&fYou have given &a%xp% &fXP to %player%&f's %pet%&f!"
   reset-xp: "&fYou have reset %player%&f's %pet%&f XP!"
   needs-pet: "&cYou must specify a pet!"
@@ -21,6 +22,7 @@ messages:
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
   invalid-amount: "&cInvalid amount!"
+  repaired-effects: "Fixed lingering effects for %player%!&f They have been kicked to prevent effect mismatch."
 
 menu:
   title: "Pets"
