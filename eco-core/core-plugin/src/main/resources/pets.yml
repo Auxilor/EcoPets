@@ -721,45 +721,45 @@ pets:
       1:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
       25:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance% &7to bleed"
+        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
         - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
 
     rewards-description:
       1:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain &ff0000%lifesteal_heal%"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain &ff0000%lifesteal_heal%"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
       25:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance% &7to bleed"
+        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
         - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
 
     level-up-messages:
       1:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
       25:
         - "&8» &#ff0000This pet can ONLY be levelled at night."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance% &7to gain"
+        - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
         - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
         - ""
-        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance% &7to bleed"
+        - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
         - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
 
     level-commands: [ ]
