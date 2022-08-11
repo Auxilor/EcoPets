@@ -14,7 +14,10 @@ class ModelEnginePetEntity(
 
         val model = ModelEngineAPI.createActiveModel(modelID)
         val modelled = ModelEngineAPI.createModeledEntity(stand)
-        modelled.addActiveModel(model)
+        // modelled.addActiveModel(model)
+        
+        // ModelEngine removed addActiveModel in new API release... for no reason. 
+        modelled.addModel(model,true)
 
         return stand
     }
