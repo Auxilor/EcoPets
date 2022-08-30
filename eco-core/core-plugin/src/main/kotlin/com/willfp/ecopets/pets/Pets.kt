@@ -3,9 +3,11 @@ package com.willfp.ecopets.pets
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
+import com.willfp.eco.core.config.ConfigType
+import com.willfp.eco.core.config.TransientConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecopets.EcoPetsPlugin
-import com.willfp.libreforge.chains.EffectChains
+import java.io.File
 
 object Pets {
     private val BY_ID: BiMap<String, Pet> = HashBiMap.create()
@@ -39,14 +41,18 @@ object Pets {
     @ConfigUpdater
     @JvmStatic
     fun update(plugin: EcoPetsPlugin) {
-        plugin.petsYml.getSubsections("chains").mapNotNull {
-            EffectChains.compile(it, "Effect Chains")
-        }
         for (set in values()) {
             removePet(set)
         }
-        for (petConfig in plugin.petsYml.getSubsections("pets")) {
-            addNewPet(Pet(petConfig, plugin))
+
+        val petsYml = TransientConfig(File(plugin.dataFolder, "pets.yml"), ConfigType.YAML)
+
+        for ((id, petConfig) in plugin.fetchConfigs("pets")) {
+            addNewPet(Pet(id, petConfig, plugin))
+        }
+
+        for (petConfig in petsYml.getSubsections("pets")) {
+            addNewPet(Pet(petConfig.getString("id"), petConfig, plugin))
         }
     }
 

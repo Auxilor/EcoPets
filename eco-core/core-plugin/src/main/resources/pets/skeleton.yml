@@ -1,0 +1,101 @@
+name: "<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB>"
+description: "&8&oLevel up by dealing bow damage"
+
+level-xp-requirements:
+  - 50
+  - 125
+  - 200
+  - 300
+  - 500
+  - 750
+  - 1000
+  - 1500
+  - 2000
+  - 3500
+  - 5000
+  - 7500
+  - 10000
+  - 15000
+  - 20000
+  - 30000
+  - 50000
+  - 75000
+  - 100000
+  - 200000
+  - 300000
+  - 400000
+  - 500000
+  - 600000
+  - 700000
+  - 800000
+  - 900000
+  - 1000000
+  - 1100000
+  - 1200000
+  - 1300000
+  - 1400000
+  - 1500000
+  - 1600000
+  - 1700000
+  - 1800000
+  - 1900000
+  - 2000000
+  - 2100000
+  - 2200000
+  - 2300000
+  - 2400000
+  - 2500000
+  - 2600000
+  - 2750000
+  - 2900000
+  - 3100000
+  - 3400000
+  - 3700000
+
+xp-gain-methods:
+  - id: bow_attack
+    multiplier: 0.5
+
+level-placeholders:
+  - id: "damage_multiplier"
+    value: "%level%"
+
+effects-description:
+  1:
+    - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+    - "   &8bow damage"
+
+rewards-description:
+  1:
+    - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+    - "   &8bow damage"
+
+level-up-messages:
+  1:
+    - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
+    - "   &8bow damage"
+
+level-commands: [ ]
+
+effects:
+  - id: damage_multiplier
+    args:
+      multiplier: "%level% * 0.01 + 1"
+    triggers:
+      - bow_attack
+conditions: [ ]
+
+entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ0NmViNjQyZGMzYTRkZmJiNWFkNTI5N2VkYWUyOTk2ZWE0Y2ZmZjkyYWMyZWI1NmRmYWU5ZWUxZDU4ZTQwOCJ9fX0="
+
+icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ0NmViNjQyZGMzYTRkZmJiNWFkNTI5N2VkYWUyOTk2ZWE0Y2ZmZjkyYWMyZWI1NmRmYWU5ZWUxZDU4ZTQwOCJ9fX0=
+
+spawn-egg:
+  enabled: true # If the pet should have a spawn egg
+  item: skeleton_spawn_egg unbreaking:1 hide_enchants
+  name: "<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB>&f Pet Spawn Egg"
+  lore:
+    - ""
+    - "&8&oPlace on the ground to"
+    - "&8&ounlock the &r<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB>&8&o pet!"
+  craftable: false
+  recipe: [ ]

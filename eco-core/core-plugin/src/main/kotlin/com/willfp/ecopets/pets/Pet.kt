@@ -37,10 +37,10 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 class Pet(
+    val id: String,
     val config: Config,
     private val plugin: EcoPetsPlugin
 ) {
-    val id = config.getString("id")
     val name = config.getFormattedString("name")
     val description = config.getFormattedString("description")
 

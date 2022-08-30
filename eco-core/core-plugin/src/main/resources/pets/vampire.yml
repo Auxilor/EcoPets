@@ -1,0 +1,160 @@
+  name: "<gradient:#A50000>Vampire</gradient:#FD2424>"
+  description: "&8&oLevel up by taking damage at night."
+
+  level-xp-requirements:
+    - 50
+    - 75
+    - 100
+    - 150
+    - 200
+    - 300
+    - 400
+    - 500
+    - 750
+    - 1000
+    - 1300
+    - 1500
+    - 1750
+    - 2000
+    - 2300
+    - 2500
+    - 3000
+    - 3500
+    - 4000
+    - 4500
+    - 5000
+    - 6000
+    - 8000
+    - 10000
+    - 12000
+    - 15000
+    - 20000
+    - 25000
+    - 30000
+    - 35000
+    - 40000
+    - 44500
+    - 50000
+    - 57000
+    - 64000
+    - 71000
+    - 78000
+    - 80000
+    - 85000
+    - 90000
+    - 95000
+    - 100000
+    - 110000
+    - 115000
+    - 120000
+    - 125000
+    - 150000
+    - 175000
+    - 200000
+
+  xp-gain-methods:
+    - id: take_damage
+      multiplier: 10.0
+      conditions:
+        - id: is_night
+
+
+  level-placeholders:
+    - id: "lifesteal_chance"
+      value: "%level%"
+    - id: "lifesteal_cooldown"
+      value: "1-(%level%/200)"
+    - id: "lifesteal_heal"
+      value: "%level%/20"
+    - id: "bleed_damage"
+      value: "(%level%-15)/10"
+    - id: "bleed_chance"
+      value: "%level%-10"
+
+  effects-description:
+    1:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+    25:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
+      - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
+
+  rewards-description:
+    1:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain &ff0000%lifesteal_heal%"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+    25:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
+      - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
+
+  level-up-messages:
+    1:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+    25:
+      - "&8» &#ff0000This pet can ONLY be levelled at night."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%lifesteal_chance%% &7to gain"
+      - "    &7health from your enemy. Has a &#ff0000%lifesteal_cooldown% &7second cooldown."
+      - ""
+      - "&8» &7When hitting enemies have a &#ff0000%bleed_chance%% &7to bleed"
+      - "    &7your enemies dealing &#ff0000%bleed_damage%&7 damage twice."
+
+  level-commands: [ ]
+
+  effects:
+    - id: give_health
+      args:
+        chance: "%level%"
+        cooldown: "1-(%level%/200)"
+        send_cooldown_message: false
+        amount: "%level%/20"
+      triggers:
+        - melee_attack
+
+    - id: bleed
+      args:
+        chance: "%level%-10"
+        damage: "(%level%-15)/10"
+        interval: 15
+        amount: 2
+      conditions:
+        - id: has_pet_level
+          args:
+            pet: vampire
+            level: 25
+      triggers:
+        - melee_attack
+
+  conditions: []
+
+  entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzgyMGExMGRiMjIyZjY5YWMyMjE1ZDdkMTBkY2E0N2VlYWZhMjE1NTUzNzY0YTJiODFiYWZkNDc5ZTc5MzNkMSJ9fX0="
+
+  icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzgyMGExMGRiMjIyZjY5YWMyMjE1ZDdkMTBkY2E0N2VlYWZhMjE1NTUzNzY0YTJiODFiYWZkNDc5ZTc5MzNkMSJ9fX0=
+
+  spawn-egg:
+    enabled: true
+    item: bat_spawn_egg unbreaking:2 hide_enchants
+    name: "<gradient:#A50000>Vampire</gradient:#FD2424>&f Pet Spawn Egg"
+    lore:
+      - ""
+      - "&8&oPlace on the ground to"
+      - "&8&ounlock the &r<gradient:#A50000>Vampire</gradient:#FD2424>&8&o pet!"
+    craftable: false
+    recipe: [ ]

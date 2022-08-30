@@ -1,0 +1,97 @@
+name: "<gradient:#1e3c72>Ravager</gradient:#2a5298>"
+description: "&8&oLevel up by successfully defending against village raids"
+
+level-xp-requirements:
+  - 50
+  - 150
+  - 300
+  - 500
+  - 750
+  - 1000
+  - 1300
+  - 1650
+  - 2050
+  - 2500
+  - 3000
+  - 3550
+  - 4150
+  - 4800
+  - 5500
+  - 6250
+  - 7050
+  - 7900
+  - 8800
+  - 9750
+  - 10750
+  - 11800
+  - 12900
+  - 14050
+  - 15250
+  - 16500
+  - 17800
+  - 19150
+  - 20550
+  - 22000
+  - 23500
+  - 25050
+  - 26650
+  - 28300
+  - 30000
+  - 31750
+  - 33550
+  - 35400
+  - 37300
+  - 39250
+  - 41250
+  - 43300
+  - 45400
+  - 47550
+  - 49700
+  - 51950
+  - 53250
+  - 55600
+  - 57000
+
+xp-gain-methods:
+  - id: win_raid
+    multiplier: 50
+
+level-placeholders:
+  - id: "health_boost"
+    value: "%level%"
+
+effects-description:
+  1:
+    - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+
+rewards-description:
+  1:
+    - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+
+level-up-messages:
+  1:
+    - "&8» &8Gives a &a+%health_boost%%&8 bonus"
+
+level-commands: [ ]
+
+effects:
+  - id: bonus_health
+    args:
+      health: "%level%"
+
+conditions: [ ]
+
+entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0="
+
+icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0=
+
+spawn-egg:
+  enabled: true
+  item: ravager_spawn_egg unbreaking:1 hide_enchants
+  name: "<gradient:#1e3c72>Ravager</gradient:#2a5298>&f Pet Spawn Egg"
+  lore:
+    - ""
+    - "&8&oPlace on the ground to"
+    - "&8&ounlock the &r<gradient:#1e3c72>Ravager</gradient:#2a5298>&8&o pet!"
+  craftable: false
+  recipe: [ ]

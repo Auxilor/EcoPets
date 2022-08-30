@@ -6,7 +6,6 @@ import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.util.toSingletonList
 import com.willfp.ecopets.commands.CommandEcopets
 import com.willfp.ecopets.commands.CommandPets
-import com.willfp.ecopets.config.PetsYml
 import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
@@ -20,17 +19,16 @@ import com.willfp.libreforge.LibReforgePlugin
 import org.bukkit.event.Listener
 
 class EcoPetsPlugin : LibReforgePlugin() {
-    val petsYml: PetsYml
-
     private val petDisplay = PetDisplay(this)
 
     init {
         instance = this
-        petsYml = PetsYml(this)
         registerHolderProvider { it.activePetLevel?.toSingletonList() ?: emptyList() }
     }
 
     override fun handleEnableAdditional() {
+        this.copyConfigs("pets")
+
         PlayerPlaceholder(
             this,
             "pet"
