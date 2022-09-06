@@ -3,7 +3,7 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.conditions.ConfiguredCondition
 import com.willfp.libreforge.events.TriggerPreProcessEvent
-import com.willfp.libreforge.filters.ConfiguredFilter
+import com.willfp.libreforge.filters.Filter
 import com.willfp.libreforge.triggers.Trigger
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -31,7 +31,7 @@ object PetTriggerXPGainListener : Listener {
             return
         }
 
-        if (!ConfiguredFilter(xpGain.filters).matches(data)) {
+        if (!Filter.matches(data, xpGain.filters)) {
             return
         }
 
