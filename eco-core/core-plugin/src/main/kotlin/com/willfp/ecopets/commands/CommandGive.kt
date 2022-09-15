@@ -32,7 +32,7 @@ class CommandGive(plugin: EcoPlugin) : Subcommand(plugin, "give", "ecopets.comma
             player = Bukkit.getOfflinePlayer(playerName)
         }
 
-        if (!player.hasPlayedBefore()) {
+        if (!player.hasPlayedBefore() && !Bukkit.getOnlinePlayers().contains(player)) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
             return
         }
