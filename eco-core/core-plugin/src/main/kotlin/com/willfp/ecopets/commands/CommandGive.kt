@@ -8,6 +8,7 @@ import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
 
@@ -25,8 +26,11 @@ class CommandGive(plugin: EcoPlugin) : Subcommand(plugin, "give", "ecopets.comma
 
         val playerName = args[0]
 
-        @Suppress("DEPRECATION")
-        val player = Bukkit.getOfflinePlayer(playerName)
+        var player = Bukkit.getPlayer(playerName) as OfflinePlayer
+        if (!Bukkit.getOnlinePlayers().contains(player)) {
+            @Suppress("DEPRECATION")
+            player = Bukkit.getOfflinePlayer(playerName)
+        }
 
         if (!player.hasPlayedBefore()) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
