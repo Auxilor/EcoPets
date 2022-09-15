@@ -21,6 +21,8 @@ messages:
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
   invalid-amount: "&cInvalid amount!"
+  cannot-take-out: "&cYou cannot take this pet out!"
+  take-pet: "&fYou have taken %player%&f's %pet%&f XP!"
 
 menu:
   title: "Pets"

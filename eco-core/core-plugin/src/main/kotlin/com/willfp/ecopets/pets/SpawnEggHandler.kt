@@ -1,22 +1,24 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.EcoPlugin
-import org.bukkit.entity.Player
+import com.willfp.eco.core.fast.fast
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.persistence.PersistentDataType
 
 class SpawnEggHandler(
     private val plugin: EcoPlugin
 ) : Listener {
+
     @EventHandler(
         ignoreCancelled = true
     )
     fun handle(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK) {
+        if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) {
             return
         }
 
@@ -39,6 +41,18 @@ class SpawnEggHandler(
         } else {
             val hand = event.player.inventory.itemInOffHand
             hand.amount = hand.amount - 1
+        }
+
+        val level = plugin.namespacedKeyFactory.create("pet_level")
+        val xp = plugin.namespacedKeyFactory.create("pet_xp")
+
+        if (item.fast().persistentDataContainer.has(xp, PersistentDataType.DOUBLE)) {
+            val petXp = item.fast().persistentDataContainer.get(xp, PersistentDataType.DOUBLE)!!
+            val petLevel = item.fast().persistentDataContainer.get(level, PersistentDataType.INTEGER)!!
+
+            player.setPetLevel(pet, petLevel)
+            player.setPetXP(pet, petXp)
+            return
         }
 
         player.setPetLevel(pet, 1)

@@ -23,9 +23,8 @@ object PetsGUI {
     private const val pageKey = "page"
 
     private fun getPage(menu: Menu, player: Player): Int {
-        val pages = ceil(Pets.values()
-            .filter { player.getPetLevel(it) > 0 }
-            .size.toDouble() / petAreaSlots.size).toInt()
+        val pages =
+            ceil(Pets.values().filter { player.getPetLevel(it) > 0 }.size.toDouble() / petAreaSlots.size).toInt()
 
         val page = menu.getState(player, pageKey) ?: 1
 
@@ -55,10 +54,9 @@ object PetsGUI {
             val pet = player.activePet
 
             if (pet == null) {
-                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.pet-info.no-active.item")))
-                    .setDisplayName(plugin.configYml.getFormattedString("gui.pet-info.no-active.name"))
-                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.pet-info.no-active.lore"))
-                    .build()
+                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.pet-info.no-active.item"))).setDisplayName(
+                        plugin.configYml.getFormattedString("gui.pet-info.no-active.name")
+                    ).addLoreLines(plugin.configYml.getFormattedStrings("gui.pet-info.no-active.lore")).build()
             } else {
                 pet.getPetInfoIcon(player)
             }
@@ -67,9 +65,8 @@ object PetsGUI {
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
             val page = getPage(menu, player)
 
-            val unlockedPets = Pets.values()
-                .sortedByDescending { player.getPetLevel(it) }
-                .filter { player.getPetLevel(it) > 0 }
+            val unlockedPets =
+                Pets.values().sortedByDescending { player.getPetLevel(it) }.filter { player.getPetLevel(it) > 0 }
 
             val pagedIndex = ((page - 1) * petAreaSlots.size) + index
 
@@ -87,16 +84,14 @@ object PetsGUI {
                 )
             )
 
-            setSlot(
-                plugin.configYml.getInt("gui.pet-info.row"),
+            setSlot(plugin.configYml.getInt("gui.pet-info.row"),
                 plugin.configYml.getInt("gui.pet-info.column"),
                 slot(petInfoItemBuilder) {
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
                         player.activePet?.levelGUI?.open(player)
                     }
-                }
-            )
+                })
 
             for ((index, pair) in petAreaSlots.withIndex()) {
                 val (row, column) = pair
@@ -111,17 +106,57 @@ object PetsGUI {
 
                         val page = getPage(menu, player)
 
-                        val unlockedPets = Pets.values()
-                            .sortedByDescending { player.getPetLevel(it) }
+                        val unlockedPets = Pets.values().sortedByDescending { player.getPetLevel(it) }
                             .filter { player.getPetLevel(it) > 0 }
 
                         val pagedIndex = ((page - 1) * petAreaSlots.size) + index
 
                         val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
 
-                        if (player.activePet != pet) {
-                            player.activePet = pet
+                        if (player.activePet == pet) {
+                            player.activePet = null
+                            player.playSound(
+                                player.location,
+                                Sound.valueOf(plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()),
+                                1f,
+                                plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
+                            )
+                            return@onLeftClick
                         }
+
+                        player.activePet = pet
+                        player.playSound(
+                            player.location,
+                            Sound.valueOf(plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()),
+                            1f,
+                            plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
+                        )
+                    }
+
+                    onShiftLeftClick { event, _ ->
+                        val player = event.whoClicked as Player
+                        val page = getPage(menu, player)
+
+                        val unlockedPets = Pets.values().sortedByDescending { player.getPetLevel(it) }
+                            .filter { player.getPetLevel(it) > 0 }
+
+                        val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+
+                        val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onShiftLeftClick
+
+                        val item = pet.inventoryItem(player, pet) ?: return@onShiftLeftClick
+
+                        if (player.activePet == pet) {
+                            player.activePet = null
+                        }
+
+                        if (player.activePet != pet) {
+                            player.activePet = null
+                        }
+
+                        player.setPetLevel(pet, 0)
+                        player.setPetXP(pet, 0.0)
+                        player.inventory.addItem(item)
 
                         player.playSound(
                             player.location,
@@ -133,13 +168,12 @@ object PetsGUI {
                 })
             }
 
-            setSlot(
-                plugin.configYml.getInt("gui.prev-page.location.row"),
+            setSlot(plugin.configYml.getInt("gui.prev-page.location.row"),
                 plugin.configYml.getInt("gui.prev-page.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
-                        .build()
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item"))).setDisplayName(
+                        plugin.configYml.getString("gui.prev-page.name")
+                    ).build()
                 ) {
                     onLeftClick { event, _, menu ->
                         val player = event.whoClicked as Player
@@ -149,23 +183,21 @@ object PetsGUI {
 
                         menu.addState(player, pageKey, newPage)
                     }
-                }
-            )
+                })
 
-            setSlot(
-                plugin.configYml.getInt("gui.next-page.location.row"),
+            setSlot(plugin.configYml.getInt("gui.next-page.location.row"),
                 plugin.configYml.getInt("gui.next-page.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
-                        .build()
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item"))).setDisplayName(
+                        plugin.configYml.getString("gui.next-page.name")
+                    ).build()
                 ) {
                     onLeftClick { event, _, menu ->
                         val player = event.whoClicked as Player
 
                         val pages = ceil(Pets.values()
-                            .filter { player.getPetLevel(it) > 0 }
-                            .size.toDouble() / petAreaSlots.size).toInt()
+                            .filter { player.getPetLevel(it) > 0 }.size.toDouble() / petAreaSlots.size
+                        ).toInt()
 
                         val page = getPage(menu, player)
 
@@ -173,33 +205,35 @@ object PetsGUI {
 
                         menu.addState(player, pageKey, newPage)
                     }
-                }
-            )
+                })
 
             setSlot(plugin.configYml.getInt("gui.close.location.row"),
                 plugin.configYml.getInt("gui.close.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.close.name"))
-                        .build()
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item"))).setDisplayName(
+                        plugin.configYml.getString(
+                            "gui.close.name"
+                        )
+                    ).build()
                 ) {
                     onLeftClick { event, _ -> event.whoClicked.closeInventory() }
-                }
-            )
+                })
 
-            setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
-                plugin.configYml.getInt("gui.deactivate-pet.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ ->
-                        val player = event.whoClicked as Player
-                        player.activePet = null
+            if (plugin.configYml.getBool("gui.deactivate-pet.enabled")) {
+                setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
+                    plugin.configYml.getInt("gui.deactivate-pet.location.column"),
+                    slot(
+                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
+                            .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ ->
+                            val player = event.whoClicked as Player
+                            player.activePet = null
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 

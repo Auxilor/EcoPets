@@ -52,6 +52,7 @@ permissions:
       ecopets.command.giveegg: true
       ecopets.command.givexp: true
       ecopets.command.reset: true
+      ecopets.command.take: true
 
   ecopets.command.reload:
     description: Allows reloading the config
@@ -73,6 +74,9 @@ permissions:
     default: op
   ecopets.command.reset:
     description: Allows the use of /ecopets reset.
+    default: op
+  ecopets.command.take:
+    description: Allows the use of /ecopets take.
     default: op
 
   ecopets.xpmultiplier.50percent:

@@ -110,6 +110,7 @@ gui:
       column: 5
 
   deactivate-pet:
+    enabled: true # Note: if this is disabled, pets can only be deactivated by clicking them when equipped.
     item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZDlhNDViOTY4MWNlYTViMjhjNzBmNzVhNjk1NmIxZjU5NGZlYzg0MGI5NjA3Nzk4ZmIxZTcwNzc2NDQzMCJ9fX0=
     name: "&cDeactivate Pet"
     location:

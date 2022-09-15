@@ -132,3 +132,20 @@ spawn-egg:
   craftable: false
   recipe: [ ]
   # recipe-permission: ecopets.craft.tiger
+
+# The inventory item part of the pet.
+# You don't get the effects of the pet while the pet is in your inventory,
+# this section is so you can trade your pet.
+inventory-item:
+  enabled: true # If the pet can be taken out of the pet inventory
+  item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
+  name: "&#FF6600Blaze &fPet &7(%level%)" # The name of the pet item
+  lore: # The lore of the pet item
+    - "%description%"
+    - "&f"
+    - "&fEffects:"
+    - "%effects%"
+    - ""
+    - "&fProgress:"
+    - "&8» &e%percentage_progress%%"
+    - "&8» &e%current_xp%&8/&7%required_xp% &fXP"

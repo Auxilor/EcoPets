@@ -93,8 +93,56 @@ class Pet(
         item
     }
 
+    private fun inventoryItemBacker(player: Player, clickedPet: Pet): ItemStack? = run {
+        val enabled = config.getBool("inventory-item.enabled")
+        if (!enabled) {
+            player.sendMessage(plugin.langYml.getMessage("cannot-take-out"))
+            return@run null
+        }
+
+        val lookup = Items.lookup(config.getString("inventory-item.item"))
+
+        if (lookup is EmptyTestableItem) {
+            return@run null
+        }
+
+        val item = ItemStackBuilder(lookup)
+            .addLoreLines(
+                injectPlaceholdersInto(config.getStrings("inventory-item.lore"), player))
+            .setDisplayName(
+                config.getString("inventory-item.name")
+                    .replace("%level%", player.getPetLevel(clickedPet).toString())
+            )
+
+            .build().apply { petEgg = this@Pet }
+
+        val level = plugin.namespacedKeyFactory.create("pet_level")
+        val xp = plugin.namespacedKeyFactory.create("pet_xp")
+
+        item.fast().persistentDataContainer.set(level, PersistentDataType.INTEGER, player.getPetLevel(clickedPet))
+        item.fast().persistentDataContainer.set(xp, PersistentDataType.DOUBLE, player.getPetXP(clickedPet))
+
+        val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
+
+        Items.registerCustomItem(
+            key,
+            CustomItem(
+                key,
+                { it.petEgg == this },
+                item
+            )
+        )
+
+        item
+    }
+
     val spawnEgg: ItemStack?
         get() = this.spawnEggBacker?.clone()
+
+    fun inventoryItem(player: Player, pet: Pet): ItemStack? {
+        return this.inventoryItemBacker(player, pet)?.clone()
+    }
+
 
     val recipe = run {
         val egg = spawnEgg

@@ -90,7 +90,7 @@ entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ0NmViNjQyZGMzYTRkZmJiNWFkNTI5N2VkYWUyOTk2ZWE0Y2ZmZjkyYWMyZWI1NmRmYWU5ZWUxZDU4ZTQwOCJ9fX0=
 
 spawn-egg:
-  enabled: true # If the pet should have a spawn egg
+  enabled: true
   item: skeleton_spawn_egg unbreaking:1 hide_enchants
   name: "<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB>&f Pet Spawn Egg"
   lore:
@@ -99,3 +99,17 @@ spawn-egg:
     - "&8&ounlock the &r<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB>&8&o pet!"
   craftable: false
   recipe: [ ]
+
+inventory-item:
+  enabled: true
+  item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
+  name: "<gradient:#F2F2F2>Skeleton</gradient:#DBDBDB> &fPet &7(%level%)"
+  lore:
+    - "%description%"
+    - "&f"
+    - "&fEffects:"
+    - "%effects%"
+    - ""
+    - "&fProgress:"
+    - "&8» &e%percentage_progress%%"
+    - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
