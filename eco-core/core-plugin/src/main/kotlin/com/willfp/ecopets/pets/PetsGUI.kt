@@ -144,7 +144,7 @@ object PetsGUI {
 
                         val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onShiftLeftClick
 
-                        val item = pet.inventoryItem(player, pet) ?: return@onShiftLeftClick
+                        val item = pet.inventoryItem(player, pet)
 
                         if (player.activePet == pet) {
                             player.activePet = null

@@ -46,6 +46,7 @@ class SpawnEggHandler(
         }
 
         if (item.fast().persistentDataContainer.has(xp, PersistentDataType.DOUBLE)) {
+            println("nope")
             val petXp = item.fast().persistentDataContainer.get(xp, PersistentDataType.DOUBLE)!!
             val petLevel = item.fast().persistentDataContainer.get(level, PersistentDataType.INTEGER)!!
 
