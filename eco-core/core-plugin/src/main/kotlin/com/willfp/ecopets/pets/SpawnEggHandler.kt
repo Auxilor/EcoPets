@@ -37,22 +37,21 @@ class SpawnEggHandler(
             return
         }
 
-        if (event.hand == EquipmentSlot.HAND) {
-            val hand = event.player.inventory.itemInMainHand
-            hand.amount = hand.amount - 1
-        } else {
-            val hand = event.player.inventory.itemInOffHand
-            hand.amount = hand.amount - 1
-        }
-
         if (item.fast().persistentDataContainer.has(xp, PersistentDataType.DOUBLE)) {
-            println("nope")
             val petXp = item.fast().persistentDataContainer.get(xp, PersistentDataType.DOUBLE)!!
             val petLevel = item.fast().persistentDataContainer.get(level, PersistentDataType.INTEGER)!!
 
             player.setPetLevel(pet, petLevel)
             player.setPetXP(pet, petXp)
             return
+        }
+
+        if (event.hand == EquipmentSlot.HAND) {
+            val hand = event.player.inventory.itemInMainHand
+            hand.amount = hand.amount - 1
+        } else {
+            val hand = event.player.inventory.itemInOffHand
+            hand.amount = hand.amount - 1
         }
 
         player.setPetLevel(pet, 1)

@@ -118,8 +118,6 @@ class Pet(
 
         item.fast().persistentDataContainer.set(SpawnEggHandler(plugin).level, PersistentDataType.INTEGER, player.getPetLevel(clickedPet))
         item.fast().persistentDataContainer.set(SpawnEggHandler(plugin).xp, PersistentDataType.DOUBLE, player.getPetXP(clickedPet))
-        println(item.fast().persistentDataContainer.get(SpawnEggHandler(plugin).level, PersistentDataType.INTEGER))
-        println(item.fast().persistentDataContainer.get(SpawnEggHandler(plugin).xp, PersistentDataType.DOUBLE))
 
         val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
 
