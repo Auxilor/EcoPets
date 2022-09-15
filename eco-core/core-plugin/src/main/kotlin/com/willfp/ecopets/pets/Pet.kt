@@ -116,11 +116,8 @@ class Pet(
 
             .build().apply { petEgg = this@Pet }
 
-        val level = plugin.namespacedKeyFactory.create("pet_level")
-        val xp = plugin.namespacedKeyFactory.create("pet_xp")
-
-        item.fast().persistentDataContainer.set(level, PersistentDataType.INTEGER, player.getPetLevel(clickedPet))
-        item.fast().persistentDataContainer.set(xp, PersistentDataType.DOUBLE, player.getPetXP(clickedPet))
+        item.fast().persistentDataContainer.set(SpawnEggHandler(plugin).level, PersistentDataType.INTEGER, player.getPetLevel(clickedPet))
+        item.fast().persistentDataContainer.set(SpawnEggHandler(plugin).xp, PersistentDataType.DOUBLE, player.getPetXP(clickedPet))
 
         val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
 

@@ -13,6 +13,8 @@ import org.bukkit.persistence.PersistentDataType
 class SpawnEggHandler(
     private val plugin: EcoPlugin
 ) : Listener {
+    val level = plugin.namespacedKeyFactory.create("pet_level")
+    val xp = plugin.namespacedKeyFactory.create("pet_xp")
 
     @EventHandler(
         ignoreCancelled = true
@@ -42,9 +44,6 @@ class SpawnEggHandler(
             val hand = event.player.inventory.itemInOffHand
             hand.amount = hand.amount - 1
         }
-
-        val level = plugin.namespacedKeyFactory.create("pet_level")
-        val xp = plugin.namespacedKeyFactory.create("pet_xp")
 
         if (item.fast().persistentDataContainer.has(xp, PersistentDataType.DOUBLE)) {
             val petXp = item.fast().persistentDataContainer.get(xp, PersistentDataType.DOUBLE)!!
