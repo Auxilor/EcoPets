@@ -20,7 +20,7 @@ class SpawnEggHandler(
         ignoreCancelled = true
     )
     fun handle(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) {
+        if (event.action != Action.RIGHT_CLICK_BLOCK) {
             return
         }
 
