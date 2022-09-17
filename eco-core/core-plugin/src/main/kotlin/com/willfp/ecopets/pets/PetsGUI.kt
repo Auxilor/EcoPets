@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.config.updating.ConfigUpdater
+import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.slot
@@ -156,7 +157,10 @@ object PetsGUI {
 
                         player.setPetLevel(pet, 0)
                         player.setPetXP(pet, 0.0)
-                        player.inventory.addItem(item)
+                        DropQueue(player)
+                            .addItem(item)
+                            .forceTelekinesis()
+                            .push()
 
                         player.playSound(
                             player.location,
