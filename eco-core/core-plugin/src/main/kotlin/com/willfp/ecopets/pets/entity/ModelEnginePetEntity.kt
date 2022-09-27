@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets.entity
 
 import com.ticxo.modelengine.api.ModelEngineAPI
+import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -17,7 +18,9 @@ class ModelEnginePetEntity(
         val animationHandler = model.animationHandler;
         val animationProperty = animationHandler.getAnimation(animationString);
 
-        if (animationProperty != null) animationHandler.playAnimation(animationProperty, true);
+        if (animationProperty != null) {
+            animationHandler.playAnimation(animationProperty, true)
+        } else { EcoPetsPlugin.instance.logger.warning("$animationString not found in model $modelID") }
 
         val modelled = ModelEngineAPI.createModeledEntity(stand)
         modelled.addModel(model, true)
