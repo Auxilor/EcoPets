@@ -15,9 +15,9 @@ class ModelEnginePetEntity(
 
         val model = ModelEngineAPI.createActiveModel(modelID)
         val animationHandler = model.animationHandler;
-        val modelAnimation = animationHandler.getAnimation(animationString);
+        val animationProperty = animationHandler.getAnimation(animationString);
 
-        if (modelAnimation != null) animationHandler.playAnimation(modelAnimation, true);
+        if (animationProperty != null) animationHandler.playAnimation(animationProperty, true);
 
         val modelled = ModelEngineAPI.createModeledEntity(stand)
         modelled.addModel(model, true)
