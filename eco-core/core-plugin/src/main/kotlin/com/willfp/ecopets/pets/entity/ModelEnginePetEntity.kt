@@ -9,18 +9,18 @@ import org.bukkit.entity.ArmorStand
 class ModelEnginePetEntity(
     pet: Pet,
     private val modelID: String,
-    private val animationString: String,
 ) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
         val stand = emptyArmorStandAt(location, pet)
+        val entityAnimation = pet.entityAnimation;
 
         val model = ModelEngineAPI.createActiveModel(modelID)
         val animationHandler = model.animationHandler;
-        val animationProperty = animationHandler.getAnimation(animationString);
+        val animationProperty = animationHandler.getAnimation(entityAnimation);
 
         if (animationProperty != null) {
             animationHandler.playAnimation(animationProperty, true)
-        } else { EcoPetsPlugin.instance.logger.warning("$animationString not found in model $modelID") }
+        } else { EcoPetsPlugin.instance.logger.warning("$entityAnimation not found in model $modelID") }
 
         val modelled = ModelEngineAPI.createModeledEntity(stand)
         modelled.addModel(model, true)
