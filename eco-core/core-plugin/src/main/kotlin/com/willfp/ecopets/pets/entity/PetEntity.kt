@@ -27,10 +27,6 @@ abstract class PetEntity(
                 return SkullPetEntity(pet)
             }
 
-            if (pet.entityAnimation == null){
-                pet.entityAnimation = "walk";
-            }
-
             val id = texture.split(":")[0]
             val parse = registrations[id] ?: return SkullPetEntity(pet)
             return parse(pet, texture.removePrefix("$id:"))

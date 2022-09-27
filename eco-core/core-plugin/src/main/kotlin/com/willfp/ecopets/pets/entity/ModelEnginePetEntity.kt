@@ -20,7 +20,15 @@ class ModelEnginePetEntity(
 
         if (animationProperty != null) {
             animationHandler.playAnimation(animationProperty, true)
-        } else { EcoPetsPlugin.instance.logger.warning("$entityAnimation not found in model $modelID") }
+        } else {
+            EcoPetsPlugin.instance.logger.warning("$entityAnimation not found in model $modelID, im use walk animation")
+            val animationPropertyWalk = animationHandler.getAnimation("walk");
+            if (animationPropertyWalk != null) {
+                animationHandler.playAnimation(animationPropertyWalk, true)
+            } else {
+                EcoPetsPlugin.instance.logger.warning("walk animation not found in $modelID, you have any animation!?")
+            }
+        }
 
         val modelled = ModelEngineAPI.createModeledEntity(stand)
         modelled.addModel(model, true)
