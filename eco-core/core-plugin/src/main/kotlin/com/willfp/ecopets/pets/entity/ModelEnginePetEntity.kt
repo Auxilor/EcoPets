@@ -8,25 +8,29 @@ import org.bukkit.entity.ArmorStand
 
 class ModelEnginePetEntity(
     pet: Pet,
-    private val modelID: String
+    private val modelID: String,
+    private val plugin: EcoPetsPlugin
 ) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
         val stand = emptyArmorStandAt(location, pet)
-        val entityAnimation = pet.entityAnimation
+        val meAnimation = pet.modelEngineAnimation
 
         val model = ModelEngineAPI.createActiveModel(modelID)
-        val animationHandler = model.animationHandler
-        val animationProperty = animationHandler.getAnimation(entityAnimation)
 
-        if (animationProperty != null) {
-            animationHandler.playAnimation(animationProperty, true)
-        } else {
-            EcoPetsPlugin.instance.logger.warning("$entityAnimation not found in model $modelID, im use walk animation")
-            val animationPropertyWalk = animationHandler.getAnimation("walk")
-            if (animationPropertyWalk != null) {
-                animationHandler.playAnimation(animationPropertyWalk, true)
+        if (meAnimation != null) {
+            val animationHandler = model.animationHandler
+            val animationProperty = animationHandler.getAnimation(meAnimation)
+
+            if (animationProperty != null) {
+                animationHandler.playAnimation(animationProperty, true)
             } else {
-                EcoPetsPlugin.instance.logger.warning("walk animation not found in $modelID, you have any animation!?")
+                plugin.logger.warning("Animation $meAnimation not found in model $modelID, defaulting to walk!")
+                val animationPropertyWalk = animationHandler.getAnimation("walk")
+                if (animationPropertyWalk != null) {
+                    animationHandler.playAnimation(animationPropertyWalk, true)
+                } else {
+                    plugin.logger.warning("Walk animation not found in $modelID!")
+                }
             }
         }
 

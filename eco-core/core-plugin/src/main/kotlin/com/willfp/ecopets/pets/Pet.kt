@@ -32,7 +32,7 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.*
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -113,8 +113,7 @@ class Pet(
     }
 
     val entityTexture = config.getString("entity-texture")
-
-    val entityAnimation = config.getString("default-animation")
+    val modelEngineAnimation = config.getStringOrNull("modelengine-animation")
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
