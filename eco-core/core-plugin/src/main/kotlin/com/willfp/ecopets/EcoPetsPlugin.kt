@@ -54,7 +54,7 @@ class EcoPetsPlugin : LibReforgePlugin() {
         return listOf(
             IntegrationLoader("ModelEngine") {
                 PetEntity.registerPetEntity("modelengine") { pet, id ->
-                    ModelEnginePetEntity(pet, id)
+                    ModelEnginePetEntity(pet, id, this)
                 }
             }
         )
