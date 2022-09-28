@@ -200,6 +200,14 @@ object PetsGUI {
                     }
                 }
             )
+
+            for (config in plugin.configYml.getSubsections("gui.custom-slots")) {
+                setSlot(
+                    config.getInt("row"),
+                    config.getInt("column"),
+                    ConfigSlot(config)
+                )
+            }
         }
     }
 

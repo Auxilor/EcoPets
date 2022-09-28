@@ -116,6 +116,9 @@ gui:
       row: 6
       column: 2
 
+  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  custom-slots: [ ]
+
 level-gui:
   rows: 6
 
@@ -209,6 +212,9 @@ level-gui:
     location:
       row: 6
       column: 5
+
+  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  custom-slots: [ ]
 
 pet-entity:
   name: "%player%&f's %pet%&f (Lvl. %level%)"

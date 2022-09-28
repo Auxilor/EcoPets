@@ -178,6 +178,14 @@ class PetLevelGUI(
                     }
                 }
             )
+
+            for (config in plugin.configYml.getSubsections("level-gui.custom-slots")) {
+                setSlot(
+                    config.getInt("row"),
+                    config.getInt("column"),
+                    ConfigSlot(config)
+                )
+            }
         }
     }
 
