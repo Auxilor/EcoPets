@@ -114,6 +114,8 @@ class Pet(
 
     val entityTexture = config.getString("entity-texture")
 
+    val entityAnimation = config.getString("default-animation")
+
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = levelXpRequirements.size
