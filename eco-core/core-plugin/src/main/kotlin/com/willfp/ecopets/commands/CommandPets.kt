@@ -7,6 +7,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class CommandPets(plugin: EcoPlugin) : PluginCommand(plugin, "pets", "ecopets.command.pets", true) {
+    init {
+        this.addSubcommand(CommandActivate(plugin))
+            .addSubcommand(CommandDeactivate(plugin))
+    }
+
     override fun onExecute(player: CommandSender, args: List<String>) {
         player as Player
         PetsGUI.open(player)
