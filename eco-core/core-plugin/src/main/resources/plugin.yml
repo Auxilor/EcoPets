@@ -53,6 +53,8 @@ permissions:
       ecopets.command.givexp: true
       ecopets.command.reset: true
       ecopets.command.take: true
+      ecopets.command.activate: true
+      ecopets.command.deactivate: true
 
   ecopets.command.reload:
     description: Allows reloading the config
@@ -78,6 +80,12 @@ permissions:
   ecopets.command.take:
     description: Allows the use of /ecopets take.
     default: op
+  ecopets.command.activate:
+    description: Allows the use of /pets activate.
+    default: true
+  ecopets.command.deactivate:
+    description: Allows the use of /pets deactivate.
+    default: true
 
   ecopets.xpmultiplier.50percent:
     description: Gives the player 50% more skill experience

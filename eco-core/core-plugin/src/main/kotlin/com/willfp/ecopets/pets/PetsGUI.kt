@@ -5,6 +5,7 @@ import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.slot
+import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
@@ -24,8 +25,9 @@ object PetsGUI {
     private const val pageKey = "page"
 
     private fun getPage(menu: Menu, player: Player): Int {
-        val pages =
-            ceil(Pets.values().filter { player.getPetLevel(it) > 0 }.size.toDouble() / petAreaSlots.size).toInt()
+        val pages = ceil(Pets.values()
+            .filter { player.getPetLevel(it) > 0 }
+            .size.toDouble() / petAreaSlots.size).toInt()
 
         val page = menu.getState(player, pageKey) ?: 1
 
@@ -223,6 +225,27 @@ object PetsGUI {
                     onLeftClick { event, _ -> event.whoClicked.closeInventory() }
                 })
 
+            setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
+                plugin.configYml.getInt("gui.deactivate-pet.location.column"),
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
+                        .build()
+                ) {
+                    onLeftClick { event, _ ->
+                        val player = event.whoClicked as Player
+                        player.activePet = null
+                    }
+                }
+            )
+
+            for (config in plugin.configYml.getSubsections("gui.custom-slots")) {
+                setSlot(
+                    config.getInt("row"),
+                    config.getInt("column"),
+                    ConfigSlot(config)
+                )
+            }
             if (plugin.configYml.getBool("gui.deactivate-pet.enabled")) {
                 setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
                     plugin.configYml.getInt("gui.deactivate-pet.location.column"),
