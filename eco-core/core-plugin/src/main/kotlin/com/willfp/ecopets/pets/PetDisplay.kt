@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.*
+import java.util.UUID
 import kotlin.math.PI
 import kotlin.math.abs
 
@@ -44,10 +44,18 @@ class PetDisplay(
 
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
-            try {
-                stand.teleport(location)
-            } catch (_: Exception) {
-
+            if (location.world != null) {
+                try {
+                    stand.teleport(location)
+                } catch (_: Throwable) {
+                    /*
+                    For anyone reading - I KNOW TO NEVER CATCH THROWABLE
+                    but NMS is really stupid and does this sometimes:
+                    java.lang.Throwable: null
+	                at net.minecraft.world.entity.Entity.teleportTo(Entity.java:3336) ~[paper-1.19.2.jar:git-Paper-186]
+	                so I guess that's what has to be done. Not sure what the actual cause is.
+                     */
+                }
             }
 
             if (!pet.entityTexture.contains(":")) {
