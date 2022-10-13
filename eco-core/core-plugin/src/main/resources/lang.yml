@@ -25,6 +25,13 @@ messages:
   no-pet-active: "&cYou don't have a pet active!"
   activated-pet: "&fYou have activated the %pet%&f pet!"
   deactivated-pet: "&fYou have deactivated the %pet%&f pet!"
+  must-specify-lrcdb-id: "&cYou must specify the ID of the config to download! Not sure what this means? Go to &alrcdb.auxilor.io"
+  lrcdb-import-error: "&cError importing config: &f%message%"
+  lrcdb-import-success: "&fImported &a%name%&f! Reload the plugin to install it"
+  must-specify-config-name: "&cYou must specify the config name!"
+  invalid-config-name: "&cInvalid config name!"
+  lrcdb-export-error: "&cError exporting config: &f%message%"
+  lrcdb-export-success: "&fExported &a%name%&f! View it on &alrcdb.auxilor.io&f, or share your config ID: &f%id%"
 
 menu:
   title: "Pets"

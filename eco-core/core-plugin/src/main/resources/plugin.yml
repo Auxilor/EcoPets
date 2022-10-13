@@ -54,6 +54,8 @@ permissions:
       ecopets.command.reset: true
       ecopets.command.activate: true
       ecopets.command.deactivate: true
+      ecopets.command.import: true
+      ecopets.command.export: true
 
   ecopets.command.reload:
     description: Allows reloading the config
@@ -75,6 +77,12 @@ permissions:
     default: op
   ecopets.command.reset:
     description: Allows the use of /ecopets reset.
+    default: op
+  ecopets.command.import:
+    description: Allows the use of /ecopets import.
+    default: op
+  ecopets.command.export:
+    description: Allows the use of /ecopets export.
     default: op
   ecopets.command.activate:
     description: Allows the use of /pets activate.
