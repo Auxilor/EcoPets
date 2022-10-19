@@ -4,6 +4,7 @@ import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.libreforge.conditions.ConfiguredCondition
 import com.willfp.libreforge.events.TriggerPreProcessEvent
 import com.willfp.libreforge.filters.Filter
+import com.willfp.libreforge.filters.Filters
 import com.willfp.libreforge.triggers.Trigger
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -31,7 +32,7 @@ object PetTriggerXPGainListener : Listener {
             return
         }
 
-        if (!Filter.matches(data, xpGain.filters)) {
+        if (!Filters.passes(data, xpGain.filters)) {
             return
         }
 
