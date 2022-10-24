@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
 import com.willfp.eco.core.config.ConfigType
-import com.willfp.eco.core.config.TransientConfig
+import com.willfp.eco.core.config.readConfig
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.ecopets.EcoPetsPlugin
 import java.io.File
@@ -45,7 +45,7 @@ object Pets {
             removePet(set)
         }
 
-        val petsYml = TransientConfig(File(plugin.dataFolder, "pets.yml"), ConfigType.YAML)
+        val petsYml = File(plugin.dataFolder, "pets.yml").readConfig(ConfigType.YAML)
 
         for ((id, petConfig) in plugin.fetchConfigs("pets")) {
             addNewPet(Pet(id, petConfig, plugin))
