@@ -142,7 +142,7 @@ class PetLevelGUI(
                         if (newPage == 0) {
                             PetsGUI.open(player)
                         } else {
-                            menu.addState(player, pageKey, newPage)
+                            menu.setState(player, pageKey, newPage)
                         }
                     }
                 }
@@ -162,7 +162,7 @@ class PetLevelGUI(
 
                         val newPage = min(pages, page + 1)
 
-                        menu.addState(player, pageKey, newPage)
+                        menu.setState(player, pageKey, newPage)
                     }
                 }
             )

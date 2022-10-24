@@ -148,7 +148,7 @@ object PetsGUI {
 
                         val newPage = max(1, page - 1)
 
-                        menu.addState(player, pageKey, newPage)
+                        menu.setState(player, pageKey, newPage)
                     }
                 }
             )
@@ -172,7 +172,7 @@ object PetsGUI {
 
                         val newPage = min(pages, page + 1)
 
-                        menu.addState(player, pageKey, newPage)
+                        menu.setState(player, pageKey, newPage)
                     }
                 }
             )

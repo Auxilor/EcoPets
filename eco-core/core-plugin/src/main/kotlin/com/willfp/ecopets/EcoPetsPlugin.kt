@@ -77,10 +77,6 @@ class EcoPetsPlugin : LibReforgePlugin() {
         )
     }
 
-    override fun getMinimumEcoVersion(): String {
-        return "6.37.0"
-    }
-
     companion object {
         @JvmStatic
         lateinit var instance: EcoPetsPlugin

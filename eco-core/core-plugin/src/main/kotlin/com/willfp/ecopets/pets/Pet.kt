@@ -172,13 +172,15 @@ class Pet(
             }
         )
 
-        effects = config.getSubsections("effects").mapNotNull {
-            Effects.compile(it, "Pet $id")
-        }.toSet()
+        effects = Effects.compile(
+            config.getSubsections("effects"),
+            "Pet $id"
+        )
 
-        conditions = config.getSubsections("conditions").mapNotNull {
-            Conditions.compile(it, "Pet $id")
-        }.toSet()
+        conditions = Conditions.compile(
+            config.getSubsections("conditions"),
+            "Pet $id"
+        )
 
         for (string in config.getStrings("level-commands")) {
             val split = string.split(":")
