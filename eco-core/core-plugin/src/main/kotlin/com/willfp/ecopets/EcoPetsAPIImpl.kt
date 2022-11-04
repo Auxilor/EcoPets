@@ -17,6 +17,10 @@ internal object EcoPetsAPIImpl : EcoPetsAPI {
 
     override fun getActivePet(player: OfflinePlayer): Pet? = player.activePet
 
+    override fun setActivePet(player: OfflinePlayer, pet: Pet?) {
+        player.activePet = pet
+    }
+
     override fun getPetLevel(player: OfflinePlayer, pet: Pet) = player.getPetLevel(pet)
 
     override fun givePetExperience(player: Player, pet: Pet, amount: Double) =

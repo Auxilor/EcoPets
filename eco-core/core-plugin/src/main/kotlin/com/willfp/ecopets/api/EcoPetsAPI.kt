@@ -10,7 +10,7 @@ interface EcoPetsAPI {
      * Get if a player has a pet.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @return If the player has the pet unlocked
      */
     fun hasPet(
@@ -29,10 +29,21 @@ interface EcoPetsAPI {
     ): Pet?
 
     /**
+     * Set a player's active pet.
+     *
+     * @param player The player.
+     * @param pet The pet.
+     */
+    fun setActivePet(
+        player: OfflinePlayer,
+        pet: Pet?
+    )
+
+    /**
      * Get a player's level of a certain pet.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @return The level.
      */
     fun getPetLevel(
@@ -44,7 +55,7 @@ interface EcoPetsAPI {
      * Give pet experience to a player.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @param amount The amount of experience to give.
      */
     fun givePetExperience(
@@ -56,9 +67,9 @@ interface EcoPetsAPI {
     /**
      * Give pet experience to a player.
      *
-     * @param player           The player.
-     * @param pet              The pet.
-     * @param amount           The amount of experience to give.
+     * @param player The player.
+     * @param pet The pet.
+     * @param amount The amount of experience to give.
      * @param applyMultipliers If multipliers should be applied.
      */
     fun givePetExperience(
@@ -69,10 +80,11 @@ interface EcoPetsAPI {
     )
 
     /**
-     * Get progress to next level between 0 and 1, where 0 is none and 1 is complete.
+     * Get progress to next level between 0 and 1, where 0 is none and 1 is
+     * complete.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @return The progress.
      */
     fun getPetProgress(
@@ -84,7 +96,7 @@ interface EcoPetsAPI {
      * Get the experience required to advance to the next level.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @return The experience required.
      */
     fun getPetXPRequired(
@@ -96,7 +108,7 @@ interface EcoPetsAPI {
      * Get experience to the next level.
      *
      * @param player The player.
-     * @param pet    The pet.
+     * @param pet The pet.
      * @return The experience.
      */
     fun getPetXP(
