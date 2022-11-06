@@ -3,6 +3,9 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
+import com.willfp.eco.core.gui.menu.MenuLayer
+import com.willfp.eco.core.gui.onLeftClick
+import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
@@ -10,63 +13,62 @@ import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.util.NumberUtils
-import org.bukkit.Material
+import com.willfp.ecomponent.components.LevelComponent
+import com.willfp.ecomponent.components.LevelState
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import kotlin.math.ceil
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.properties.Delegates
+
 
 class PetLevelGUI(
     plugin: EcoPlugin,
     private val pet: Pet
 ) {
     private val menu: Menu
-    private val pageKey = "page"
-    private var levelsPerPage by Delegates.notNull<Int>()
-    private var pages by Delegates.notNull<Int>()
-
-    private fun getPage(menu: Menu, player: Player): Int {
-        val page = menu.getState(player, pageKey) ?: 1
-
-        return min(pages, max(page, 1))
-    }
 
     init {
         val maskPattern = plugin.configYml.getStrings("level-gui.mask.pattern").toTypedArray()
         val maskItems = MaskItems.fromItemNames(plugin.configYml.getStrings("level-gui.mask.materials"))
 
-        val progressionOrder = "123456789abcdefghijklmnopqrstuvwxyz"
         val progressionPattern = plugin.configYml.getStrings("level-gui.progression-slots.pattern")
 
-        val progressionSlots = mutableMapOf<Int, Pair<Int, Int>>()
+        val component = object : LevelComponent(progressionPattern, pet.maxLevel) {
+            override fun getLevelItem(player: Player, menu: Menu, level: Int, levelState: LevelState): ItemStack {
+                val key = levelState.name.lowercase().replace("_", "-")
 
-        var x = 0
-        for (row in progressionPattern) {
-            x++
-            var y = 0
-            for (char in row) {
-                y++
-                if (char == '0') {
-                    continue
+                return ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.$key.item")))
+                    .setDisplayName(
+                        plugin.configYml.getFormattedString("level-gui.progression-slots.$key.name")
+                            .replace("%pet%", pet.name)
+                            .replace("%level%", level.toString())
+                            .replace("%level_numeral%", NumberUtils.toNumeral(level))
+                    )
+                    .addLoreLines(
+                        pet.injectPlaceholdersInto(
+                            plugin.configYml.getFormattedStrings("level-gui.progression-slots.$key.lore"),
+                            player,
+                            forceLevel = level
+                        )
+                    )
+                    .setAmount(
+                        if (plugin.configYml.getBool("level-gui.progression-slots.level-as-amount")) level else 1
+                    )
+                    .build()
+            }
+
+            override fun getLevelState(player: Player, level: Int): LevelState {
+                return when {
+                    level <= player.getPetLevel(pet) -> LevelState.UNLOCKED
+                    level == player.getPetLevel(pet) + 1 -> LevelState.IN_PROGRESS
+                    else -> LevelState.LOCKED
                 }
-
-                val pos = progressionOrder.indexOf(char)
-
-                if (pos == -1) {
-                    continue
-                }
-
-                progressionSlots[pos + 1] = Pair(x, y)
             }
         }
 
-        levelsPerPage = progressionSlots.size
-        pages = ceil(pet.maxLevel.toDouble() / levelsPerPage).toInt()
-
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
-            setTitle(pet.name)
+            title = pet.name
+
+            maxPages(component.pages)
+
             setMask(
                 FillerMask(
                     maskItems,
@@ -74,58 +76,11 @@ class PetLevelGUI(
                 )
             )
 
-            for ((level, value) in progressionSlots) {
-                setSlot(
-                    value.first,
-                    value.second,
-                    slot(ItemStack(Material.BLACK_STAINED_GLASS_PANE)) {
-                        setUpdater { player, menu, _ ->
-                            val page = getPage(menu, player)
+            addComponent(1, 1, component)
 
-                            val slotLevel = ((page - 1) * levelsPerPage) + level
-
-                            fun getItem(section: String) =
-                                ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.$section.item")))
-                                    .setDisplayName(
-                                        plugin.configYml.getFormattedString("level-gui.progression-slots.$section.name")
-                                            .replace("%pet%", pet.name)
-                                            .replace("%level%", slotLevel.toString())
-                                            .replace("%level_numeral%", NumberUtils.toNumeral(slotLevel))
-                                    )
-                                    .addLoreLines(
-                                        pet.injectPlaceholdersInto(
-                                            plugin.configYml.getFormattedStrings("level-gui.progression-slots.$section.lore"),
-                                            player,
-                                            forceLevel = slotLevel
-                                        )
-                                    )
-                                    .build()
-
-                            if (slotLevel > pet.maxLevel) {
-                                maskItems.items[0].item
-                            } else {
-                                val item = when {
-                                    slotLevel <= player.getPetLevel(pet) -> {
-                                        getItem("unlocked")
-                                    }
-                                    slotLevel == player.getPetLevel(pet) + 1 -> {
-                                        getItem("in-progress")
-                                    }
-                                    else -> {
-                                        getItem("locked")
-                                    }
-                                }
-
-                                if (plugin.configYml.getBool("level-gui.progression-slots.level-as-amount")) {
-                                    item.amount = slotLevel
-                                }
-                                item
-                            }
-                        }
-                    }
-                )
-            }
-            setSlot(
+            // Instead of the page changer, this will show up when on the first page
+            addComponent(
+                MenuLayer.LOWER,
                 plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.row"),
                 plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.column"),
                 slot(
@@ -133,39 +88,32 @@ class PetLevelGUI(
                         .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.prev-page.name"))
                         .build()
                 ) {
-                    onLeftClick { event, _, menu ->
-                        val player = event.whoClicked as Player
-                        val page = getPage(menu, player)
-
-                        val newPage = max(0, page - 1)
-
-                        if (newPage == 0) {
-                            PetsGUI.open(player)
-                        } else {
-                            menu.setState(player, pageKey, newPage)
-                        }
-                    }
+                    onLeftClick { player, _, _, _ -> PetsGUI.open(player) }
                 }
             )
-            setSlot(
+
+            addComponent(
+                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.row"),
+                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.column"),
+                PageChanger(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.prev-page.material")))
+                        .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.prev-page.name"))
+                        .build(),
+                    PageChanger.Direction.BACKWARDS
+                )
+            )
+
+            addComponent(
                 plugin.configYml.getInt("level-gui.progression-slots.next-page.location.row"),
                 plugin.configYml.getInt("level-gui.progression-slots.next-page.location.column"),
-                slot(
+                PageChanger(
                     ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.next-page.material")))
                         .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.next-page.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _, menu ->
-                        val player = event.whoClicked as Player
-
-                        val page = getPage(menu, player)
-
-                        val newPage = min(pages, page + 1)
-
-                        menu.setState(player, pageKey, newPage)
-                    }
-                }
+                        .build(),
+                    PageChanger.Direction.FORWARDS
+                )
             )
+
             setSlot(
                 plugin.configYml.getInt("level-gui.progression-slots.close.location.row"),
                 plugin.configYml.getInt("level-gui.progression-slots.close.location.column"),
@@ -190,5 +138,7 @@ class PetLevelGUI(
         }
     }
 
-    fun open(player: Player) = menu.open(player)
+    fun open(player: Player) {
+        menu.open(player)
+    }
 }

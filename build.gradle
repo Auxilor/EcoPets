@@ -43,12 +43,14 @@ allprojects {
 
     shadowJar {
         relocate('com.willfp.libreforge', 'com.willfp.ecopets.libreforge')
+        relocate('com.willfp.ecomponent', 'com.willfp.ecopets.ecomponent')
         relocate('org.joml', 'com.willfp.ecopets.libreforge.joml')
     }
 
     dependencies {
         compileOnly 'com.willfp:eco:6.44.0'
         implementation 'com.willfp:libreforge:3.117.0'
+        implementation 'com.willfp:ecomponent:1.0.0'
         implementation 'org.joml:joml:1.10.4'
 
         compileOnly 'org.jetbrains:annotations:23.0.0'
