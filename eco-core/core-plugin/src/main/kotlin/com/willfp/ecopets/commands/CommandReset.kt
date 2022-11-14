@@ -49,14 +49,11 @@ class CommandReset(plugin: EcoPlugin) : Subcommand(plugin, "reset", "ecopets.com
             return
         }
 
-        if (player.activePet == pet) {
-            player.activePet = null
-        }
         player.setPetXP(pet, 0.0)
-        player.setPetLevel(pet, 0)
+        player.setPetLevel(pet, 1)
 
         sender.sendMessage(
-            plugin.langYml.getMessage("reset-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+            plugin.langYml.getMessage("reset", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%player%", player.savedDisplayName)
                 .replace("%pet%", pet.name)
         )

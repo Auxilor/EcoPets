@@ -34,6 +34,8 @@ messages:
   no-pet-active: "&cYou don't have a pet active!"
   activated-pet: "&fYou have activated the %pet%&f pet!"
   deactivated-pet: "&fYou have deactivated the %pet%&f pet!"
+  cannot-take-out: "&cYou cannot take this pet out!"
+  take-pet: "&fYou have taken %player%&f's %pet%&f XP!"
 
 menu:
   title: "Pets"

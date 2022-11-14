@@ -92,7 +92,7 @@ entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0=
 
 spawn-egg:
-  enabled: true # If the pet should have a spawn egg
+  enabled: true
   item: magma_cube_spawn_egg unbreaking:1 hide_enchants
   name: "&6Mancubus&f Spawn Egg"
   lore:
@@ -101,4 +101,17 @@ spawn-egg:
     - "&8&ounlock the &r&6Mancubus&8&o pet!"
   craftable: false
   recipe: [ ]
-  # recipe-permission: ecopets.craft.mancubus
+  recipe-permission: ecopets.craft.mancubus
+inventory-item:
+  enabled: true
+  item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
+  name: "&6Mancubus &fPet &7(%level%)"
+  lore:
+    - "%description%"
+    - "&f"
+    - "&fEffects:"
+    - "%effects%"
+    - ""
+    - "&fProgress:"
+    - "&8» &e%percentage_progress%%"
+    - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
