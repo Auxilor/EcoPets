@@ -9,7 +9,9 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import java.util.UUID
 import kotlin.math.PI
 import kotlin.math.abs
@@ -45,17 +47,7 @@ class PetDisplay(
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
             if (location.world != null) {
-                try {
-                    stand.teleport(location)
-                } catch (_: Throwable) {
-                    /*
-                    For anyone reading - I KNOW TO NEVER CATCH THROWABLE
-                    but NMS is really stupid and does this sometimes:
-                    java.lang.Throwable: null
-	                at net.minecraft.world.entity.Entity.teleportTo(Entity.java:3336) ~[paper-1.19.2.jar:git-Paper-186]
-	                so I guess that's what has to be done. Not sure what the actual cause is.
-                     */
-                }
+                stand.teleport(location)
             }
 
             if (!pet.entityTexture.contains(":")) {
@@ -117,10 +109,25 @@ class PetDisplay(
         trackedEntities.clear()
     }
 
+
+    private fun remove(player: Player) {
+        trackedEntities[player.uniqueId]?.stand?.remove()
+        trackedEntities.remove(player.uniqueId)
+    }
+
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-        trackedEntities[event.player.uniqueId]?.stand?.remove()
-        trackedEntities.remove(event.player.uniqueId)
+        remove(event.player)
+    }
+
+    @EventHandler
+    fun onTeleport(event: PlayerTeleportEvent) {
+        remove(event.player)
+    }
+
+    @EventHandler
+    fun onChangedWorld(event: PlayerChangedWorldEvent) {
+        remove(event.player)
     }
 
     private data class PetArmorStand(

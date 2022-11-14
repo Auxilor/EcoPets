@@ -48,7 +48,8 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet): ArmorStand {
         stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
     }
 
-    stand.isCustomNameVisible = true
+    stand.isCustomNameVisible = pet.name != ""
+
     stand.customName = pet.name
 
     return stand

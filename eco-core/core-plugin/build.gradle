@@ -7,7 +7,7 @@ dependencies {
     compileOnly 'net.kyori:adventure-api:4.10.1'
     compileOnly 'net.essentialsx:EssentialsX:2.19.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.6'
-    compileOnly 'com.ticxo.modelengine:api:R3.0.0'
+    compileOnly 'com.ticxo.modelengine:api:R3.0.1'
 }
 
 build.dependsOn publishToMavenLocal
