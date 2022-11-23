@@ -40,7 +40,7 @@ class PetDisplay(
                 .replace("%player%", player.displayName)
                 .replace("%pet%", pet.name)
                 .replace("%level%", player.getPetLevel(pet).toString())
-                .formatEco(player)
+                .formatEco(player, true)
 
             val location = getLocation(player)
 
