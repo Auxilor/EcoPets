@@ -41,7 +41,7 @@ class EcoPetsPlugin : LibReforgePlugin() {
     }
 
     override fun handleReloadAdditional() {
-        if (this.configYml.getBool("pet-entity.enabled")) {
+        if (!this.configYml.getBool("pet-entity.enabled")) {
             return
         }
 
