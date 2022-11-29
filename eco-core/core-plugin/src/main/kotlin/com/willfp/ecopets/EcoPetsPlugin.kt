@@ -41,6 +41,10 @@ class EcoPetsPlugin : LibReforgePlugin() {
     }
 
     override fun handleReloadAdditional() {
+        if (this.configYml.getBool("pet-entity.enabled")) {
+            return
+        }
+
         this.scheduler.runTimer(1, 1) {
             petDisplay.tickAll()
         }
