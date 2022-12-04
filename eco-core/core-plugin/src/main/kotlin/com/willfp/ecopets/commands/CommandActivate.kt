@@ -53,7 +53,7 @@ class CommandActivate(plugin: EcoPlugin) : Subcommand(plugin, "activate", "ecope
 
         if (args.size == 1) {
             StringUtil.copyPartialMatches(
-                args[1],
+                args[0],
                 Pets.values().filter { sender.hasPet(it) }.map { it.id },
                 completions
             )

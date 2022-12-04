@@ -217,6 +217,7 @@ level-gui:
   custom-slots: [ ]
 
 pet-entity:
+  enabled: true # If you disable this, there will be no floating pets
   name: "%player%&f's %pet%&f (Lvl. %level%)"
 
 level-up:
