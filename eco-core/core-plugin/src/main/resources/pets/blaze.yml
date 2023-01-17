@@ -58,14 +58,14 @@ level-placeholders:
     value: "%level% * 2"
 effects-description:
   1:
-    - "&6Â» &7Increased XP gain by %xp_multiplier%%!"
-rewards-description: []
-level-up-messages: []
+    - "&6» &7Increased XP gain by %xp_multiplier%%!"
+rewards-description:
+  1:
+    - "&6» &7Increased XP gain by %xp_multiplier%%!"
+level-up-messages:
+  1:
+    - "&6» &7Increased XP gain by %xp_multiplier%%!"
 level-commands: []
-effects:
-  - id: xp_multiplier
-    args:
-      multiplier: "%level% * 0.02 + 1"
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
 spawn-egg:
