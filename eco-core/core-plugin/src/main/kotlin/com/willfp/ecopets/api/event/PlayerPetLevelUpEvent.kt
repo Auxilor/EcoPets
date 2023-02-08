@@ -1,16 +1,15 @@
 package com.willfp.ecopets.api.event
 
-import org.bukkit.entity.Player
 import com.willfp.ecopets.pets.Pet
-import org.bukkit.event.player.PlayerEvent
+import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
-import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
+import org.bukkit.event.player.PlayerEvent
 
 class PlayerPetLevelUpEvent(
     who: Player,
-    val pet: Pet,
+    override val pet: Pet,
     val level: Int
-) : PlayerEvent(who) {
+) : PlayerEvent(who), PetEvent {
     override fun getHandlers(): HandlerList {
         return handlerList
     }

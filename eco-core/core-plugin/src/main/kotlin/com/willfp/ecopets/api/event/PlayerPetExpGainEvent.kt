@@ -1,18 +1,17 @@
 package com.willfp.ecopets.api.event
 
-import org.bukkit.entity.Player
 import com.willfp.ecopets.pets.Pet
-import org.bukkit.event.player.PlayerEvent
-import org.bukkit.event.HandlerList
-import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
+import org.bukkit.event.HandlerList
+import org.bukkit.event.player.PlayerEvent
 
 class PlayerPetExpGainEvent(
     who: Player,
-    val pet: Pet,
+    override val pet: Pet,
     var amount: Double,
     val isMultiply: Boolean
-) : PlayerEvent(who), Cancellable {
+) : PlayerEvent(who), Cancellable, PetEvent {
     private var cancelled = false
 
     override fun setCancelled(cancel: Boolean) {
