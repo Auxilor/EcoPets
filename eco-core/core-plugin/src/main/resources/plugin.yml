@@ -7,8 +7,6 @@ website: willfp.com
 load: STARTUP
 depend:
   - eco
-  - ProtocolLib
-  - PlaceholderAPI
 softdepend:
   - AureliumSkills
   - Vault
