@@ -33,8 +33,8 @@ object PetsGUI {
         val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
 
         petAreaSlots.clear()
-        for (row in topLeftRow..bottomRightRow) {
-            for (column in topLeftColumn..bottomRightColumn) {
+        for (row in topLeftRow .. bottomRightRow) {
+            for (column in topLeftColumn .. bottomRightColumn) {
                 petAreaSlots.add(Pair(row, column))
             }
         }
@@ -71,7 +71,7 @@ object PetsGUI {
 
             setMask(
                 FillerMask(
-                    MaskItems.fromItemNames(plugin  .configYml.getStrings("gui.mask.materials")),
+                    MaskItems.fromItemNames(plugin.configYml.getStrings("gui.mask.materials")),
                     *plugin.configYml.getStrings("gui.mask.pattern").toTypedArray()
                 )
             )
@@ -86,7 +86,7 @@ object PetsGUI {
 
             for ((index, pair) in petAreaSlots.withIndex()) {
                 val (row, column) = pair
-                setSlot(row, column, slot({ player, menu ->  petIconBuilder(player, menu, index) }) {
+                setSlot(row, column, slot({ player, menu -> petIconBuilder(player, menu, index) }) {
                     setUpdater { player, menu, _ ->
                         petIconBuilder(player, menu, index)
                     }
@@ -122,9 +122,11 @@ object PetsGUI {
             setSlot(
                 plugin.configYml.getInt("gui.prev-page.location.row"),
                 plugin.configYml.getInt("gui.prev-page.location.column"),
-                slot(ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
-                    .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
-                    .build())
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
+                        .build()
+                )
                 {
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
@@ -144,9 +146,11 @@ object PetsGUI {
             setSlot(
                 plugin.configYml.getInt("gui.next-page.location.row"),
                 plugin.configYml.getInt("gui.next-page.location.column"),
-                slot(                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
-                    .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
-                    .build())
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
+                        .build()
+                )
                 {
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
