@@ -3,9 +3,8 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
-import com.willfp.eco.core.gui.menu.MenuLayer
 import com.willfp.eco.core.gui.page.Page
-import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.page.PageChangeEvent
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
@@ -24,17 +23,6 @@ import kotlin.math.min
 object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
-    private const val pageKey = "page"
-
-    private fun getPage(menu: Menu, player: Player): Int {
-        val pages = ceil(Pets.values()
-            .filter { player.getPetLevel(it) > 0 }
-            .size.toDouble() / petAreaSlots.size).toInt()
-
-        val page = menu.getState(player, pageKey) ?: 1
-
-        return max(min(pages, page + 1), 1)
-    }
 
     @JvmStatic
     @ConfigUpdater
@@ -66,13 +54,13 @@ object PetsGUI {
         }
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
-            val page = getPage(menu, player)
+            val page = menu.getPage(player)
 
             val unlockedPets = Pets.values()
                 .sortedByDescending { player.getPetLevel(it) }
                 .filter { player.getPetLevel(it) > 0 }
 
-            val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+            val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
 
             val pet = unlockedPets.getOrNull(pagedIndex)
             pet?.getIcon(player) ?: ItemStack(Material.AIR)
@@ -83,12 +71,14 @@ object PetsGUI {
 
             setMask(
                 FillerMask(
-                    MaskItems.fromItemNames(plugin.configYml.getStrings("gui.mask.materials")),
+                    MaskItems.fromItemNames(plugin  .configYml.getStrings("gui.mask.materials")),
                     *plugin.configYml.getStrings("gui.mask.pattern").toTypedArray()
                 )
             )
 
             onRender { player, menu ->
+                menu.setState(player, "ecopets", true)
+
                 if (menu.getPage(player) > menu.getMaxPage(player)) {
                     menu.setState(player, Page.PAGE_KEY, 1)
                 }
@@ -109,7 +99,7 @@ object PetsGUI {
                             .sortedByDescending { player.getPetLevel(it) }
                             .filter { player.getPetLevel(it) > 0 }
 
-                        val pagedIndex = ((page - 1) * petAreaSlots.size) + index
+                        val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
 
                         val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
 
@@ -127,6 +117,52 @@ object PetsGUI {
                 })
             }
 
+            // I do this for backwards compatibility because with PageChanger if you don't have any more pages, the item will disappear and this would require an update of the config for all users
+            // This is terrible imo, but everything for compatibility!
+            setSlot(
+                plugin.configYml.getInt("gui.prev-page.location.row"),
+                plugin.configYml.getInt("gui.prev-page.location.column"),
+                slot(ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
+                    .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
+                    .build())
+                {
+                    onLeftClick { event, _, _ ->
+                        val player = event.whoClicked as Player
+                        val page = menu.getPage(player)
+                        val newPage = max(1, min(page + -1, menu.getMaxPage(player)))
+
+                        if (newPage == page) {
+                            return@onLeftClick
+                        }
+
+                        menu.setState(player, Page.PAGE_KEY, newPage)
+                        menu.callEvent(player, PageChangeEvent(newPage, page))
+                    }
+                }
+            )
+
+            setSlot(
+                plugin.configYml.getInt("gui.next-page.location.row"),
+                plugin.configYml.getInt("gui.next-page.location.column"),
+                slot(                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
+                    .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
+                    .build())
+                {
+                    onLeftClick { event, _, _ ->
+                        val player = event.whoClicked as Player
+                        val page = menu.getPage(player)
+                        val newPage = max(1, min(page + 1, menu.getMaxPage(player)))
+
+                        if (newPage == page) {
+                            return@onLeftClick
+                        }
+
+                        menu.setState(player, Page.PAGE_KEY, newPage)
+                        menu.callEvent(player, PageChangeEvent(newPage, page))
+                    }
+                }
+            )
+
             setSlot(
                 plugin.configYml.getInt("gui.pet-info.row"),
                 plugin.configYml.getInt("gui.pet-info.column"),
@@ -136,30 +172,6 @@ object PetsGUI {
                         player.activePet?.levelGUI?.open(player)
                     }
                 }
-            )
-
-            addComponent(
-                MenuLayer.TOP,
-                plugin.configYml.getInt("gui.prev-page.location.row"),
-                plugin.configYml.getInt("gui.prev-page.location.column"),
-                PageChanger(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
-                        .build(),
-                    PageChanger.Direction.BACKWARDS
-                )
-            )
-
-            addComponent(
-                MenuLayer.TOP,
-                plugin.configYml.getInt("gui.next-page.location.row"),
-                plugin.configYml.getInt("gui.next-page.location.column"),
-                PageChanger(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
-                        .build(),
-                    PageChanger.Direction.FORWARDS
-                )
             )
 
             setSlot(plugin.configYml.getInt("gui.close.location.row"),
