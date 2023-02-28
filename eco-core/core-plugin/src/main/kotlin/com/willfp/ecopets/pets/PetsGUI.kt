@@ -3,6 +3,9 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
+import com.willfp.eco.core.gui.menu.MenuLayer
+import com.willfp.eco.core.gui.page.Page
+import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
@@ -55,14 +58,11 @@ object PetsGUI {
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 
-            if (pet == null) {
-                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.pet-info.no-active.item")))
+            pet?.getPetInfoIcon(player)
+                ?: ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.pet-info.no-active.item")))
                     .setDisplayName(plugin.configYml.getFormattedString("gui.pet-info.no-active.name"))
                     .addLoreLines(plugin.configYml.getFormattedStrings("gui.pet-info.no-active.lore"))
                     .build()
-            } else {
-                pet.getPetInfoIcon(player)
-            }
         }
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
@@ -79,7 +79,7 @@ object PetsGUI {
         }
 
         return menu(plugin.configYml.getInt("gui.rows")) {
-            setTitle(plugin.langYml.getString("menu.title"))
+            title = plugin.langYml.getString("menu.title")
 
             setMask(
                 FillerMask(
@@ -88,29 +88,22 @@ object PetsGUI {
                 )
             )
 
-            setSlot(
-                plugin.configYml.getInt("gui.pet-info.row"),
-                plugin.configYml.getInt("gui.pet-info.column"),
-                slot(petInfoItemBuilder) {
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        player.activePet?.levelGUI?.open(player)
-                    }
+            onRender { player, menu ->
+                if (menu.getPage(player) > menu.getMaxPage(player)) {
+                    menu.setState(player, Page.PAGE_KEY, 1)
                 }
-            )
+            }
 
             for ((index, pair) in petAreaSlots.withIndex()) {
                 val (row, column) = pair
-
-                setSlot(row, column, slot({ p, m -> petIconBuilder(p, m, index) }) {
-                    setUpdater { p, m, _ ->
-                        petIconBuilder(p, m, index)
+                setSlot(row, column, slot({ player, menu ->  petIconBuilder(player, menu, index) }) {
+                    setUpdater { player, menu, _ ->
+                        petIconBuilder(player, menu, index)
                     }
 
                     onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
-
-                        val page = getPage(menu, player)
+                        val page = menu.getPage(player)
 
                         val unlockedPets = Pets.values()
                             .sortedByDescending { player.getPetLevel(it) }
@@ -135,46 +128,38 @@ object PetsGUI {
             }
 
             setSlot(
-                plugin.configYml.getInt("gui.prev-page.location.row"),
-                plugin.configYml.getInt("gui.prev-page.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _, menu ->
+                plugin.configYml.getInt("gui.pet-info.row"),
+                plugin.configYml.getInt("gui.pet-info.column"),
+                slot(petInfoItemBuilder) {
+                    onLeftClick { event, _, _ ->
                         val player = event.whoClicked as Player
-                        val page = getPage(menu, player)
-
-                        val newPage = max(1, page - 1)
-
-                        menu.setState(player, pageKey, newPage)
+                        player.activePet?.levelGUI?.open(player)
                     }
                 }
             )
 
-            setSlot(
+            addComponent(
+                MenuLayer.TOP,
+                plugin.configYml.getInt("gui.prev-page.location.row"),
+                plugin.configYml.getInt("gui.prev-page.location.column"),
+                PageChanger(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
+                        .build(),
+                    PageChanger.Direction.BACKWARDS
+                )
+            )
+
+            addComponent(
+                MenuLayer.TOP,
                 plugin.configYml.getInt("gui.next-page.location.row"),
                 plugin.configYml.getInt("gui.next-page.location.column"),
-                slot(
+                PageChanger(
                     ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
                         .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _, menu ->
-                        val player = event.whoClicked as Player
-
-                        val pages = ceil(Pets.values()
-                            .filter { player.getPetLevel(it) > 0 }
-                            .size.toDouble() / petAreaSlots.size).toInt()
-
-                        val page = getPage(menu, player)
-
-                        val newPage = min(pages, page + 1)
-
-                        menu.setState(player, pageKey, newPage)
-                    }
-                }
+                        .build(),
+                    PageChanger.Direction.FORWARDS
+                )
             )
 
             setSlot(plugin.configYml.getInt("gui.close.location.row"),
@@ -208,6 +193,21 @@ object PetsGUI {
                     config.getInt("column"),
                     ConfigSlot(config)
                 )
+            }
+
+            maxPages { player ->
+                val unlockedPets = Pets.values()
+                    .sortedByDescending { player.getPetLevel(it) }
+                    .filter { player.getPetLevel(it) > 0 }
+
+                val perPage = petAreaSlots.size
+
+                val pages = if (unlockedPets.isEmpty()) {
+                    0
+                } else {
+                    ceil((unlockedPets.size.toDouble() / perPage)).toInt()
+                }
+                pages
             }
         }
     }
