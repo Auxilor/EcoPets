@@ -21,6 +21,9 @@ softdepend:
   - EcoSkills
   - Reforges
   - ModelEngine
+loadbefore:
+  - EcoEnchants
+
 commands:
   ecopets:
     description: Base Command
