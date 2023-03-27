@@ -64,30 +64,41 @@ xp-gain-methods:
 level-placeholders:
   - id: "multiplier"
     value: "%level%"
+  - id: "grace_level"
+    value: "floor(%level%/10)"
 
 effects-description:
   1:
     - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
     - "   &8melee damage when in water"
-  2:
-    - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
-    - "   &8movement speed when in water"
+  10:
+    - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
+    - "   &8melee damage when in water"
+    - ""
+    - "&8» &8Gives a &aDolphins Grace %grace_level%"
+    - "   &8potion effect in water"
 
 rewards-description:
   1:
     - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
     - "   &8melee damage when in water"
-  2:
-    - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
-    - "   &8movement speed when in water"
+  10:
+    - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
+    - "   &8melee damage when in water"
+    - ""
+    - "&8» &8Gives a &aDolphins Grace %grace_level%"
+    - "   &8potion effect in water"
 
 level-up-messages:
   1:
     - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
     - "   &8melee damage when in water"
-  2:
-    - "&8» &8Gives a &a+%multiply_velocity%%&8 bonus to"
-    - "   &8movement speed when in water"
+  10:
+    - "&8» &8Gives a &a+%multiplier%%&8 bonus to"
+    - "   &8melee damage when in water"
+    - ""
+    - "&8» &8Gives a &aDolphins Grace %grace_level%"
+    - "   &8potion effect in water"
 
 level-commands: [ ]
 
@@ -97,9 +108,10 @@ effects:
       multiplier: "%level% * 0.01 + 1"
     triggers:
       - melee_attack
-  - id: movement_speed_multiplier
+  - id: permanent_potion_effect
     args:
-      multiplier: "%level% * 1.3 + 1"
+      effect: dolphins_grace
+      level: floor(%level% / 10)
 
 conditions:
   - id: in_water
