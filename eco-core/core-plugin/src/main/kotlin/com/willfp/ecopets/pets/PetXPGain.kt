@@ -26,19 +26,23 @@ object PetTriggerXPGainListener : Listener {
 
         val pet = event.player.activePet ?: return
 
-        val xpGain = pet.getPetXPGain(trigger) ?: return
+        val xpGains = pet.getPetXPGain(trigger)
 
-        if (xpGain.conditions.any { !it.isMet(player) }) {
-            return
+        if (xpGains.isEmpty()) return
+
+        xpGains.filterNot { xpGain ->
+            xpGain.conditions.any { !it.isMet(player) }
+        }.filter {
+            Filters.passes(data, it.filters)
         }
 
-        if (!Filters.passes(data, xpGain.filters)) {
-            return
-        }
+        if (xpGains.isEmpty()) return
 
-        player.givePetExperience(
-            pet,
-            value * xpGain.multiplier
-        )
+        for (xpGain in xpGains) {
+            player.givePetExperience(
+                pet,
+                value * xpGain.multiplier
+            )
+        }
     }
 }

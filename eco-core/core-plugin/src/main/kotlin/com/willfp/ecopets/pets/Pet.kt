@@ -155,13 +155,13 @@ class Pet(
         val conditions = it.getSubsections("conditions")
             .mapNotNull { cfg -> Conditions.compile(cfg, "Pet $id XP Gain methods") }
 
-        trigger to PetXPGain(
+        PetXPGain(
             trigger,
             multiplier,
             conditions,
             it.getSubsection("filters")
         )
-    }.toMap()
+    }
 
     init {
         config.injectPlaceholders(
@@ -405,8 +405,8 @@ class Pet(
         }
     }
 
-    fun getPetXPGain(trigger: Trigger): PetXPGain? {
-        return petXpGains[trigger]
+    fun getPetXPGain(trigger: Trigger): List<PetXPGain> {
+        return petXpGains.filter { it.trigger == trigger }
     }
 
     override fun equals(other: Any?): Boolean {
