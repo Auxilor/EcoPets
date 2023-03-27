@@ -14,6 +14,7 @@ import com.willfp.eco.core.placeholder.PlayerStaticPlaceholder
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
+import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
@@ -27,7 +28,6 @@ import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.counters.Counters
 import com.willfp.libreforge.effects.EffectList
 import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.triggers.Trigger
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -349,6 +349,14 @@ class Pet(
         return processed.flatten().formatEco(player)
     }
 
+    override fun onRegister() {
+        petXpGains.forEach { it.bind(PetXPAccumulator(this)) }
+    }
+
+    override fun onRemove() {
+        petXpGains.forEach { it.unbind() }
+    }
+
     fun getIcon(player: Player): ItemStack {
         val base = baseItem.clone()
 
@@ -397,6 +405,10 @@ class Pet(
         for (command in commands) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.name))
         }
+    }
+
+    override fun getID(): String {
+        return this.id
     }
 
     override fun equals(other: Any?): Boolean {
@@ -486,7 +498,7 @@ private val expMultiplierCache = Caffeine.newBuilder()
     }
 
 val Player.petExperienceMultiplier: Double
-    get() = expMultiplierCache.get(this)
+    get() = expMultiplierCache.get(this)!!
 
 private fun Player.cacheSkillExperienceMultiplier(): Double {
     if (this.hasPermission("ecopets.xpmultiplier.quadruple")) {

@@ -8,7 +8,7 @@ import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
-import com.willfp.ecopets.pets.PetTriggerXPGainListener
+import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
@@ -16,6 +16,7 @@ import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.registerHolderProvider
 import org.bukkit.event.Listener
 
@@ -29,6 +30,12 @@ class EcoPetsPlugin : LibreforgePlugin() {
                 listOf(SimpleProvidedHolder(l))
             } ?: emptyList()
         }
+    }
+
+    override fun loadConfigCategories(): List<ConfigCategory> {
+        return listOf(
+            Pets
+        )
     }
 
     override fun handleEnable() {
@@ -77,7 +84,6 @@ class EcoPetsPlugin : LibreforgePlugin() {
     override fun loadListeners(): List<Listener> {
         return listOf(
             PetLevelListener(this),
-            PetTriggerXPGainListener,
             SpawnEggHandler(this),
             petDisplay,
             DiscoverRecipeListener(this)
@@ -89,4 +95,3 @@ class EcoPetsPlugin : LibreforgePlugin() {
         lateinit var instance: EcoPetsPlugin
     }
 }
-

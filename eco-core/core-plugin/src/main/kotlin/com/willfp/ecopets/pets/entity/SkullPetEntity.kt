@@ -14,6 +14,7 @@ class SkullPetEntity(pet: Pet) : PetEntity(pet) {
             .setSkullTexture(pet.entityTexture)
             .build()
 
+        @Suppress("UNNECESSARY_SAFE_CALL") // Can be null.
         stand.equipment?.helmet = skull
 
         return stand
