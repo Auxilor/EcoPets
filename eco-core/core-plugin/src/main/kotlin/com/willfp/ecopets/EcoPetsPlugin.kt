@@ -3,8 +3,7 @@ package com.willfp.ecopets
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
-import com.willfp.eco.util.toSingletonList
-import com.willfp.ecopets.commands.CommandEcopets
+import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
@@ -15,20 +14,24 @@ import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
-import com.willfp.libreforge.LibReforgePlugin
+import com.willfp.libreforge.SimpleProvidedHolder
+import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.registerHolderProvider
 import org.bukkit.event.Listener
 
-class EcoPetsPlugin : LibReforgePlugin() {
+class EcoPetsPlugin : LibreforgePlugin() {
     private val petDisplay = PetDisplay(this)
 
     init {
         instance = this
-        registerHolderProvider { it.activePetLevel?.toSingletonList() ?: emptyList() }
+        registerHolderProvider {
+            it.activePetLevel?.let { l ->
+                listOf(SimpleProvidedHolder(l))
+            } ?: emptyList()
+        }
     }
 
-    override fun handleEnableAdditional() {
-        this.copyConfigs("pets")
-
+    override fun handleEnable() {
         PlayerPlaceholder(
             this,
             "pet"
@@ -40,7 +43,7 @@ class EcoPetsPlugin : LibReforgePlugin() {
         ) { it.activePet?.id ?: "" }.register()
     }
 
-    override fun handleReloadAdditional() {
+    override fun handleReload() {
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return
         }
@@ -50,11 +53,11 @@ class EcoPetsPlugin : LibReforgePlugin() {
         }
     }
 
-    override fun handleDisableAdditional() {
+    override fun handleDisable() {
         petDisplay.shutdown()
     }
 
-    override fun loadAdditionalIntegrations(): List<IntegrationLoader> {
+    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("ModelEngine") {
                 PetEntity.registerPetEntity("modelengine") { pet, id ->
@@ -66,7 +69,7 @@ class EcoPetsPlugin : LibReforgePlugin() {
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcopets(this),
+            CommandEcoPets(this),
             CommandPets(this)
         )
     }

@@ -1,16 +1,20 @@
 package com.willfp.ecopets.pets
 
-import com.google.common.collect.BiMap
-import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
-import com.willfp.eco.core.config.ConfigType
-import com.willfp.eco.core.config.readConfig
-import com.willfp.eco.core.config.updating.ConfigUpdater
+import com.willfp.eco.core.config.interfaces.Config
+import com.willfp.eco.core.registry.Registry
 import com.willfp.ecopets.EcoPetsPlugin
-import java.io.File
+import com.willfp.libreforge.loader.LibreforgePlugin
+import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.loader.configs.LegacyLocation
 
-object Pets {
-    private val BY_ID: BiMap<String, Pet> = HashBiMap.create()
+object Pets : ConfigCategory("pet", "pets") {
+    private val registry = Registry<Pet>()
+
+    override val legacyLocation = LegacyLocation(
+        "pets.yml",
+        "pets"
+    )
 
     /**
      * Get all registered [Pet]s.
@@ -19,7 +23,7 @@ object Pets {
      */
     @JvmStatic
     fun values(): List<Pet> {
-        return ImmutableList.copyOf(BY_ID.values)
+        return ImmutableList.copyOf(registry.values())
     }
 
     /**
@@ -30,50 +34,14 @@ object Pets {
      */
     @JvmStatic
     fun getByID(name: String): Pet? {
-        return BY_ID[name]
+        return registry[name]
     }
 
-    /**
-     * Update all [Pet]s.
-     *
-     * @param plugin Instance of EcoPets.
-     */
-    @ConfigUpdater
-    @JvmStatic
-    fun update(plugin: EcoPetsPlugin) {
-        for (set in values()) {
-            removePet(set)
-        }
-
-        val petsYml = File(plugin.dataFolder, "pets.yml").readConfig(ConfigType.YAML)
-
-        for ((id, petConfig) in plugin.fetchConfigs("pets")) {
-            addNewPet(Pet(id, petConfig, plugin))
-        }
-
-        for (petConfig in petsYml.getSubsections("pets")) {
-            addNewPet(Pet(petConfig.getString("id"), petConfig, plugin))
-        }
+    override fun clear(plugin: LibreforgePlugin) {
+        registry.clear()
     }
 
-    /**
-     * Add new [Pet] to EcoPets.
-     *
-     * @param pet The [Pet] to add.
-     */
-    @JvmStatic
-    fun addNewPet(pet: Pet) {
-        BY_ID.remove(pet.id)
-        BY_ID[pet.id] = pet
-    }
-
-    /**
-     * Remove [Pet] from EcoPets.
-     *
-     * @param pet The [Pet] to remove.
-     */
-    @JvmStatic
-    fun removePet(pet: Pet) {
-        BY_ID.remove(pet.id)
+    override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
+        registry.register(Pet(id, config, plugin as EcoPetsPlugin))
     }
 }
