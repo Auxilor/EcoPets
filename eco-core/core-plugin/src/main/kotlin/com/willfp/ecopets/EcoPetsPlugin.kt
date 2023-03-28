@@ -25,11 +25,6 @@ class EcoPetsPlugin : LibreforgePlugin() {
 
     init {
         instance = this
-        registerHolderProvider {
-            it.activePetLevel?.let { l ->
-                listOf(SimpleProvidedHolder(l))
-            } ?: emptyList()
-        }
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
@@ -39,6 +34,12 @@ class EcoPetsPlugin : LibreforgePlugin() {
     }
 
     override fun handleEnable() {
+        registerHolderProvider {
+            it.activePetLevel?.let { l ->
+                listOf(SimpleProvidedHolder(l))
+            } ?: emptyList()
+        }
+
         PlayerPlaceholder(
             this,
             "pet"
