@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.EcoPlugin
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import org.bukkit.Bukkit
@@ -48,7 +49,11 @@ class PetDisplay(
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
             if (location.world != null) {
-                stand.teleport(location)
+                if (Prerequisite.HAS_FOLIA.isMet) {
+                    stand.teleportAsync(location)
+                } else {
+                    stand.teleport(location)
+                }
             }
 
             if (!pet.entityTexture.contains(":")) {

@@ -4,6 +4,7 @@ main: com.willfp.ecopets.EcoPetsPlugin
 api-version: 1.17
 authors: [ Auxilor ]
 website: willfp.com
+folia-supported: true
 depend:
   - eco
 softdepend:
