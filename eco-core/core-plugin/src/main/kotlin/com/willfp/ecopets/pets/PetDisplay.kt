@@ -110,8 +110,12 @@ class PetDisplay(
     }
 
     fun shutdown() {
-        for (stand in trackedEntities.values) {
-            stand.stand.remove()
+        for (player in Bukkit.getOnlinePlayers()) {
+            for (stand in trackedEntities.values) {
+                plugin.scheduler.run(player.location) {
+                    stand.stand.remove()
+                }
+            }
         }
 
         trackedEntities.clear()
