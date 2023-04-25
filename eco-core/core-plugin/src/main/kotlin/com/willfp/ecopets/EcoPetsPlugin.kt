@@ -52,7 +52,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Triggers.register(TriggerGainPetXp)
         Triggers.register(TriggerLevelUpPet)
         Filters.register(FilterPet)
-        
+
         registerHolderProvider {
             it.activePetLevel?.let { l ->
                 listOf(SimpleProvidedHolder(l))
@@ -75,8 +75,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
             return
         }
 
-
-        petDisplay.tickAll()
+        this.scheduler.runTimerAsync(1, 1) { petDisplay.tickAll() }
     }
 
     override fun handleDisable() {
