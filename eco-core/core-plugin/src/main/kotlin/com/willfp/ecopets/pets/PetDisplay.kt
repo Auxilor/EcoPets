@@ -26,7 +26,9 @@ class PetDisplay(
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            tickPlayer(player)
+            plugin.scheduler.runTimer(player.location, 1, 1) {
+                tickPlayer(player)
+            }
         }
 
         tick++
