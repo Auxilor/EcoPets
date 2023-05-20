@@ -14,6 +14,7 @@ import com.willfp.eco.core.placeholder.PlayerStaticPlaceholder
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
+import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
@@ -21,12 +22,12 @@ import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.entity.PetEntity
+import com.willfp.libreforge.ViolationContext
+import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
-import com.willfp.libreforge.conditions.ConfiguredCondition
-import com.willfp.libreforge.effects.ConfiguredEffect
+import com.willfp.libreforge.counters.Counters
+import com.willfp.libreforge.effects.EffectList
 import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -40,7 +41,7 @@ class Pet(
     val id: String,
     val config: Config,
     private val plugin: EcoPetsPlugin
-) {
+) : Registrable {
     val name = config.getFormattedString("name")
     val description = config.getFormattedString("description")
 
@@ -123,8 +124,8 @@ class Pet(
 
     private val baseItem: ItemStack = Items.lookup(config.getString("icon")).item
 
-    private val effects: Set<ConfiguredEffect>
-    private val conditions: Set<ConfiguredCondition>
+    private val effects: EffectList
+    private val conditions: ConditionList
 
     private val levels = Caffeine.newBuilder()
         .build<Int, PetLevel>()
@@ -150,18 +151,11 @@ class Pet(
         }
 
     private val petXpGains = config.getSubsections("xp-gain-methods").mapNotNull {
-        val trigger = Triggers.getById(it.getString("id")) ?: return@mapNotNull null
-        val multiplier = it.getDouble("multiplier")
-        val conditions = it.getSubsections("conditions")
-            .mapNotNull { cfg -> Conditions.compile(cfg, "Pet $id XP Gain methods") }
-
-        trigger to PetXPGain(
-            trigger,
-            multiplier,
-            conditions,
-            it.getSubsection("filters")
+        Counters.compile(
+            it,
+            ViolationContext(plugin, "Pet $id XP Gain methods")
         )
-    }.toMap()
+    }
 
     init {
         config.injectPlaceholders(
@@ -174,12 +168,12 @@ class Pet(
 
         effects = Effects.compile(
             config.getSubsections("effects"),
-            "Pet $id"
+            ViolationContext(plugin, "Pet $id")
         )
 
         conditions = Conditions.compile(
             config.getSubsections("conditions"),
-            "Pet $id"
+            ViolationContext(plugin, "Pet $id")
         )
 
         for (string in config.getStrings("level-commands")) {
@@ -249,7 +243,7 @@ class Pet(
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
-        PetLevel(this, it, effects, conditions)
+        PetLevel(plugin, this, it, effects, conditions)
     }
 
     private fun getLevelUpMessages(level: Int, whitespace: Int = 0): List<String> = levelUpMessages.get(level) {
@@ -355,6 +349,14 @@ class Pet(
         return processed.flatten().formatEco(player)
     }
 
+    override fun onRegister() {
+        petXpGains.forEach { it.bind(PetXPAccumulator(this)) }
+    }
+
+    override fun onRemove() {
+        petXpGains.forEach { it.unbind() }
+    }
+
     fun getIcon(player: Player): ItemStack {
         val base = baseItem.clone()
 
@@ -405,8 +407,8 @@ class Pet(
         }
     }
 
-    fun getPetXPGain(trigger: Trigger): PetXPGain? {
-        return petXpGains[trigger]
+    override fun getID(): String {
+        return this.id
     }
 
     override fun equals(other: Any?): Boolean {
@@ -496,7 +498,7 @@ private val expMultiplierCache = Caffeine.newBuilder()
     }
 
 val Player.petExperienceMultiplier: Double
-    get() = expMultiplierCache.get(this)
+    get() = expMultiplierCache.get(this)!!
 
 private fun Player.cacheSkillExperienceMultiplier(): Double {
     if (this.hasPermission("ecopets.xpmultiplier.quadruple")) {

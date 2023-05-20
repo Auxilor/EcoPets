@@ -49,6 +49,7 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet): ArmorStand {
     }
 
     stand.isCustomNameVisible = true
+    @Suppress("DEPRECATION")
     stand.customName = pet.name
 
     return stand

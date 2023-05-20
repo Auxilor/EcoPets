@@ -1,5 +1,0 @@
-rootProject.name = 'EcoPets'
-
-// Core
-include ':eco-core'
-include ':eco-core:core-plugin'

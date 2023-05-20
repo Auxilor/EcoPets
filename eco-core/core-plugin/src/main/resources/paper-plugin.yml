@@ -1,23 +1,21 @@
 name: ${pluginName}
 version: ${version}
 main: com.willfp.ecopets.EcoPetsPlugin
-api-version: 1.17
-authors: [ Auxilor ]
-website: willfp.com
-depend:
-  - eco
-softdepend:
-  - libreforge
-commands:
-  ecopets:
-    description: Base Command
-    permission: ecopets.command.ecopets
-  pets:
-    aliases:
-      - pet
-    description: Open the pets menu
-    permission: ecopets.command.pets
-    default: true
+api-version: 1.19
+
+dependencies:
+  - name: eco
+    required: true
+    bootstrap: false
+
+  - name: libreforge
+    required: false
+    bootstrap: false
+
+load-after:
+  - name: eco
+    bootstrap: false
+
 
 permissions:
   ecopets.*:

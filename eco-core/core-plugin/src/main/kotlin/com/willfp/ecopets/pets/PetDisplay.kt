@@ -36,6 +36,7 @@ class PetDisplay(
         val pet = player.activePet
 
         if (pet != null) {
+            @Suppress("DEPRECATION")
             stand.customName = plugin.configYml.getString("pet-entity.name")
                 .replace("%player%", player.displayName)
                 .replace("%pet%", pet.name)
