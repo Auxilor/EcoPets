@@ -36,6 +36,11 @@ class PetDisplay(
         val pet = player.activePet
 
         if (pet != null) {
+            if (player.isInvisible) {
+                remove(player)
+                return
+            }
+
             @Suppress("DEPRECATION")
             stand.customName = plugin.configYml.getString("pet-entity.name")
                 .replace("%player%", player.displayName)
@@ -77,6 +82,10 @@ class PetDisplay(
     }
 
     private fun getOrNew(player: Player): ArmorStand? {
+        if (player.isInvisible) {
+            return null
+        }
+
         val tracked = trackedEntities[player.uniqueId]
         val existing = tracked?.stand
 

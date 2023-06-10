@@ -11,9 +11,12 @@ dependencies {
 
 publishing {
     publications {
-        register("maven", MavenPublication::class) {
-            from(components["java"])
+        register<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            version = project.version.toString()
             artifactId = rootProject.name
+
+            artifact(rootProject.tasks.shadowJar.get().archiveFile)
         }
     }
 
