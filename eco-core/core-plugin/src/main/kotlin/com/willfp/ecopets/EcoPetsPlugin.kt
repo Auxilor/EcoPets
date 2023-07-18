@@ -12,13 +12,7 @@ import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
 import com.willfp.ecopets.libreforge.FilterPet
 import com.willfp.ecopets.libreforge.TriggerGainPetXp
 import com.willfp.ecopets.libreforge.TriggerLevelUpPet
-import com.willfp.ecopets.pets.DiscoverRecipeListener
-import com.willfp.ecopets.pets.PetDisplay
-import com.willfp.ecopets.pets.PetLevelListener
-import com.willfp.ecopets.pets.Pets
-import com.willfp.ecopets.pets.SpawnEggHandler
-import com.willfp.ecopets.pets.activePet
-import com.willfp.ecopets.pets.activePetLevel
+import com.willfp.ecopets.pets.*
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.libreforge.SimpleProvidedHolder
@@ -68,6 +62,18 @@ class EcoPetsPlugin : LibreforgePlugin() {
             this,
             "pet_id"
         ) { it.activePet?.id ?: "" }.register()
+
+        PlayerPlaceholder(
+            this,
+            "total_pets"
+        ) {
+            var pets = 0
+            for (pet in Pets.values()) {
+                if (it.hasPet(pet))
+                    pets++
+            }
+            pets.toString()
+        }.register()
     }
 
     override fun handleReload() {
