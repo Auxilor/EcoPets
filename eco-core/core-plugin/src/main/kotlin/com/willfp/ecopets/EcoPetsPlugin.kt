@@ -5,13 +5,7 @@ import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
-import com.willfp.ecopets.libreforge.ConditionHasActivePet
-import com.willfp.ecopets.libreforge.ConditionHasPetLevel
-import com.willfp.ecopets.libreforge.EffectGivePetXp
-import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
-import com.willfp.ecopets.libreforge.FilterPet
-import com.willfp.ecopets.libreforge.TriggerGainPetXp
-import com.willfp.ecopets.libreforge.TriggerLevelUpPet
+import com.willfp.ecopets.libreforge.*
 import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
@@ -48,6 +42,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
     override fun handleEnable() {
         Conditions.register(ConditionHasPetLevel)
         Conditions.register(ConditionHasActivePet)
+        Conditions.register(ConditionHasPet)
         Effects.register(EffectPetXpMultiplier)
         Effects.register(EffectGivePetXp)
         Triggers.register(TriggerGainPetXp)
