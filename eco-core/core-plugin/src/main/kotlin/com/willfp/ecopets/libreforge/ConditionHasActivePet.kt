@@ -14,9 +14,10 @@ object ConditionHasActivePet : Condition<NoCompileData>("has_active_pet") {
     }
 
     override fun isMet(player: Player, config: Config, compileData: NoCompileData): Boolean {
-        return EcoPetsAPI.instance.hasPet(
-            player,
-            Pets.getByID(config.getString("pet").lowercase()) ?: return false
-        )
+        return EcoPetsAPI.instance.getActivePet(player) == Pets.getByID(config.getString("pet").lowercase())
+//        return EcoPetsAPI.instance.hasPet(
+//            player,
+//            Pets.getByID(config.getString("pet").lowercase()) ?: return false
+//        )
     }
 }
