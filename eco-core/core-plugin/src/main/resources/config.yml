@@ -3,6 +3,11 @@
 # by Auxilor
 #
 
+# Even if eco is set up to use a database, you can
+# force EcoPets to save to local storage to disable
+# cross-server sync.
+use-local-storage: false
+
 discover-recipes: true
 
 gui:
