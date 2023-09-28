@@ -81,6 +81,18 @@ gui:
       - "&8» &e%percentage_progress%%"
       - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
 
+    # By default, the lore for the max level is the same,
+    # but you can change this if you want.
+    max-level-lore:
+      - "%description%"
+      - "&f"
+      - "&fEffects:"
+      - "%effects%"
+      - ""
+      - "&fProgress:"
+      - "&8» &e%percentage_progress%%"
+      - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
     active-lore:
       - ""
       - "&cThis pet is already active!"
