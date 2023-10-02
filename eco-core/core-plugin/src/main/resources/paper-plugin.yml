@@ -33,6 +33,7 @@ permissions:
       ecopets.command.give: true
       ecopets.command.giveegg: true
       ecopets.command.givexp: true
+      ecopets.command.givecurrentxp: true
       ecopets.command.reset: true
       ecopets.command.activate: true
       ecopets.command.deactivate: true
@@ -54,6 +55,9 @@ permissions:
     default: op
   ecopets.command.givexp:
     description: Allows the use of /ecopets givexp.
+    default: op
+  ecopets.command.givecurrentxp:
+    description: Allows the use of /ecopets givecurrentxp.
     default: op
   ecopets.command.reset:
     description: Allows the use of /ecopets reset.

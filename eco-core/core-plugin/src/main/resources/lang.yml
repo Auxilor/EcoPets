@@ -7,6 +7,8 @@ messages:
 
   needs-player: "&cYou must specify a player!"
   gave-xp: "&fYou have given &a%xp% &fXP to %player%&f's %pet%&f!"
+  gave-current-xp: "&fYou have given &a%xp% &fXP to %player%&f's currently active pet!"
+  no-pet: "&cThe player doesn't have a pet active!"
   reset-xp: "&fYou have reset %player%&f's %pet%&f XP!"
   needs-pet: "&cYou must specify a pet!"
   need-amount: "&cYou must specify a amount!"

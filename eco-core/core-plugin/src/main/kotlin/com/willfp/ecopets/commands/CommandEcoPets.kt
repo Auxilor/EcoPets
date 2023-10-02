@@ -11,6 +11,7 @@ class CommandEcoPets(plugin: EcoPlugin) : PluginCommand(plugin, "ecopets", "ecop
             .addSubcommand(CommandGiveEgg(plugin))
             .addSubcommand(CommandGiveXP(plugin))
             .addSubcommand(CommandReset(plugin))
+            .addSubcommand(CommandGiveCurrentXP(plugin))
     }
 
     override fun onExecute(sender: CommandSender, args: List<String>) {
