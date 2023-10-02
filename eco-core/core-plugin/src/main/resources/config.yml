@@ -69,6 +69,20 @@ gui:
         - ""
         - "&eClick to view Level Progression!"
 
+      # By default, the lore for the max level is the same,
+      # but you can change this if you want.
+      max-level-lore:
+        - "%description%"
+        - "&f"
+        - "&fEffects:"
+        - "%effects%"
+        - ""
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+        - ""
+        - "&eClick to view Level Progression!"
+
   pet-icon:
     name: "%pet% &fLvl. &a%level%"
     lore:
@@ -208,6 +222,17 @@ level-gui:
       item: yellow_stained_glass_pane
       name: "%pet% &fLvl. &a%level%"
       lore:
+        - "&f"
+        - "&fRewards:"
+        - "%rewards%"
+        - "&f"
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
+      # By default, the lore for the max level is the same,
+      # but you can change this if you want.
+      max-level-lore:
         - "&f"
         - "&fRewards:"
         - "%rewards%"

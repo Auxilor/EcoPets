@@ -381,9 +381,12 @@ class Pet(
 
     fun getPetInfoIcon(player: Player): ItemStack {
         val base = baseItem.clone()
+
+        val prefix = if (player.getPetLevel(this) == this.maxLevel) "max-level-" else ""
+
         return ItemStackBuilder(base)
             .setDisplayName(
-                plugin.configYml.getFormattedString("gui.pet-info.active.name")
+                plugin.configYml.getFormattedString("gui.pet-info.active.${prefix}lore")
                     .replace("%level%", player.getPetLevel(this).toString())
                     .replace("%pet%", this.name)
             )

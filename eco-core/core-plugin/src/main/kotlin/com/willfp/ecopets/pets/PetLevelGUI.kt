@@ -35,6 +35,8 @@ class PetLevelGUI(
             override fun getLevelItem(player: Player, menu: Menu, level: Int, levelState: LevelState): ItemStack {
                 val key = levelState.name.lowercase().replace("_", "-")
 
+                val prefix = if (player.getPetLevel(pet) == pet.maxLevel) "max-level-" else ""
+
                 return ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.$key.item")))
                     .setDisplayName(
                         plugin.configYml.getFormattedString("level-gui.progression-slots.$key.name")
@@ -44,7 +46,7 @@ class PetLevelGUI(
                     )
                     .addLoreLines(
                         pet.injectPlaceholdersInto(
-                            plugin.configYml.getFormattedStrings("level-gui.progression-slots.$key.lore"),
+                            plugin.configYml.getFormattedStrings("level-gui.progression-slots.$key.${prefix}lore"),
                             player,
                             forceLevel = level
                         )
