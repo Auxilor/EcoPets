@@ -386,12 +386,12 @@ class Pet(
 
         return ItemStackBuilder(base)
             .setDisplayName(
-                plugin.configYml.getFormattedString("gui.pet-info.active.${prefix}lore")
+                plugin.configYml.getFormattedString("gui.pet-info.name")
                     .replace("%level%", player.getPetLevel(this).toString())
                     .replace("%pet%", this.name)
             )
             .addLoreLines {
-                injectPlaceholdersInto(plugin.configYml.getStrings("gui.pet-info.active.lore"), player)
+                injectPlaceholdersInto(plugin.configYml.getStrings("gui.pet-info.${prefix}lore"), player)
             }
             .build()
     }
