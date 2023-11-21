@@ -4,6 +4,7 @@ import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.pets.Pets
 import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
+import com.willfp.libreforge.toDispatcher
 import org.bukkit.event.EventHandler
 
 object EffectPetXpMultiplier : MultiMultiplierEffect<Pet>("pet_xp_multiplier") {
@@ -21,6 +22,6 @@ object EffectPetXpMultiplier : MultiMultiplierEffect<Pet>("pet_xp_multiplier") {
     fun handle(event: PlayerPetExpGainEvent) {
         val player = event.player
 
-        event.amount *= getMultiplier(player, event.pet)
+        event.amount *= getMultiplier(player.toDispatcher(), event.pet)
     }
 }
