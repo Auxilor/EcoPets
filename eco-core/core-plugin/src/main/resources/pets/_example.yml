@@ -7,6 +7,12 @@
 # The display name of the pet
 name: "&6Tiger"
 
+# Offset of pet display position on the y-axis (default is 0.0)
+offset: 0.0
+
+# Whether the pet will rotate on its own (default is false)
+rotatable: true
+
 # The description of the pet
 description: "&8&oLevel up by dealing melee damage"
 
@@ -115,6 +121,8 @@ conditions: [ ]
 
 # The texture of the pet entity in game
 # If you're using modelengine, use modelengine:id as the texture
+# If you want to use custom item, use itemstack:<Item Lookup System String> as the texture (For example: itemstack:itemsadder:namespace__key)
+# https://plugins.auxilor.io/all-plugins/the-item-lookup-system
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 
 # The icon in GUIs
