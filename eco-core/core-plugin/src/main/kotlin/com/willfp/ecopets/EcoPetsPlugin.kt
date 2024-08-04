@@ -20,6 +20,7 @@ import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
+import com.willfp.ecopets.pets.entity.ItemStackPetEntity
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
@@ -85,6 +86,10 @@ class EcoPetsPlugin : LibreforgePlugin() {
             }
             pets.toString()
         }.register()
+
+        PetEntity.registerPetEntity("itemstack") { pet, itemStack ->
+            ItemStackPetEntity(pet, itemStack)
+        }
     }
 
     override fun handleReload() {
