@@ -12,6 +12,8 @@ import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.ecopets.EcoPetsPlugin
+import com.willfp.ecopets.api.event.PlayerPetSwapEvent
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -104,6 +106,7 @@ object PetsGUI {
                         val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
 
                         if (player.activePet != pet) {
+                            Bukkit.getServer().pluginManager.callEvent(PlayerPetSwapEvent(player, player.activePet, pet))
                             player.activePet = pet
                         }
 
@@ -198,6 +201,7 @@ object PetsGUI {
                 ) {
                     onLeftClick { event, _ ->
                         val player = event.whoClicked as Player
+                        Bukkit.getServer().pluginManager.callEvent(PlayerPetSwapEvent(player, player.activePet, null))
                         player.activePet = null
                     }
                 }

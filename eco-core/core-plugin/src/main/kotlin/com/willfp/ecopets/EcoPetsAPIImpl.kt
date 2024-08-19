@@ -1,6 +1,7 @@
 package com.willfp.ecopets
 
 import com.willfp.ecopets.api.EcoPetsAPI
+import com.willfp.ecopets.api.event.PlayerPetSwapEvent
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.getPetLevel
@@ -9,6 +10,7 @@ import com.willfp.ecopets.pets.getPetXP
 import com.willfp.ecopets.pets.getPetXPRequired
 import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
+import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
@@ -18,6 +20,7 @@ internal object EcoPetsAPIImpl : EcoPetsAPI {
     override fun getActivePet(player: OfflinePlayer): Pet? = player.activePet
 
     override fun setActivePet(player: OfflinePlayer, pet: Pet?) {
+        Bukkit.getServer().pluginManager.callEvent(PlayerPetSwapEvent(player, player.activePet, pet))
         player.activePet = pet
     }
 
