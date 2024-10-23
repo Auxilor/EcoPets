@@ -1,15 +1,17 @@
 package com.willfp.ecopets.pets.entity
 
+import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
 
 abstract class PetEntity(
     val pet: Pet
 ) {
-    abstract fun spawn(location: Location): ArmorStand
+    abstract fun spawn(location: Location): Entity
 
     companion object {
         private val registrations = mutableMapOf<String, (Pet, String) -> PetEntity>()
@@ -20,10 +22,13 @@ abstract class PetEntity(
         }
 
         @JvmStatic
-        fun create(pet: Pet): PetEntity {
+        fun create(plugin: EcoPetsPlugin, pet: Pet): PetEntity {
             val texture = pet.entityTexture
 
             if (!texture.contains(":")) {
+                if (plugin.configYml.getBool("pet-entity.item-display.enabled")) {
+                    return ItemDisplayPetEntity(pet, plugin)
+                }
                 return SkullPetEntity(pet)
             }
 
