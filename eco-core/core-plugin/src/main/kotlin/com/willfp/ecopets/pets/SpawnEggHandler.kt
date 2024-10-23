@@ -1,6 +1,8 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.EcoPlugin
+import com.willfp.ecopets.api.event.PlayerAdoptPetEvent
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -42,5 +44,6 @@ class SpawnEggHandler(
         }
 
         player.setPetLevel(pet, 1)
+        Bukkit.getServer().pluginManager.callEvent(PlayerAdoptPetEvent(player, pet))
     }
 }
