@@ -67,7 +67,7 @@ class PetLevelGUI(
         }
 
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
-            title = pet.name
+            title = plugin.langYml.getString("menu.level-title").replace("%pet%", pet.name)
 
             maxPages(component.pages)
 

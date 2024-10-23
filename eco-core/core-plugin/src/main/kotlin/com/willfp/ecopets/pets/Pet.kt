@@ -115,6 +115,10 @@ class Pet(
 
     val entityTexture = config.getString("entity-texture")
 
+    val offset = config.getDouble("offset")
+
+    val rotatable = config.getBool("rotatable")
+
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = levelXpRequirements.size
