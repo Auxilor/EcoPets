@@ -238,7 +238,7 @@ class Pet(
     }
 
     fun makePetEntity(): PetEntity {
-        return PetEntity.create(this)
+        return PetEntity.create(plugin, this)
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
