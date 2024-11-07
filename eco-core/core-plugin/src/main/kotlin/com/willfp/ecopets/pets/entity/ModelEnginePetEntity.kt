@@ -11,12 +11,20 @@ class ModelEnginePetEntity(
     private val modelID: String,
     private val plugin: EcoPetsPlugin
 ) : PetEntity(pet) {
+
+    val animation = pet.config.getStringOrNull("modelengine-animation")
+
     override fun spawn(location: Location): ArmorStand {
         val stand = emptyArmorStandAt(location, pet)
 
+        val modelled = ModelEngineBridge.instance.createModeledEntity(stand)
+
         val model = ModelEngineBridge.instance.createActiveModel(modelID) ?: return stand
 
-        val modelled = ModelEngineBridge.instance.createModeledEntity(stand)
+        if (animation != null) {
+            model.animationHandler.playAnimation(animation, 0.3, 0.3, 1.0, true)
+        }
+
         modelled.addModel(model)
 
         return stand
