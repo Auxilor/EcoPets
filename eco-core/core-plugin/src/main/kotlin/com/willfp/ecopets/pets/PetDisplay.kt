@@ -10,9 +10,12 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.event.world.ChunkUnloadEvent
+import org.bukkit.event.world.EntitiesUnloadEvent
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.abs
@@ -37,7 +40,7 @@ class PetDisplay(
         val pet = player.activePet
 
         if (pet != null) {
-            if (player.isInvisible) {
+            if (player.isInvisible || player.isDead) {
                 remove(player)
                 return
             }
@@ -122,6 +125,11 @@ class PetDisplay(
         trackedEntities.remove(player.uniqueId)
     }
 
+    private fun remove(uuid: UUID) {
+        trackedEntities[uuid]?.entity?.remove()
+        trackedEntities.remove(uuid)
+    }
+
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
         remove(event.player)
@@ -135,6 +143,20 @@ class PetDisplay(
     @EventHandler
     fun onWorldChange(event: PlayerChangedWorldEvent) {
         remove(event.player)
+    }
+
+    @EventHandler
+    fun onPlayerDeath(event: PlayerDeathEvent) {
+        remove(event.player)
+    }
+
+    @EventHandler
+    fun onEntitiesUnload(event: EntitiesUnloadEvent) {
+        trackedEntities.entries.forEach {
+            if(event.chunk == it.value.entity.chunk) {
+                remove(it.key)
+            }
+        }
     }
 
     private data class PetDisplayEntity(
