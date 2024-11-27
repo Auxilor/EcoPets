@@ -29,7 +29,11 @@ class PetDisplay(
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            tickPlayer(player)
+            if (player.isOnline) {
+                tickPlayer(player)
+            } else {
+                remove(player)
+            }
         }
 
         tick++
@@ -40,7 +44,7 @@ class PetDisplay(
         val pet = player.activePet
 
         if (pet != null) {
-            if (player.isInvisible || player.isDead) {
+            if (player.isInvisible || player.isDead || !player.isOnline) {
                 remove(player)
                 return
             }
@@ -153,7 +157,7 @@ class PetDisplay(
     @EventHandler
     fun onEntitiesUnload(event: EntitiesUnloadEvent) {
         trackedEntities.entries.forEach {
-            if(event.chunk == it.value.entity.chunk) {
+            if (event.chunk == it.value.entity.chunk) {
                 remove(it.key)
             }
         }
