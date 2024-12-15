@@ -29,7 +29,7 @@ class PetDisplay(
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            if (player.isOnline) {
+            if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
                 tickPlayer(player)
             } else {
                 remove(player)
