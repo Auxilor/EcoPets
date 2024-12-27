@@ -53,6 +53,22 @@ object PetsGUI {
                     .build()
         }
 
+        val togglePetItemBuilder = { player: Player, _: Menu ->
+            val isPetVisible = !player.shouldHidePet
+
+            if (isPetVisible) {
+                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.hide-pet.item")))
+                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.hide-pet.name"))
+                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.hide-pet.lore"))
+                    .build()
+            } else {
+                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.show-pet.item")))
+                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.show-pet.name"))
+                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.show-pet.lore"))
+                    .build()
+            }
+        }
+
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
             val page = menu.getPage(player)
 
@@ -199,6 +215,16 @@ object PetsGUI {
                     onLeftClick { event, _ ->
                         val player = event.whoClicked as Player
                         player.activePet = null
+                    }
+                }
+            )
+
+            setSlot(plugin.configYml.getInt("gui.toggle.location.row"),
+                plugin.configYml.getInt("gui.toggle.location.column"),
+                slot(togglePetItemBuilder) {
+                    onLeftClick { event, _ ->
+                        val player = event.whoClicked as Player
+                        player.shouldHidePet = !player.shouldHidePet
                     }
                 }
             )

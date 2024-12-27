@@ -24,6 +24,7 @@ messages:
   no-pet-active: "&cYou don't have a pet active!"
   activated-pet: "&fYou have activated the %pet%&f pet!"
   deactivated-pet: "&fYou have deactivated the %pet%&f pet!"
+  toggled-pet: "&fYour pet is now %status%!"
 
 menu:
   title: "Pets"
