@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     java
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.9.20"
-    id("io.github.goooler.shadow") version "8.1.7"
+    kotlin("jvm") version "2.1.0"
+    id("com.gradleup.shadow") version "8.3.0"
     id("com.willfp.libreforge-gradle-plugin") version "1.0.0"
 }
 
@@ -25,7 +27,7 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
     apply(plugin = "maven-publish")
-    apply(plugin = "io.github.goooler.shadow")
+    apply(plugin = "com.gradleup.shadow")
 
     repositories {
         mavenLocal()
@@ -40,7 +42,7 @@ allprojects {
     dependencies {
         compileOnly("com.willfp:eco:6.55.0")
         compileOnly("org.jetbrains:annotations:23.0.0")
-        compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+        compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
     }
 
     java {
@@ -56,8 +58,8 @@ allprojects {
         }
 
         compileKotlin {
-            kotlinOptions {
-                jvmTarget = "17"
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_17)
             }
         }
 
