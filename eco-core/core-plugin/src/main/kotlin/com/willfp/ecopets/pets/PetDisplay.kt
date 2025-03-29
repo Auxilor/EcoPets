@@ -50,13 +50,14 @@ class PetDisplay(
 
             val location = getLocation(player)
 
+            location.y += pet.offset
             location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
 
             if (location.world != null) {
                 stand.teleport(location)
             }
 
-            if (!pet.entityTexture.contains(":")) {
+            if (!pet.entityTexture.contains(":") && pet.rotatable) {
                 stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
             }
         }
