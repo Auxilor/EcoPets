@@ -261,6 +261,10 @@ level-gui:
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
   name: "%player%&f's %pet%&f (Lvl. %level%)"
+  item-display:
+    enabled: false
+    teleport-duration: 3
+
 
 level-up:
   message:
