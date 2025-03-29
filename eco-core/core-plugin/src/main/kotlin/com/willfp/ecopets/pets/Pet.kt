@@ -449,6 +449,12 @@ private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
     ""
 )
 
+private val shouldHidePetKey: PersistentDataKey<Boolean> = PersistentDataKey(
+    EcoPetsPlugin.instance.namespacedKeyFactory.create("hide_pet"),
+    PersistentDataKeyType.BOOLEAN,
+    false
+)
+
 private val petEggKey = EcoPetsPlugin.instance.namespacedKeyFactory.create("pet_egg")
 
 var ItemStack.petEgg: Pet?
@@ -467,6 +473,10 @@ val OfflinePlayer.activePetLevel: PetLevel?
         val active = this.activePet ?: return null
         return this.getPetLevelObject(active)
     }
+
+var OfflinePlayer.shouldHidePet: Boolean
+    get() = this.profile.read(shouldHidePetKey)
+    set(value) = this.profile.write(shouldHidePetKey, value)
 
 fun OfflinePlayer.getPetLevel(pet: Pet): Int =
     this.profile.read(pet.levelKey)
