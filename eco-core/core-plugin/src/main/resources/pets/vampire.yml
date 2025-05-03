@@ -4,18 +4,6 @@ description: "&8&oLevel up by taking damage at night."
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzgyMGExMGRiMjIyZjY5YWMyMjE1ZDdkMTBkY2E0N2VlYWZhMjE1NTUzNzY0YTJiODFiYWZkNDc5ZTc5MzNkMSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzgyMGExMGRiMjIyZjY5YWMyMjE1ZDdkMTBkY2E0N2VlYWZhMjE1NTUzNzY0YTJiODFiYWZkNDc5ZTc5MzNkMSJ9fX0=
 
-spawn-egg:
-  enabled: true
-  item: bat_spawn_egg unbreaking:2 hide_enchants
-  name: "<gradient:#A50000>Vampire</gradient:#FD2424>&f Pet Spawn Egg"
-  lore:
-    - ""
-    - "&8&oPlace on the ground to"
-    - "&8&ounlock the &r<gradient:#A50000>Vampire</gradient:#FD2424>&8&o pet!"
-  craftable: false
-  recipe: [ ]
-  recipe-permission: ecopets.craft.vampire
-
 level-xp-requirements:
   - 50
   - 75
@@ -158,3 +146,15 @@ effects:
       - melee_attack
 
 conditions: [ ]
+
+spawn-egg:
+  enabled: true
+  item: bat_spawn_egg unbreaking:2 hide_enchants
+  name: "<gradient:#A50000>Vampire</gradient:#FD2424>&f Pet Spawn Egg"
+  lore:
+    - ""
+    - "&8&oPlace on the ground to"
+    - "&8&ounlock the &r<gradient:#A50000>Vampire</gradient:#FD2424>&8&o pet!"
+  craftable: false
+  recipe: [ ]
+  recipe-permission: ecopets.craft.vampire

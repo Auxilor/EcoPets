@@ -58,9 +58,7 @@ class Pet(
     )
 
     val xpKey: PersistentDataKey<Double> = PersistentDataKey(
-        EcoPetsPlugin.instance.namespacedKeyFactory.create("${id}_xp"),
-        PersistentDataKeyType.DOUBLE,
-        0.0
+        EcoPetsPlugin.instance.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
     )
 
     private val spawnEggBacker: ItemStack? = run {
@@ -135,17 +133,13 @@ class Pet(
 
     private val conditions: ConditionList
 
-    private val levels = Caffeine.newBuilder()
-        .build<Int, PetLevel>()
+    private val levels = Caffeine.newBuilder().build<Int, PetLevel>()
 
-    private val effectsDescription = Caffeine.newBuilder()
-        .build<Int, List<String>>()
+    private val effectsDescription = Caffeine.newBuilder().build<Int, List<String>>()
 
-    private val rewardsDescription = Caffeine.newBuilder()
-        .build<Int, List<String>>()
+    private val rewardsDescription = Caffeine.newBuilder().build<Int, List<String>>()
 
-    private val levelUpMessages = Caffeine.newBuilder()
-        .build<Int, List<String>>()
+    private val levelUpMessages = Caffeine.newBuilder().build<Int, List<String>>()
 
     private val levelCommands = mutableMapOf<Int, MutableList<String>>()
 
@@ -162,10 +156,7 @@ class Pet(
         }
 
     private val petXpGains = config.getSubsections("xp-gain-methods").mapNotNull {
-        Counters.compile(
-            it,
-            ViolationContext(plugin, "Pet $id XP Gain methods")
-        )
+        Counters.compile(it, ViolationContext(plugin, "Pet $id"))
     }
 
     init {
