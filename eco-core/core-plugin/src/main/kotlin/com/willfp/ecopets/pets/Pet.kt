@@ -334,7 +334,7 @@ class Pet(
             .map {
                 it.replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
                     .replace("%current_xp%", player.getPetXP(this).toNiceString())
-                    .replace("required_xp", this.getFormattedExpForLevel(player.getPetLevel(this) + 1))
+                    .replace("%required_xp%", this.getFormattedExpForLevel(player.getPetLevel(this) + 1))
                     .replace("%description%", this.description)
                     .replace("%pet%", this.name)
                     .replace("%level%", (forceLevel ?: player.getPetLevel(this)).toString())
