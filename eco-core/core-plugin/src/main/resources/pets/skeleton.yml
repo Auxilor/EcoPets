@@ -86,7 +86,7 @@ effects:
       multiplier: "%level% * 0.01 + 1"
     triggers:
       - bow_attack
-      -
+
 conditions: [ ]
 
 spawn-egg:

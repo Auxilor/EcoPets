@@ -54,7 +54,7 @@ level-xp-requirements:
   - 3100000
   - 3400000
   - 3700000
-  -
+
 xp-gain-methods:
   - id: kill
     multiplier: 1
