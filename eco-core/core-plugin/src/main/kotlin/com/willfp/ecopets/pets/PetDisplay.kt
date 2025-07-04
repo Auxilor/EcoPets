@@ -31,6 +31,14 @@ class PetDisplay(
         tick++
     }
 
+    private val smoothYOffsetMap = mutableMapOf<UUID, Double>()
+    private val lastUpdateMap = mutableMapOf<UUID, Long>()
+    private val expireAfterMillis = 5_000L
+    companion object {
+        private const val DEFAULT_EYE_HEIGHT = 1.62
+        private const val MAX_Y_OFFSET = 0.5
+    }
+
     private fun tickPlayer(player: Player) {
         val stand = getOrNew(player) ?: return
         val pet = player.activePet
@@ -63,22 +71,46 @@ class PetDisplay(
     }
 
     private fun getLocation(player: Player): Location {
-        val offset = player.eyeLocation.direction.clone().normalize()
-            .multiply(-1)
-            .apply {
-                y = abs(y)
+        val direction = player.eyeLocation.direction.clone().normalize()
+        val offset = direction.clone().multiply(-0.75)
 
-                if (abs(x) < 0.5) {
-                    x = 0.5
-                }
+        val uuid = player.uniqueId
+        val currentTime = System.currentTimeMillis()
 
-                if (abs(z) < 0.5) {
-                    z = 0.5
-                }
-            }
-            .rotateAroundY(PI / 6)
+        // Calculate inverted Y-delta from default eye height
+        val eyeY = player.eyeLocation.y
+        val baseY = player.location.y + DEFAULT_EYE_HEIGHT
+        var targetYOffset = baseY - eyeY // inverted
 
-        return player.eyeLocation.clone().add(offset)
+        // Clamp to avoid wild swings
+        targetYOffset = targetYOffset.coerceIn(-MAX_Y_OFFSET, MAX_Y_OFFSET)
+
+        // Smooth it
+        val lastY = smoothYOffsetMap[uuid] ?: targetYOffset
+        val lastUpdate = lastUpdateMap[uuid] ?: currentTime
+        val deltaTime = currentTime - lastUpdate
+
+        val t = when {
+            deltaTime > 1000 -> 0.5
+            deltaTime > 500 -> 0.3
+            else -> 0.15
+        }
+
+        val smoothedYOffset = lerp(lastY, targetYOffset, t)
+        smoothYOffsetMap[uuid] = smoothedYOffset
+        lastUpdateMap[uuid] = currentTime
+
+        offset.y = smoothedYOffset
+
+        // Smooth X/Z bias
+        if (abs(offset.x) < 0.3) offset.x *= 1.5
+        if (abs(offset.z) < 0.3) offset.z *= 1.5
+
+        offset.rotateAroundY(Math.PI / 12)
+        cleanupOldEntries(currentTime)
+
+        // Use base location, not eyeLocation, for static anchoring
+        return player.location.clone().add(0.0, DEFAULT_EYE_HEIGHT, 0.0).add(offset)
     }
 
     private fun getOrNew(player: Player): ArmorStand? {
@@ -143,4 +175,16 @@ class PetDisplay(
         val stand: ArmorStand,
         val pet: Pet
     )
+
+    private fun lerp(a: Double, b: Double, t: Double): Double {
+        return a + (b - a) * t
+    }
+
+    private fun cleanupOldEntries(currentTime: Long) {
+        val expired = lastUpdateMap.filterValues { currentTime - it > expireAfterMillis }.keys
+        for (uuid in expired) {
+            smoothYOffsetMap.remove(uuid)
+            lastUpdateMap.remove(uuid)
+        }
+    }
 }
