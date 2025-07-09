@@ -3,9 +3,11 @@ package com.willfp.ecopets.commands
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
+import com.willfp.ecopets.api.event.PlayerPetSwapEvent
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
@@ -37,6 +39,7 @@ class CommandActivate(plugin: EcoPlugin) : Subcommand(plugin, "activate", "ecope
             plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)
         )
+        Bukkit.getServer().pluginManager.callEvent(PlayerPetSwapEvent(player, player.activePet, pet))
         player.activePet = pet
     }
 
