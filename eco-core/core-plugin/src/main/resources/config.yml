@@ -260,6 +260,7 @@ level-gui:
 
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
+  show-hologram: true # If the pet's name should be shown above the pet
   name: "%player%&f's %pet%&f (Lvl. %level%)"
 
 level-up:
