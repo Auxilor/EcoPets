@@ -261,6 +261,10 @@ level-gui:
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
   name: "%player%&f's %pet%&f (Lvl. %level%)"
+  location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
+  location_xz_offset: 0.75 # How far the pet should be from the player on the X and Z axis (Default: 0.75)
+  bobbing: true # If the pet should bob up and down
+  bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
 
 level-up:
   message:
