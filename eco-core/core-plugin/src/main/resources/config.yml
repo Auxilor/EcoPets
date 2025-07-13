@@ -265,6 +265,8 @@ pet-entity:
   location_xz_offset: 0.75 # How far the pet should be from the player on the X and Z axis (Default: 0.75)
   bobbing: true # If the pet should bob up and down
   bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
+  rotation: true # If the pet should rotate/spin
+  rotation-intensity: 20 # How fast the pet should rotate/spin (Default: 20)
 
 level-up:
   message:

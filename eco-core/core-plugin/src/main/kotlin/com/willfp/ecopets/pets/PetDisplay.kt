@@ -72,8 +72,9 @@ class PetDisplay(
                 stand.teleport(location)
             }
 
-            if (!pet.entityTexture.contains(":")) {
-                stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
+            if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
+                val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
+                stand.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
             }
         }
     }
