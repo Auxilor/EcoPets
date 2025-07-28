@@ -41,6 +41,11 @@ class PetDisplay(
     }
 
     private fun tickPlayer(player: Player) {
+        if (player.shouldHidePet) {
+            remove(player)
+            return
+        }
+
         val stand = getOrNew(player) ?: return
         val pet = player.activePet
 
