@@ -4,6 +4,7 @@ import com.willfp.eco.core.EcoPlugin
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
@@ -13,16 +14,17 @@ class SpawnEggHandler(
     private val plugin: EcoPlugin
 ) : Listener {
     @EventHandler(
-        ignoreCancelled = true
+        priority = EventPriority.HIGHEST,
+        ignoreCancelled = false
     )
     fun handle(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK) {
+        if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) {
             return
         }
 
         val player = event.player
-
         val item = event.item ?: return
+        
         val pet = item.petEgg ?: return
 
         event.isCancelled = true
@@ -42,5 +44,7 @@ class SpawnEggHandler(
         }
 
         player.setPetLevel(pet, 1)
+        
+        player.sendMessage(plugin.langYml.getMessage("pet-activated").replace("%pet%", pet.name))
     }
 }
