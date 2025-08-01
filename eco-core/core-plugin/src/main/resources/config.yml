@@ -261,6 +261,7 @@ level-gui:
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
   name: "%player%&f's %pet%&f (Lvl. %level%)"
+  scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
 
 level-up:
   message:

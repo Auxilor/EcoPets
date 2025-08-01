@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack
 
 class SkullPetEntity(pet: Pet) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
-        val stand = emptyArmorStandAt(location, pet)
+        val stand = emptyArmorStandAt(location, pet, isSkull = true)
 
         val skull: ItemStack = SkullBuilder()
             .setSkullTexture(pet.entityTexture)
