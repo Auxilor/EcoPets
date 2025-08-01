@@ -12,7 +12,7 @@ class ModelEnginePetEntity(
     private val plugin: EcoPetsPlugin
 ) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
-        val stand = emptyArmorStandAt(location, pet)
+        val stand = emptyArmorStandAt(location, pet, isSkull = false)
 
         val model = ModelEngineBridge.instance.createActiveModel(modelID) ?: return stand
 
