@@ -3,6 +3,7 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
+import com.willfp.libreforge.getDoubleFromExpression
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -40,6 +41,11 @@ class PetDisplay(
     }
 
     private fun tickPlayer(player: Player) {
+        if (player.shouldHidePet) {
+            remove(player)
+            return
+        }
+
         val stand = getOrNew(player) ?: return
         val pet = player.activePet
 
@@ -57,22 +63,32 @@ class PetDisplay(
                 .formatEco(player)
 
             val location = getLocation(player)
+            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
+            val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
 
-            location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
+
+            if (plugin.configYml.getBool("pet-entity.bobbing")) {
+                location.y += offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
+            } else {
+                location.y += offset
+            }
 
             if (location.world != null) {
                 stand.teleport(location)
             }
 
-            if (!pet.entityTexture.contains(":")) {
-                stand.setRotation((20 * tick / (2 * PI)).toFloat(), 0f)
+            if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
+                val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
+                stand.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
             }
         }
     }
 
     private fun getLocation(player: Player): Location {
         val direction = player.eyeLocation.direction.clone().normalize()
-        val offset = direction.clone().multiply(-0.75)
+
+        val locationXZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_xz_offset") ?: 0.75
+        val offset = direction.clone().multiply(-locationXZOffset)
 
         val uuid = player.uniqueId
         val currentTime = System.currentTimeMillis()
