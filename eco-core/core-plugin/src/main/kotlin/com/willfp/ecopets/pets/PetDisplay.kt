@@ -48,6 +48,7 @@ class PetDisplay(
 
         val stand = getOrNew(player) ?: return
         val pet = player.activePet
+        val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
 
         if (pet != null) {
             if (player.isInvisible) {
@@ -55,12 +56,17 @@ class PetDisplay(
                 return
             }
 
-            @Suppress("DEPRECATION")
-            stand.customName = plugin.configYml.getString("pet-entity.name")
-                .replace("%player%", player.displayName)
-                .replace("%pet%", pet.name)
-                .replace("%level%", player.getPetLevel(pet).toString())
-                .formatEco(player)
+            if (showHologram) {
+                @Suppress("DEPRECATION")
+                stand.customName = plugin.configYml.getString("pet-entity.name")
+                    .replace("%player%", player.displayName)
+                    .replace("%pet%", pet.name)
+                    .replace("%level%", player.getPetLevel(pet).toString())
+                    .formatEco(player)
+                stand.isCustomNameVisible = true
+            } else {
+                stand.isCustomNameVisible = false
+            }
 
             val location = getLocation(player)
             val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
