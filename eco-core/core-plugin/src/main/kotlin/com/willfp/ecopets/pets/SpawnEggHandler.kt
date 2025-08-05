@@ -1,7 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.EcoPlugin
-import org.bukkit.entity.Player
+import com.willfp.eco.util.StringUtils
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -42,5 +42,9 @@ class SpawnEggHandler(
         }
 
         player.setPetLevel(pet, 1)
+        player.sendMessage(
+            plugin.langYml.getMessage("pet-spawned", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                .replace("%pet%", pet.name)
+        )
     }
 }

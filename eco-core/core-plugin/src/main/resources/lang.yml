@@ -19,6 +19,7 @@ messages:
   gave-pet: "&fSuccessfully gave %player%&f the %pet%&f pet!"
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
+  pet-spawned: "&fYou've spawned your %pet%&f pet! Visit &a/pets&f to activate it!"
   invalid-amount: "&cInvalid amount!"
   pet-already-active: "&cYou already have this pet active!"
   no-pet-active: "&cYou don't have a pet active!"

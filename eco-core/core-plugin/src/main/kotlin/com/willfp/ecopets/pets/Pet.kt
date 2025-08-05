@@ -122,7 +122,7 @@ class Pet(
 
     private val xpFormula = config.getStringOrNull("xp-formula")
 
-    private val levelXpRequirements = config.getDoublesOrNull("level-xp-requirements")
+    private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements?.size ?: Int.MAX_VALUE
 
@@ -426,21 +426,22 @@ class Pet(
      * Get the XP required to reach the next level, if currently at [level].
      */
     fun getExpForLevel(level: Int): Double {
+        if (level < 1 || level > maxLevel) {
+            return Double.MAX_VALUE
+        }
+
         if (xpFormula != null) {
             return evaluateExpression(
                 xpFormula,
                 placeholderContext(
-                    injectable = LevelInjectable(level)
+                    injectable = LevelInjectable(level - 1)
                 )
             )
         }
 
-        if (levelXpRequirements != null) {
-            return levelXpRequirements.getOrNull(level) ?: Double.POSITIVE_INFINITY
-        }
-
-        return Double.POSITIVE_INFINITY
+        return levelXpRequirements[level - 1].toDouble()
     }
+
 
     fun getFormattedExpForLevel(level: Int): String {
         val required = getExpForLevel(level)
