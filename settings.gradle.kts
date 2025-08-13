@@ -7,6 +7,14 @@ pluginManagement {
     }
 }
 
+// In settings.gradle.kts
+buildCache {
+    local {
+        isEnabled = true
+    }
+}
+
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
