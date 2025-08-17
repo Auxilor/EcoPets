@@ -27,5 +27,6 @@ messages:
 
 menu:
   title: "Pets"
+  level-title: "%pet%"
 
 infinity: "∞"
