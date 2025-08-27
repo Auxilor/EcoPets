@@ -154,7 +154,7 @@ class Pet(
                 NumberUtils.evaluateExpression(
                     sub.getString("value")
                         .replace("%level%", it.toString())
-                ).toNiceString()
+                )
             }
         }
 
@@ -262,7 +262,7 @@ class Pet(
     )
 
     fun makePetEntity(): PetEntity {
-        return PetEntity.create(this)
+        return PetEntity.create(plugin, this)
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
@@ -458,7 +458,16 @@ class Pet(
         val commands = levelCommands[level] ?: emptyList()
 
         for (command in commands) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.name))
+            var filledCommand = command.replace("%player%", player.name).replace("%level%", level.toString())
+
+            for (placeholder in levelPlaceholders) {
+                val value = placeholder(level)
+                filledCommand = filledCommand.replace("%${placeholder.id}%", value.toString())
+                filledCommand = filledCommand.replace("%${placeholder.id}_int%", value.toInt().toString())
+                filledCommand = filledCommand.replace("%${placeholder.id}_formatted%", value.toNiceString())
+            }
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), filledCommand)
         }
     }
 
@@ -481,7 +490,7 @@ class Pet(
 
 private class LevelPlaceholder(
     val id: String,
-    private val function: (Int) -> String
+    private val function: (Int) -> Double
 ) {
     operator fun invoke(level: Int) = function(level)
 }
@@ -489,7 +498,7 @@ private class LevelPlaceholder(
 private fun Collection<LevelPlaceholder>.format(string: String, level: Int): String {
     var process = string
     for (placeholder in this) {
-        process = process.replace("%${placeholder.id}%", placeholder(level))
+        process = process.replace("%${placeholder.id}%", placeholder(level).toNiceString())
     }
     return process
 }
