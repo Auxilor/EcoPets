@@ -18,13 +18,13 @@ class ItemDisplayPetEntity(
             .build()
 
         val itemDisplay = location.world!!.spawn(location, ItemDisplay::class.java) {
-            it.itemStack = skull
+            it.setItemStack(skull)
             it.isCustomNameVisible = true
             @Suppress("DEPRECATION")
             it.customName = pet.name
             it.teleportDuration = plugin.configYml.getInt("pet-entity.item-display.teleport-duration", 3)
         }
 
-        return itemDisplay;
+        return itemDisplay
     }
 }
