@@ -3,7 +3,6 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.getDoubleFromExpression
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -15,7 +14,6 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
-import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
 import java.util.*
 import kotlin.math.PI
@@ -99,7 +97,7 @@ class PetDisplay(
         }
     }
 
-    private fun getLocation(player: Player): Location {
+    private fun getLocation(player: Player, d: Double): Location {
         val direction = player.eyeLocation.direction.clone().normalize()
 
         val locationXZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_xz_offset") ?: 0.75
@@ -160,9 +158,6 @@ class PetDisplay(
             if (pet == null) {
                 return null
             }
-
-            val location = getLocation(player)
-            val stand = pet.makePetEntity().spawn(location)
 
             val location = getLocation(player, 0.0)
             val entity = pet.makePetEntity().spawn(location)
