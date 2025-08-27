@@ -1,6 +1,9 @@
 name: "<gradient:#1e3c72>Ravager</gradient:#2a5298>"
 description: "&8&oLevel up by successfully defending against village raids"
 
+entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0="
+icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0=
+
 level-xp-requirements:
   - 50
   - 150
@@ -72,7 +75,7 @@ level-up-messages:
   1:
     - "&8» &8Gives a &a+%health_boost%%&8 bonus"
 
-level-commands: [ ]
+level-up-effects: [ ]
 
 effects:
   - id: bonus_health
@@ -80,10 +83,6 @@ effects:
       health: "%level%"
 
 conditions: [ ]
-
-entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0="
-
-icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2QyMGJmNTJlYzM5MGEwNzk5Mjk5MTg0ZmM2NzhiZjg0Y2Y3MzJiYjFiZDc4ZmQxYzRiNDQxODU4ZjAyMzVhOCJ9fX0=
 
 spawn-egg:
   enabled: true
@@ -95,3 +94,4 @@ spawn-egg:
     - "&8&ounlock the &r<gradient:#1e3c72>Ravager</gradient:#2a5298>&8&o pet!"
   craftable: false
   recipe: [ ]
+  recipe-permission: ecopets.craft.ravager

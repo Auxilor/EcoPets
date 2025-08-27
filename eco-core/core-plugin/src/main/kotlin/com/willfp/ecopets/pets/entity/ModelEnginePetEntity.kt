@@ -1,8 +1,8 @@
 package com.willfp.ecopets.pets.entity
 
-import com.ticxo.modelengine.api.ModelEngineAPI
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.pets.Pet
+import com.willfp.modelenginebridge.ModelEngineBridge
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 
@@ -12,30 +12,12 @@ class ModelEnginePetEntity(
     private val plugin: EcoPetsPlugin
 ) : PetEntity(pet) {
     override fun spawn(location: Location): ArmorStand {
-        val stand = emptyArmorStandAt(location, pet)
-        val meAnimation = pet.modelEngineAnimation
+        val stand = emptyArmorStandAt(location, pet, isSkull = false)
 
-        val model = ModelEngineAPI.createActiveModel(modelID)
+        val model = ModelEngineBridge.instance.createActiveModel(modelID) ?: return stand
 
-        if (meAnimation != null) {
-            val animationHandler = model.animationHandler
-            val animationProperty = animationHandler.getAnimation(meAnimation)
-
-            if (animationProperty != null) {
-                animationHandler.playAnimation(animationProperty, true)
-            } else {
-                plugin.logger.warning("Animation $meAnimation not found in model $modelID, defaulting to walk!")
-                val animationPropertyWalk = animationHandler.getAnimation("walk")
-                if (animationPropertyWalk != null) {
-                    animationHandler.playAnimation(animationPropertyWalk, true)
-                } else {
-                    plugin.logger.warning("Walk animation not found in $modelID!")
-                }
-            }
-        }
-
-        val modelled = ModelEngineAPI.createModeledEntity(stand)
-        modelled.addModel(model, true)
+        val modelled = ModelEngineBridge.instance.createModeledEntity(stand)
+        modelled.addModel(model)
 
         return stand
     }
