@@ -20,6 +20,7 @@ import com.willfp.eco.util.NumberUtils.evaluateExpression
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
+import com.willfp.eco.util.toNumeral
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
@@ -118,6 +119,8 @@ class Pet(
     }
 
     val entityTexture = config.getString("entity-texture")
+
+    private val xpFormula = config.getStringOrNull("xp-formula")
 
     private val xpFormula = config.getStringOrNull("xp-formula")
 
@@ -330,16 +333,30 @@ class Pet(
     }
 
     fun injectPlaceholdersInto(lore: List<String>, player: Player, forceLevel: Int? = null): List<String> {
-        val withPlaceholders = lore
-            .map {
-                it.replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
-                    .replace("%current_xp%", player.getPetXP(this).toNiceString())
-                    .replace("%required_xp%", this.getFormattedExpForLevel(player.getPetLevel(this) + 1))
-                    .replace("%description%", this.description)
-                    .replace("%pet%", this.name)
-                    .replace("%level%", (forceLevel ?: player.getPetLevel(this)).toString())
+        val level = forceLevel ?: player.getPetLevel(this)
+        val regex = Regex("%level_(-?\\d+)(_numeral)?%")
+
+        val withPlaceholders = lore.map { line ->
+            var result = line
+                .replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
+                .replace("%current_xp%", player.getPetXP(this).toNiceString())
+                .replace("%required_xp%", this.getFormattedExpForLevel(level + 1))
+                .replace("%description%", this.description)
+                .replace("%pet%", this.name)
+                .replace("%level%", level.toString())
+                .replace("%level_numeral%", level.toNumeral())
+
+            // Handle dynamic %level_X% and %level_X_numeral%
+            result = regex.replace(result) { match ->
+                val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
+                val isNumeral = match.groupValues[2].isNotEmpty()
+                val newLevel = level + offset
+
+                if (isNumeral) newLevel.toNumeral() else newLevel.toString()
             }
-            .toMutableList()
+
+            result
+        }.toMutableList()
 
         val processed = mutableListOf<List<String>>()
 
@@ -347,20 +364,18 @@ class Pet(
             val whitespace = s.length - s.replace(" ", "").length
 
             processed.add(
-                if (s.contains("%effects%")) {
-                    getEffectsDescription(forceLevel ?: player.getPetLevel(this), whitespace)
-                } else if (s.contains("%rewards%")) {
-                    getRewardsDescription(forceLevel ?: player.getPetLevel(this), whitespace)
-                } else if (s.contains("%level_up_messages%")) {
-                    getLevelUpMessages(forceLevel ?: player.getPetLevel(this), whitespace)
-                } else {
-                    listOf(s)
+                when {
+                    s.contains("%effects%") -> getEffectsDescription(level, whitespace)
+                    s.contains("%rewards%") -> getRewardsDescription(level, whitespace)
+                    s.contains("%level_up_messages%") -> getLevelUpMessages(level, whitespace)
+                    else -> listOf(s)
                 }
             )
         }
 
         return processed.flatten().formatEco(player)
     }
+
 
     override fun onRegister() {
         petXpGains.forEach { it.bind(PetXPAccumulator(this)) }
@@ -413,20 +428,20 @@ class Pet(
      * Get the XP required to reach the next level, if currently at [level].
      */
     fun getExpForLevel(level: Int): Double {
+        if (level < 1 || level > maxLevel) {
+            return Double.MAX_VALUE
+        }
+
         if (xpFormula != null) {
             return evaluateExpression(
                 xpFormula,
                 placeholderContext(
-                    injectable = LevelInjectable(level)
+                    injectable = LevelInjectable(level - 1)
                 )
             )
         }
 
-        if (levelXpRequirements != null) {
-            return levelXpRequirements.getOrNull(level) ?: Double.POSITIVE_INFINITY
-        }
-
-        return Double.POSITIVE_INFINITY
+        return levelXpRequirements[level - 1].toDouble()
     }
 
     fun getFormattedExpForLevel(level: Int): String {
@@ -485,6 +500,12 @@ private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
     ""
 )
 
+private val shouldHidePetKey: PersistentDataKey<Boolean> = PersistentDataKey(
+    EcoPetsPlugin.instance.namespacedKeyFactory.create("hide_pet"),
+    PersistentDataKeyType.BOOLEAN,
+    false
+)
+
 private val petEggKey = EcoPetsPlugin.instance.namespacedKeyFactory.create("pet_egg")
 
 var ItemStack.petEgg: Pet?
@@ -503,6 +524,10 @@ val OfflinePlayer.activePetLevel: PetLevel?
         val active = this.activePet ?: return null
         return this.getPetLevelObject(active)
     }
+
+var OfflinePlayer.shouldHidePet: Boolean
+    get() = this.profile.read(shouldHidePetKey)
+    set(value) = this.profile.write(shouldHidePetKey, value)
 
 fun OfflinePlayer.getPetLevel(pet: Pet): Int =
     this.profile.read(pet.levelKey)
