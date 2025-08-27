@@ -72,14 +72,14 @@ permissions:
     default: true
 
   ecopets.xpmultiplier.50percent:
-    description: Gives the player 50% more skill experience
+    description: Gives the player 50% more pet experience
     default: false
   ecopets.xpmultiplier.double:
-    description: Gives the player 2x skill experience
+    description: Gives the player 2x pet experience
     default: false
   ecopets.xpmultiplier.triple:
-    description: Gives the player 3x skill experience
+    description: Gives the player 3x pet experience
     default: false
   ecopets.xpmultiplier.quadruple:
-    description: Gives the player 4x skill experience
+    description: Gives the player 4x pet experience
     default: false

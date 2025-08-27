@@ -147,6 +147,23 @@ gui:
       row: 6
       column: 2
 
+  toggle:
+    hide-pet:
+      item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI1YjhlZWQ1YzU2NWJkNDQwZWM0N2M3OWMyMGQ1Y2YzNzAxNjJiMWQ5YjVkZDMxMDBlZDYyODNmZTAxZDZlIn19fQ==
+      name: "&cHide Pet"
+      lore:
+        - "&f"
+        - "&eClick to hide your pet"
+    show-pet:
+      item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjNmNzliMjA3ZDYxZTEyMjUyM2I4M2Q2MTUwOGQ5OWNmYTA3OWQ0NWJmMjNkZjJhOWE1MTI3ZjkwNzFkNGIwMCJ9fX0=
+      name: "&aShow Pet"
+      lore:
+        - "&f"
+        - "&eClick to show your pet"
+    location:
+      row: 6
+      column: 8
+
   # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
   custom-slots: [ ]
 
@@ -260,7 +277,15 @@ level-gui:
 
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
+  show-hologram: true # If the pet's name should be shown above the pet
   name: "%player%&f's %pet%&f (Lvl. %level%)"
+  location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
+  location_xz_offset: 0.75 # How far the pet should be from the player on the X and Z axis (Default: 0.75)
+  bobbing: true # If the pet should bob up and down
+  bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
+  rotation: true # If the pet should rotate/spin
+  rotation-intensity: 20 # How fast the pet should rotate/spin (Default: 20)
+  scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
   item-display:
     enabled: false
     teleport-duration: 3
