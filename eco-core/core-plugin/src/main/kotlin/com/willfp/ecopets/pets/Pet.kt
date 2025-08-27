@@ -122,7 +122,9 @@ class Pet(
 
     private val xpFormula = config.getStringOrNull("xp-formula")
 
-    private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
+    private val xpFormula = config.getStringOrNull("xp-formula")
+
+    private val levelXpRequirements = config.getDoublesOrNull("level-xp-requirements")
 
     val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements?.size ?: Int.MAX_VALUE
 
