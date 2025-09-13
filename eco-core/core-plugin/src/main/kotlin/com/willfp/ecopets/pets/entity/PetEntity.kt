@@ -47,14 +47,20 @@ private fun ArmorStand.applyScale(plugin: EcoPlugin, isSkull: Boolean) {
         return
     }
 
-    val scaleAttribute = getAttribute(Attribute.SCALE)
-    if (scaleAttribute == null) {
-        plugin.logger.warning("Failed to set scale - SCALE attribute not found on ArmorStand")
-        return
+    val scaleAttribute = try {
+        Attribute::class.java.getField("SCALE").get(null) as? Attribute
+    } catch (_: NoSuchFieldException) {
+        null
     }
 
-    scaleAttribute.baseValue = scale
-
+    if (scaleAttribute != null) {
+        val attr = getAttribute(scaleAttribute)
+        if (attr != null) {
+            attr.baseValue = scale
+        } else {
+            plugin.logger.warning("Failed to set scale - SCALE attribute not found on ArmorStand instance")
+        }
+    }
 }
 
 internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): ArmorStand {

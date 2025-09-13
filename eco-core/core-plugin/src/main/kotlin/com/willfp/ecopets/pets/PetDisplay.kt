@@ -3,7 +3,6 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.getDoubleFromExpression
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -30,6 +29,10 @@ class PetDisplay(
         }
 
         tick++
+        // Reset tick to prevent overflow
+        if (tick > 1_048_576) {
+            tick = 0
+        }
     }
 
     private val smoothYOffsetMap = mutableMapOf<UUID, Double>()

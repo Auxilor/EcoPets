@@ -123,12 +123,14 @@ object PetsGUI {
                             player.activePet = pet
                         }
 
-                        player.playSound(
-                            player.location,
-                            Sound.valueOf(plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()),
-                            1f,
-                            plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
-                        )
+                        try {
+                            val soundName = plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()
+                            val soundMethod = Sound::class.java.getMethod("valueOf", String::class.java)
+                            val sound = soundMethod.invoke(null, soundName) as Sound
+                            player.playSound(player.location, sound, 1f, plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat())
+                        } catch (e: Exception) {
+                            plugin.logger.warning("Failed to play sound for pet icon click: ${e.message}")
+                        }
                     }
                 })
             }
