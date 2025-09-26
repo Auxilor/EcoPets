@@ -277,6 +277,7 @@ level-gui:
 
 pet-entity:
   enabled: true # If you disable this, there will be no floating pets
+  show-hologram: true # If the pet's name should be shown above the pet
   name: "%player%&f's %pet%&f (Lvl. %level%)"
   location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
   location_xz_offset: 0.75 # How far the pet should be from the player on the X and Z axis (Default: 0.75)
@@ -285,6 +286,10 @@ pet-entity:
   rotation: true # If the pet should rotate/spin
   rotation-intensity: 20 # How fast the pet should rotate/spin (Default: 20)
   scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
+  item-display:
+    enabled: false
+    teleport-duration: 3
+
 
 level-up:
   message:

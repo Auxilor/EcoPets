@@ -60,6 +60,7 @@ allprojects {
         compileKotlin {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_21)
+
             }
         }
 

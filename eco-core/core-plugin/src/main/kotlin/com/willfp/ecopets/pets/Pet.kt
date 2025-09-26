@@ -122,7 +122,7 @@ class Pet(
 
     private val xpFormula = config.getStringOrNull("xp-formula")
 
-    private val levelXpRequirements = config.getDoublesOrNull("level-xp-requirements")
+    private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements?.size ?: Int.MAX_VALUE
 
@@ -152,7 +152,7 @@ class Pet(
                 NumberUtils.evaluateExpression(
                     sub.getString("value")
                         .replace("%level%", it.toString())
-                ).toNiceString()
+                )
             }
         }
 
@@ -260,7 +260,7 @@ class Pet(
     )
 
     fun makePetEntity(): PetEntity {
-        return PetEntity.create(this)
+        return PetEntity.create(plugin, this)
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
@@ -426,20 +426,20 @@ class Pet(
      * Get the XP required to reach the next level, if currently at [level].
      */
     fun getExpForLevel(level: Int): Double {
+        if (level < 1 || level > maxLevel) {
+            return Double.MAX_VALUE
+        }
+
         if (xpFormula != null) {
             return evaluateExpression(
                 xpFormula,
                 placeholderContext(
-                    injectable = LevelInjectable(level)
+                    injectable = LevelInjectable(level - 1)
                 )
             )
         }
 
-        if (levelXpRequirements != null) {
-            return levelXpRequirements.getOrNull(level) ?: Double.POSITIVE_INFINITY
-        }
-
-        return Double.POSITIVE_INFINITY
+        return levelXpRequirements[level - 1].toDouble()
     }
 
     fun getFormattedExpForLevel(level: Int): String {
@@ -456,7 +456,16 @@ class Pet(
         val commands = levelCommands[level] ?: emptyList()
 
         for (command in commands) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.name))
+            var filledCommand = command.replace("%player%", player.name).replace("%level%", level.toString())
+
+            for (placeholder in levelPlaceholders) {
+                val value = placeholder(level)
+                filledCommand = filledCommand.replace("%${placeholder.id}%", value.toString())
+                filledCommand = filledCommand.replace("%${placeholder.id}_int%", value.toInt().toString())
+                filledCommand = filledCommand.replace("%${placeholder.id}_formatted%", value.toNiceString())
+            }
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), filledCommand)
         }
     }
 
@@ -479,7 +488,7 @@ class Pet(
 
 private class LevelPlaceholder(
     val id: String,
-    private val function: (Int) -> String
+    private val function: (Int) -> Double
 ) {
     operator fun invoke(level: Int) = function(level)
 }
@@ -487,7 +496,7 @@ private class LevelPlaceholder(
 private fun Collection<LevelPlaceholder>.format(string: String, level: Int): String {
     var process = string
     for (placeholder in this) {
-        process = process.replace("%${placeholder.id}%", placeholder(level))
+        process = process.replace("%${placeholder.id}%", placeholder(level).toNiceString())
     }
     return process
 }

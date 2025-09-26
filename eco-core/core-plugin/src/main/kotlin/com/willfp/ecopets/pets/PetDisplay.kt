@@ -3,17 +3,19 @@ package com.willfp.ecopets.pets
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
-import com.willfp.libreforge.getDoubleFromExpression
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
-import java.util.UUID
+import org.bukkit.event.world.EntitiesUnloadEvent
+import java.util.*
 import kotlin.math.PI
 import kotlin.math.abs
 
@@ -22,11 +24,15 @@ class PetDisplay(
 ) : Listener {
     private var tick = 0
 
-    private val trackedEntities = mutableMapOf<UUID, PetArmorStand>()
+    private val trackedEntities = mutableMapOf<UUID, PetDisplayEntity>()
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            tickPlayer(player)
+            if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
+                tickPlayer(player)
+            } else {
+                remove(player)
+            }
         }
 
         tick++
@@ -46,25 +52,32 @@ class PetDisplay(
             return
         }
 
-        val stand = getOrNew(player) ?: return
+        val entity = getOrNew(player) ?: return
         val pet = player.activePet
+        val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
 
         if (pet != null) {
-            if (player.isInvisible) {
+            if (player.isInvisible || player.isDead || !player.isOnline) {
                 remove(player)
                 return
             }
 
-            @Suppress("DEPRECATION")
-            stand.customName = plugin.configYml.getString("pet-entity.name")
-                .replace("%player%", player.displayName)
-                .replace("%pet%", pet.name)
-                .replace("%level%", player.getPetLevel(pet).toString())
-                .formatEco(player)
+            if (showHologram) {
+                @Suppress("DEPRECATION")
+                entity.customName = plugin.configYml.getString("pet-entity.name")
+                    .replace("%player%", player.displayName)
+                    .replace("%pet%", pet.name)
+                    .replace("%level%", player.getPetLevel(pet).toString())
+                    .formatEco(player)
+                entity.isCustomNameVisible = true
+            } else {
+                entity.isCustomNameVisible = false
+            }
 
-            val location = getLocation(player)
+            val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
             val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
             val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
+
 
 
             if (plugin.configYml.getBool("pet-entity.bobbing")) {
@@ -74,17 +87,17 @@ class PetDisplay(
             }
 
             if (location.world != null) {
-                stand.teleport(location)
+                entity.teleport(location)
             }
 
             if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
                 val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
-                stand.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
+                entity.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
             }
         }
     }
 
-    private fun getLocation(player: Player): Location {
+    private fun getLocation(player: Player, d: Double): Location {
         val direction = player.eyeLocation.direction.clone().normalize()
 
         val locationXZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_xz_offset") ?: 0.75
@@ -129,17 +142,13 @@ class PetDisplay(
         return player.location.clone().add(0.0, DEFAULT_EYE_HEIGHT, 0.0).add(offset)
     }
 
-    private fun getOrNew(player: Player): ArmorStand? {
-        if (player.isInvisible) {
-            return null
-        }
-
+    private fun getOrNew(player: Player): Entity? {
         val tracked = trackedEntities[player.uniqueId]
-        val existing = tracked?.stand
+        val existing = tracked?.entity
 
         val pet = player.activePet
         if (pet != tracked?.pet) {
-            tracked?.stand?.remove()
+            tracked?.entity?.remove()
         }
 
         if (existing == null || existing.isDead || pet == null) {
@@ -150,26 +159,31 @@ class PetDisplay(
                 return null
             }
 
-            val location = getLocation(player)
-            val stand = pet.makePetEntity().spawn(location)
+            val location = getLocation(player, 0.0)
+            val entity = pet.makePetEntity().spawn(location)
 
-            trackedEntities[player.uniqueId] = PetArmorStand(stand, pet)
+            trackedEntities[player.uniqueId] = PetDisplayEntity(entity, pet)
         }
 
-        return trackedEntities[player.uniqueId]?.stand
+        return trackedEntities[player.uniqueId]?.entity
     }
 
     fun shutdown() {
         for (stand in trackedEntities.values) {
-            stand.stand.remove()
+            stand.entity.remove()
         }
 
         trackedEntities.clear()
     }
 
     private fun remove(player: Player) {
-        trackedEntities[player.uniqueId]?.stand?.remove()
+        trackedEntities[player.uniqueId]?.entity?.remove()
         trackedEntities.remove(player.uniqueId)
+    }
+
+    private fun remove(uuid: UUID) {
+        trackedEntities[uuid]?.entity?.remove()
+        trackedEntities.remove(uuid)
     }
 
     @EventHandler
@@ -187,8 +201,22 @@ class PetDisplay(
         remove(event.player)
     }
 
-    private data class PetArmorStand(
-        val stand: ArmorStand,
+    @EventHandler
+    fun onPlayerDeath(event: PlayerDeathEvent) {
+        remove(event.player)
+    }
+
+    @EventHandler
+    fun onEntitiesUnload(event: EntitiesUnloadEvent) {
+        trackedEntities.entries.forEach {
+            if (event.chunk == it.value.entity.chunk) {
+                remove(it.key)
+            }
+        }
+    }
+
+    private data class PetDisplayEntity(
+        val entity: Entity,
         val pet: Pet
     )
 
