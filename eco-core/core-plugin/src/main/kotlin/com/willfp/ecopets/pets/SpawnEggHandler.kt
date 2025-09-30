@@ -1,13 +1,14 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.EcoPlugin
-import com.willfp.eco.util.StringUtils
+import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.persistence.PersistentDataType
 
 class SpawnEggHandler(
     private val plugin: EcoPlugin
@@ -16,7 +17,7 @@ class SpawnEggHandler(
         ignoreCancelled = true
     )
     fun handle(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK) {
+        if (!event.action.isRightClick) {
             return
         }
 
@@ -24,6 +25,10 @@ class SpawnEggHandler(
 
         val item = event.item ?: return
         val pet = item.petEgg ?: return
+        val levelKey = plugin.namespacedKeyFactory.create("${pet.id}_egg_level")
+        val level = item.itemMeta.persistentDataContainer.get(levelKey, PersistentDataType.INTEGER)
+        val xpKey = plugin.namespacedKeyFactory.create("${pet.id}_egg_xp")
+        val xp = item.itemMeta.persistentDataContainer.get(xpKey, PersistentDataType.DOUBLE)
 
         event.isCancelled = true
         event.setUseItemInHand(Event.Result.DENY)
@@ -41,10 +46,14 @@ class SpawnEggHandler(
             hand.amount = hand.amount - 1
         }
 
-        player.setPetLevel(pet, 1)
-        player.sendMessage(
-            plugin.langYml.getMessage("pet-spawned", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%pet%", pet.name)
-        )
+        if (level == null) {
+            player.setPetLevel(pet, 1)
+        } else {
+            player.setPetLevel(pet, level)
+        }
+
+        if (xp != null) {
+            player.setPetXP(pet, xp)
+        }
     }
 }

@@ -13,14 +13,7 @@ import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
 import com.willfp.ecopets.libreforge.FilterPet
 import com.willfp.ecopets.libreforge.TriggerGainPetXp
 import com.willfp.ecopets.libreforge.TriggerLevelUpPet
-import com.willfp.ecopets.pets.DiscoverRecipeListener
-import com.willfp.ecopets.pets.PetDisplay
-import com.willfp.ecopets.pets.PetLevelListener
-import com.willfp.ecopets.pets.Pets
-import com.willfp.ecopets.pets.SpawnEggHandler
-import com.willfp.ecopets.pets.activePet
-import com.willfp.ecopets.pets.activePetLevel
-import com.willfp.ecopets.pets.hasPet
+import com.willfp.ecopets.pets.*
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.libreforge.SimpleProvidedHolder
@@ -36,7 +29,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
 class EcoPetsPlugin : LibreforgePlugin() {
-    private val petDisplay = PetDisplay(this)
+    val petDisplay = PetDisplay(this)
 
     init {
         instance = this
@@ -123,7 +116,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
             PetLevelListener(this),
             SpawnEggHandler(this),
             petDisplay,
-            DiscoverRecipeListener(this)
+            DiscoverRecipeListener(this),
         )
     }
 

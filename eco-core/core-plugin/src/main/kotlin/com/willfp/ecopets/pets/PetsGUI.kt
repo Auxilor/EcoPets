@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.config.updating.ConfigUpdater
+import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.page.Page
@@ -51,22 +52,6 @@ object PetsGUI {
                     .setDisplayName(plugin.configYml.getFormattedString("gui.pet-info.no-active.name"))
                     .addLoreLines(plugin.configYml.getFormattedStrings("gui.pet-info.no-active.lore"))
                     .build()
-        }
-
-        val togglePetItemBuilder = { player: Player, _: Menu ->
-            val isPetVisible = !player.shouldHidePet
-
-            if (isPetVisible) {
-                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.hide-pet.item")))
-                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.hide-pet.name"))
-                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.hide-pet.lore"))
-                    .build()
-            } else {
-                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.show-pet.item")))
-                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.show-pet.name"))
-                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.show-pet.lore"))
-                    .build()
-            }
         }
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
@@ -130,6 +115,38 @@ object PetsGUI {
                             plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
                         )
                     }
+
+                    onRightClick { event, _, _ ->
+                        val player = event.whoClicked as Player
+                        val page = menu.getPage(player)
+
+                        val unlockedPets = Pets.values()
+                            .sortedByDescending { player.getPetLevel(it) }
+                            .filter { player.getPetLevel(it) > 0 }
+
+                        val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
+
+                        val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onRightClick
+
+                        val level = player.getPetLevel(pet)
+                        val xp = player.getPetXP(pet)
+
+                        if (player.activePet == pet) {
+                            player.activePet = null
+                        }
+
+                        player.setPetLevel(pet, 0)
+                        player.setPetXP(pet, 0.0)
+
+                        val egg = pet.spawnEggBacker(level, xp)?.clone()
+
+                        if (egg != null) {
+                            DropQueue(player)
+                                .addItem(egg)
+                                .forceTelekinesis()
+                                .push()
+                        }
+                    }
                 })
             }
 
@@ -191,6 +208,12 @@ object PetsGUI {
                         val player = event.whoClicked as Player
                         player.activePet?.levelGUI?.open(player)
                     }
+
+                    onRightClick { event, _, _ ->
+                        val player = event.whoClicked as Player
+
+                        player.activePet = null;
+                    }
                 }
             )
 
@@ -219,12 +242,17 @@ object PetsGUI {
                 }
             )
 
-            setSlot(plugin.configYml.getInt("gui.toggle.location.row"),
-                plugin.configYml.getInt("gui.toggle.location.column"),
-                slot(togglePetItemBuilder) {
-                    onLeftClick { event, _ ->
+            setSlot(
+                plugin.configYml.getInt("gui.show-pet.location.row"),
+                plugin.configYml.getInt("gui.show-pet.location.column"),
+                slot(
+                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.show-pet.item")))
+                        .setDisplayName(plugin.configYml.getString("gui.show-pet.name"))
+                        .build()
+                ) {
+                    onLeftClick {event, _ ->
                         val player = event.whoClicked as Player
-                        player.shouldHidePet = !player.shouldHidePet
+                        plugin.petDisplay.togglePetVisibility(player)
                     }
                 }
             )

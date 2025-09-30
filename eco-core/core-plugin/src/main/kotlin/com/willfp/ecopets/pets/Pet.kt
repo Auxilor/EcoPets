@@ -62,7 +62,7 @@ class Pet(
         EcoPetsPlugin.instance.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
     )
 
-    private val spawnEggBacker: ItemStack? = run {
+    fun spawnEggBacker(level: Int = 0, xp: Double = 0.0): ItemStack? = run {
         val enabled = config.getBool("spawn-egg.enabled")
         if (!enabled) {
             return@run null
@@ -79,8 +79,26 @@ class Pet(
         val item = ItemStackBuilder(lookup)
             .addLoreLines(config.getFormattedStrings("spawn-egg.lore"))
             .apply {
-                if (name != null) {
-                    setDisplayName(name)
+                if (level >= 1) {
+                    writeMetaKey(
+                        plugin.namespacedKeyFactory.create("${id}_egg_level"),
+                        PersistentDataType.INTEGER,
+                        level
+                    )
+                }
+
+                if (xp > 0) {
+                    writeMetaKey(
+                        plugin.namespacedKeyFactory.create("${id}_egg_xp"),
+                        PersistentDataType.DOUBLE,
+                        xp
+                    )
+                }
+
+                if (name != null && level >= 1) {
+                    setDisplayName(name + " §8(§7Lvl. $level§8)")
+                } else if (name != null) {
+                    setDisplayName(name + " §8(§7Lvl. 1§8)")
                 }
             }
             .build().apply { petEgg = this@Pet }
@@ -100,7 +118,7 @@ class Pet(
     }
 
     val spawnEgg: ItemStack?
-        get() = this.spawnEggBacker?.clone()
+        get() = this.spawnEggBacker()?.clone()
 
     val recipe = run {
         val egg = spawnEgg

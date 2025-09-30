@@ -119,6 +119,13 @@ gui:
       sound: ui_button_click
       pitch: 1
 
+  show-pet:
+    item: barrier
+    name: "&4Show/Hide Pet"
+    location:
+      row: 6
+      column: 3
+
   prev-page:
     item: arrow
     name: "&fPrevious Page"
