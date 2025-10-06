@@ -17,6 +17,7 @@ import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
 import com.willfp.ecopets.pets.Pets
+import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
@@ -88,6 +89,8 @@ class EcoPetsPlugin : LibreforgePlugin() {
     }
 
     override fun handleReload() {
+        PetsGUI.update(this)
+
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return
         }

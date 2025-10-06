@@ -1,6 +1,5 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.page.Page
@@ -24,17 +23,15 @@ object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
 
-    @JvmStatic
-    @ConfigUpdater
-    fun update(plugin: EcoPetsPlugin) {
+    internal fun update(plugin: EcoPetsPlugin) {
         val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
         val topLeftColumn = plugin.configYml.getInt("gui.pet-area.top-left.column")
         val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
         val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
 
         petAreaSlots.clear()
-        for (row in topLeftRow .. bottomRightRow) {
-            for (column in topLeftColumn .. bottomRightColumn) {
+        for (row in topLeftRow..bottomRightRow) {
+            for (column in topLeftColumn..bottomRightColumn) {
                 petAreaSlots.add(Pair(row, column))
             }
         }
@@ -194,7 +191,8 @@ object PetsGUI {
                 }
             )
 
-            setSlot(plugin.configYml.getInt("gui.close.location.row"),
+            setSlot(
+                plugin.configYml.getInt("gui.close.location.row"),
                 plugin.configYml.getInt("gui.close.location.column"),
                 slot(
                     ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
@@ -205,7 +203,8 @@ object PetsGUI {
                 }
             )
 
-            setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
+            setSlot(
+                plugin.configYml.getInt("gui.deactivate-pet.location.row"),
                 plugin.configYml.getInt("gui.deactivate-pet.location.column"),
                 slot(
                     ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
@@ -219,7 +218,8 @@ object PetsGUI {
                 }
             )
 
-            setSlot(plugin.configYml.getInt("gui.toggle.location.row"),
+            setSlot(
+                plugin.configYml.getInt("gui.toggle.location.row"),
                 plugin.configYml.getInt("gui.toggle.location.column"),
                 slot(togglePetItemBuilder) {
                     onLeftClick { event, _ ->
