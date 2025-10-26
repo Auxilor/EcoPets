@@ -10,9 +10,9 @@ import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.util.SoundUtils
 import com.willfp.ecopets.EcoPetsPlugin
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
@@ -122,7 +122,7 @@ object PetsGUI {
 
                         player.playSound(
                             player.location,
-                            Sound.valueOf(plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()),
+                            SoundUtils.getSound(plugin.configYml.getString("gui.pet-icon.click.sound"))!!,
                             1f,
                             plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
                         )
