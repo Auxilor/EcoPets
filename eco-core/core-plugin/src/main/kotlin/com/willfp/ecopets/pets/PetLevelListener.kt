@@ -1,7 +1,9 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.util.SoundUtils
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
+import com.willfp.libreforge.toDispatcher
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -16,18 +18,21 @@ class PetLevelListener(
         val player = event.player
         val level = event.level
 
+        pet.levelUpEffects?.trigger(player.toDispatcher())
         pet.executeLevelCommands(player, level)
 
         if (this.plugin.configYml.getBool("level-up.sound.enabled")) {
-            val sound = Sound.valueOf(this.plugin.configYml.getString("level-up.sound.id").uppercase())
+            val sound = SoundUtils.getSound(this.plugin.configYml.getString("level-up.sound.id"))
             val pitch = this.plugin.configYml.getDouble("level-up.sound.pitch")
 
-            player.playSound(
-                player.location,
-                sound,
-                100f,
-                pitch.toFloat()
-            )
+            if (sound != null) {
+                player.playSound(
+                    player.location,
+                    sound,
+                    100f,
+                    pitch.toFloat()
+                )
+            }
         }
 
         if (this.plugin.configYml.getBool("level-up.message.enabled")) {
