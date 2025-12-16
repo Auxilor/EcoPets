@@ -11,7 +11,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
-class CommandActivateOther(plugin: EcoPlugin) : Subcommand(plugin, "activateother", "ecopets.command.activateother", false) {
+class CommandActivateOther(plugin: EcoPlugin) :
+    Subcommand(plugin, "activateother", "ecopets.command.activateother", false) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             sender.sendMessage(plugin.langYml.getMessage("needs-player"))
@@ -25,33 +26,47 @@ class CommandActivateOther(plugin: EcoPlugin) : Subcommand(plugin, "activateothe
 
         val playerName = args[0]
 
-        val player = Bukkit.getPlayer(playerName)
+        @Suppress("DEPRECATION")
+        val player = Bukkit.getOfflinePlayer(playerName)
 
-        if (player == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
+        if (!player.hasPlayedBefore() && player !is Player) {
+            sender.sendMessage(
+                plugin.langYml.getMessage("invalid-player")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
         val pet = Pets.getByID(args[1])
 
         if (pet == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("invalid-pet")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
         if (!player.hasPet(pet)) {
-            player.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("doesnt-have-pet")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
         if (player.activePet == pet) {
-            player.sendMessage(plugin.langYml.getMessage("pet-already-active"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("pet-already-active")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
-        player.sendMessage(
+        sender.sendMessage(
             plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)
+                .replace("%player%", playerName)
         )
         player.activePet = pet
     }

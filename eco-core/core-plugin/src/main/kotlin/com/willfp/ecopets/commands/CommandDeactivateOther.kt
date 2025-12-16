@@ -9,35 +9,39 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class CommandDeactivateOther(plugin: EcoPlugin) : Subcommand(plugin, "deactivateother", "ecopets.command.deactivateother", false) {
+class CommandDeactivateOther(plugin: EcoPlugin) :
+    Subcommand(plugin, "deactivateother", "ecopets.command.deactivateother", false) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             sender.sendMessage(plugin.langYml.getMessage("needs-player"))
             return
         }
 
-        if (args.size == 1) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-pet"))
-            return
-        }
-
         val playerName = args[0]
 
-        val player = Bukkit.getPlayer(playerName)
+        @Suppress("DEPRECATION")
+        val player = Bukkit.getOfflinePlayer(playerName)
 
-        if (player == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
+        if (!player.hasPlayedBefore() && player !is Player) {
+            sender.sendMessage(
+                plugin.langYml.getMessage("invalid-player")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
         if (player.activePet == null) {
-            player.sendMessage(plugin.langYml.getMessage("no-pet-active"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("no-pet-active")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
-        player.sendMessage(
+        sender.sendMessage(
             plugin.langYml.getMessage("deactivated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", player.activePet?.name ?: "")
+                .replace("%player%", playerName)
         )
 
         player.activePet = null
