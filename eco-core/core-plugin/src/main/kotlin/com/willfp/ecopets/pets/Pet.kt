@@ -22,6 +22,8 @@ import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.toNumeral
 import com.willfp.ecopets.EcoPetsPlugin
+import com.willfp.ecopets.api.event.PlayerPetActivateEvent
+import com.willfp.ecopets.api.event.PlayerPetDeactivateEvent
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.entity.PetEntity
@@ -524,7 +526,18 @@ var ItemStack.petEgg: Pet?
 
 var OfflinePlayer.activePet: Pet?
     get() = Pets.getByID(this.profile.read(activePetKey))
-    set(value) = this.profile.write(activePetKey, value?.id ?: "")
+    set(value) {
+        if (value == null) {
+            val deactivateEvent = PlayerPetDeactivateEvent(this)
+            Bukkit.getPluginManager().callEvent(deactivateEvent)
+            if (deactivateEvent.isCancelled) return
+        } else {
+            val activateEvent = PlayerPetActivateEvent(this, value)
+            Bukkit.getPluginManager().callEvent(activateEvent)
+            if (activateEvent.isCancelled) return
+        }
+        this.profile.write(activePetKey, value?.id ?: "")
+    }
 
 val OfflinePlayer.activePetLevel: PetLevel?
     get() {

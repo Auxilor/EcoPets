@@ -8,6 +8,8 @@ import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
 import com.willfp.ecopets.libreforge.ConditionHasPet
 import com.willfp.ecopets.libreforge.ConditionHasPetLevel
+import com.willfp.ecopets.libreforge.EffectActivatePet
+import com.willfp.ecopets.libreforge.EffectDeactivatePet
 import com.willfp.ecopets.libreforge.EffectGivePetXp
 import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
 import com.willfp.ecopets.libreforge.FilterPet
@@ -55,6 +57,8 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Conditions.register(ConditionHasPet)
         Effects.register(EffectPetXpMultiplier)
         Effects.register(EffectGivePetXp)
+        Effects.register(EffectActivatePet)
+        Effects.register(EffectDeactivatePet)
         Triggers.register(TriggerGainPetXp)
         Triggers.register(TriggerLevelUpPet)
         Filters.register(FilterPet)
