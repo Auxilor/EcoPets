@@ -3,6 +3,7 @@ package com.willfp.ecopets.libreforge
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.pets.Pets
+import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.arguments
 import com.willfp.libreforge.effects.Effect
@@ -23,8 +24,7 @@ object EffectGivePetXp : Effect<NoCompileData>("give_pet_xp") {
     override fun onTrigger(config: Config, data: TriggerData, compileData: NoCompileData): Boolean {
         val player = data.player ?: return false
 
-        EcoPetsAPI.instance.givePetExperience(
-            player,
+       player.givePetExperience(
             Pets.getByID(config.getFormattedString("pet", data)) ?: return false,
             config.getDoubleFromExpression("amount", player)
         )

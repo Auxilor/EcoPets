@@ -9,7 +9,6 @@ import com.willfp.ecopets.pets.hasPet
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
 
 class CommandActivateOther(plugin: EcoPlugin) :
     Subcommand(plugin, "activateother", "ecopets.command.activateother", false) {

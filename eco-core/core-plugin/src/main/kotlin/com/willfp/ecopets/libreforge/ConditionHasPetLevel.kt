@@ -4,6 +4,7 @@ import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.Pets
+import com.willfp.ecopets.pets.getPetLevel
 import com.willfp.libreforge.Dispatcher
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.ProvidedHolder
@@ -35,8 +36,8 @@ object ConditionHasPetLevel : Condition<NoCompileData>("has_pet_level") {
     ): Boolean {
         val player = dispatcher.get<Player>() ?: return false
 
-        return EcoPetsAPI.instance.getPetLevel(
-            player,
+
+        return player.getPetLevel(
             Pets.getByID(config.getString("pet").lowercase()) ?: return false
         ) >= config.getIntFromExpression("level", player)
     }

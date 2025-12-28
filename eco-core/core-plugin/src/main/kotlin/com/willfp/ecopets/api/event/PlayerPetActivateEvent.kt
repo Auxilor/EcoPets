@@ -2,11 +2,9 @@ package com.willfp.ecopets.api.event
 
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.OfflinePlayer
-import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
-import org.bukkit.event.player.PlayerEvent
 
 class PlayerPetActivateEvent(
     val who: OfflinePlayer,
