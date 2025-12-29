@@ -22,9 +22,12 @@ import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.toNumeral
 import com.willfp.ecopets.EcoPetsPlugin
+import com.willfp.ecopets.api.event.PlayerPetActivateEvent
+import com.willfp.ecopets.api.event.PlayerPetDeactivateEvent
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.entity.PetEntity
+import com.willfp.ecopets.plugin
 import com.willfp.ecopets.util.LevelInjectable
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.conditions.ConditionList
@@ -53,13 +56,13 @@ class Pet(
     val description = config.getFormattedString("description")
 
     val levelKey: PersistentDataKey<Int> = PersistentDataKey(
-        EcoPetsPlugin.instance.namespacedKeyFactory.create("${id}_level"),
+        plugin.namespacedKeyFactory.create("${id}_level"),
         PersistentDataKeyType.INT,
         0
     )
 
     val xpKey: PersistentDataKey<Double> = PersistentDataKey(
-        EcoPetsPlugin.instance.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
+        plugin.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
     )
 
     private val spawnEggBacker: ItemStack? = run {
@@ -426,7 +429,7 @@ class Pet(
      * Get the XP required to reach the next level, if currently at [level].
      */
     fun getExpForLevel(level: Int): Double {
-        if (level < 1 || level > maxLevel) {
+        if (level !in 1..maxLevel) {
             return Double.MAX_VALUE
         }
 
@@ -502,18 +505,18 @@ private fun Collection<LevelPlaceholder>.format(string: String, level: Int): Str
 }
 
 private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
-    EcoPetsPlugin.instance.namespacedKeyFactory.create("active_pet"),
+    plugin.namespacedKeyFactory.create("active_pet"),
     PersistentDataKeyType.STRING,
     ""
 )
 
 private val shouldHidePetKey: PersistentDataKey<Boolean> = PersistentDataKey(
-    EcoPetsPlugin.instance.namespacedKeyFactory.create("hide_pet"),
+    plugin.namespacedKeyFactory.create("hide_pet"),
     PersistentDataKeyType.BOOLEAN,
     false
 )
 
-private val petEggKey = EcoPetsPlugin.instance.namespacedKeyFactory.create("pet_egg")
+private val petEggKey = plugin.namespacedKeyFactory.create("pet_egg")
 
 var ItemStack.petEgg: Pet?
     get() = Pets.getByID(this.fast().persistentDataContainer.get(petEggKey, PersistentDataType.STRING) ?: "")
@@ -524,7 +527,18 @@ var ItemStack.petEgg: Pet?
 
 var OfflinePlayer.activePet: Pet?
     get() = Pets.getByID(this.profile.read(activePetKey))
-    set(value) = this.profile.write(activePetKey, value?.id ?: "")
+    set(value) {
+        if (value == null) {
+            val deactivateEvent = PlayerPetDeactivateEvent(this)
+            Bukkit.getPluginManager().callEvent(deactivateEvent)
+            if (deactivateEvent.isCancelled) return
+        } else {
+            val activateEvent = PlayerPetActivateEvent(this, value)
+            Bukkit.getPluginManager().callEvent(activateEvent)
+            if (activateEvent.isCancelled) return
+        }
+        this.profile.write(activePetKey, value?.id ?: "")
+    }
 
 val OfflinePlayer.activePetLevel: PetLevel?
     get() {

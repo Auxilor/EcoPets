@@ -39,6 +39,8 @@ permissions:
       ecopets.command.reset: true
       ecopets.command.activate: true
       ecopets.command.deactivate: true
+      ecopets.command.activateother: true
+      ecopets.command.deactivateother: true
 
   ecopets.command.reload:
     description: Allows reloading the config
@@ -69,6 +71,12 @@ permissions:
     default: true
   ecopets.command.deactivate:
     description: Allows the use of /pets deactivate.
+    default: true
+  ecopets.command.activateother:
+    description: Allows the use of /ecopets activateother.
+    default: true
+  ecopets.command.deactivateother:
+    description: Allows the use of /ecopets deactivateother.
     default: true
 
   ecopets.xpmultiplier.50percent:

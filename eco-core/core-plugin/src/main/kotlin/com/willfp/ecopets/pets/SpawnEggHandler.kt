@@ -35,10 +35,10 @@ class SpawnEggHandler(
 
         if (event.hand == EquipmentSlot.HAND) {
             val hand = event.player.inventory.itemInMainHand
-            hand.amount = hand.amount - 1
+            hand.amount -= 1
         } else {
             val hand = event.player.inventory.itemInOffHand
-            hand.amount = hand.amount - 1
+            hand.amount -= 1
         }
 
         player.setPetLevel(pet, 1)

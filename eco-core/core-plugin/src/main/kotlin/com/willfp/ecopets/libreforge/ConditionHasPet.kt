@@ -3,6 +3,7 @@ package com.willfp.ecopets.libreforge
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.pets.Pets
+import com.willfp.ecopets.pets.hasPet
 import com.willfp.libreforge.Dispatcher
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.ProvidedHolder
@@ -19,8 +20,7 @@ object ConditionHasPet : Condition<NoCompileData>("has_pet") {
     ): Boolean {
         val player = dispatcher.get<Player>() ?: return false
 
-        return EcoPetsAPI.instance.hasPet(
-            player,
+        return player.hasPet(
             Pets.getByID(config.getString("pet").lowercase()) ?: return false
         )
     }
