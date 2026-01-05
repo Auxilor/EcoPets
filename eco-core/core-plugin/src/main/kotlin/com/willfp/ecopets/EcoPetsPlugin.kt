@@ -8,11 +8,15 @@ import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
 import com.willfp.ecopets.libreforge.ConditionHasPet
 import com.willfp.ecopets.libreforge.ConditionHasPetLevel
+import com.willfp.ecopets.libreforge.EffectActivatePet
+import com.willfp.ecopets.libreforge.EffectDeactivatePet
 import com.willfp.ecopets.libreforge.EffectGivePetXp
 import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
 import com.willfp.ecopets.libreforge.FilterPet
 import com.willfp.ecopets.libreforge.TriggerGainPetXp
 import com.willfp.ecopets.libreforge.TriggerLevelUpPet
+import com.willfp.ecopets.libreforge.TriggerPetActivate
+import com.willfp.ecopets.libreforge.TriggerPetDeactivate
 import com.willfp.ecopets.pets.DiscoverRecipeListener
 import com.willfp.ecopets.pets.PetDisplay
 import com.willfp.ecopets.pets.PetLevelListener
@@ -36,11 +40,14 @@ import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
+internal lateinit var plugin: EcoPetsPlugin
+    private set
+
 class EcoPetsPlugin : LibreforgePlugin() {
     private val petDisplay = PetDisplay(this)
 
     init {
-        instance = this
+        plugin = this
     }
 
     override fun loadConfigCategories(): List<ConfigCategory> {
@@ -55,8 +62,12 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Conditions.register(ConditionHasPet)
         Effects.register(EffectPetXpMultiplier)
         Effects.register(EffectGivePetXp)
+        Effects.register(EffectActivatePet)
+        Effects.register(EffectDeactivatePet)
         Triggers.register(TriggerGainPetXp)
         Triggers.register(TriggerLevelUpPet)
+        Triggers.register(TriggerPetActivate)
+        Triggers.register(TriggerPetDeactivate)
         Filters.register(FilterPet)
 
         registerSpecificHolderProvider<Player> {
@@ -128,10 +139,5 @@ class EcoPetsPlugin : LibreforgePlugin() {
             petDisplay,
             DiscoverRecipeListener(this)
         )
-    }
-
-    companion object {
-        @JvmStatic
-        lateinit var instance: EcoPetsPlugin
     }
 }

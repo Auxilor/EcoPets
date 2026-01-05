@@ -3,6 +3,7 @@ package com.willfp.ecopets.pets.entity
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.pets.Pet
+import com.willfp.ecopets.plugin
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.ArmorStand
@@ -72,7 +73,7 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): 
         isCollidable = false
         isPersistent = false
 
-        for (slot in EquipmentSlot.values()) {
+        for (slot in EquipmentSlot.entries) {
             stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
         }
 
@@ -80,7 +81,7 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): 
         @Suppress("DEPRECATION")
         customName = pet.name
 
-        applyScale(EcoPetsPlugin.instance, isSkull)
+        applyScale(plugin, isSkull)
 
     }
 
