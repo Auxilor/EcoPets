@@ -10,8 +10,6 @@ import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
 
 class CommandGiveXP(plugin: EcoPlugin) : Subcommand(plugin, "givexp", "ecopets.command.givexp", false) {
     override fun onExecute(sender: CommandSender, args: List<String>) {

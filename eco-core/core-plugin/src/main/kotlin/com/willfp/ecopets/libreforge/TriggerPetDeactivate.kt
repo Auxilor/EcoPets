@@ -1,7 +1,6 @@
 package com.willfp.ecopets.libreforge
 
 import com.willfp.ecopets.api.event.PlayerPetActivateEvent
-import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.libreforge.toDispatcher
 import com.willfp.libreforge.triggers.Trigger
 import com.willfp.libreforge.triggers.TriggerData

@@ -4,7 +4,6 @@ import com.willfp.eco.util.SoundUtils
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.libreforge.toDispatcher
-import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -12,6 +11,7 @@ import org.bukkit.event.Listener
 class PetLevelListener(
     private val plugin: EcoPetsPlugin
 ) : Listener {
+    @Suppress("DEPRECATION")
     @EventHandler(priority = EventPriority.MONITOR)
     fun onLevelUp(event: PlayerPetLevelUpEvent) {
         val pet = event.pet

@@ -127,7 +127,7 @@ class Pet(
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
-    val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements?.size ?: Int.MAX_VALUE
+    val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements.size
 
     val levelGUI = PetLevelGUI(plugin, this)
 
@@ -186,6 +186,7 @@ class Pet(
             ViolationContext(plugin, "Pet $id")
         )
 
+        @Suppress("DEPRECATION")
         manageLevelCommands(config)
 
         PlayerPlaceholder(
