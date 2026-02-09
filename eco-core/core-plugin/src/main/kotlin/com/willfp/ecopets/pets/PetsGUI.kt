@@ -11,7 +11,7 @@ import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.util.SoundUtils
-import com.willfp.ecopets.EcoPetsPlugin
+import com.willfp.ecopets.plugin
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -23,7 +23,7 @@ object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
 
-    internal fun update(plugin: EcoPetsPlugin) {
+    internal fun update() {
         val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
         val topLeftColumn = plugin.configYml.getInt("gui.pet-area.top-left.column")
         val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
@@ -36,10 +36,10 @@ object PetsGUI {
             }
         }
 
-        menu = buildMenu(plugin)
+        menu = buildMenu()
     }
 
-    private fun buildMenu(plugin: EcoPetsPlugin): Menu {
+    private fun buildMenu(): Menu {
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 

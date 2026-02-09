@@ -43,7 +43,7 @@ internal lateinit var plugin: EcoPetsPlugin
     private set
 
 class EcoPetsPlugin : LibreforgePlugin() {
-    private val petDisplay = PetDisplay(this)
+    private val petDisplay = PetDisplay
 
     init {
         plugin = this
@@ -99,7 +99,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
     }
 
     override fun handleReload() {
-        PetsGUI.update(this)
+        PetsGUI.update()
 
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return
@@ -118,7 +118,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
         return listOf(
             IntegrationLoader("ModelEngine") {
                 PetEntity.registerPetEntity("modelengine") { pet, id ->
-                    ModelEnginePetEntity(pet, id, this)
+                    ModelEnginePetEntity(pet, id)
                 }
             }
         )
@@ -126,17 +126,17 @@ class EcoPetsPlugin : LibreforgePlugin() {
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcoPets(this),
-            CommandPets(this)
+            CommandEcoPets,
+            CommandPets
         )
     }
 
     override fun loadListeners(): List<Listener> {
         return listOf(
-            PetLevelListener(this),
-            SpawnEggHandler(this),
+            PetLevelListener,
+            SpawnEggHandler,
             petDisplay,
-            DiscoverRecipeListener(this)
+            DiscoverRecipeListener
         )
     }
 }
