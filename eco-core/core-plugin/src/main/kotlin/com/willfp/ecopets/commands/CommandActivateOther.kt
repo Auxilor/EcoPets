@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 
 object CommandActivateOther : Subcommand(
     plugin,
-    "activateother",
+    "activate",
     "ecopets.command.activateother",
     false
 ) {

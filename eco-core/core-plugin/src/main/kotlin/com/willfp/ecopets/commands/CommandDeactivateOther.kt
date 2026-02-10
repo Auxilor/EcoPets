@@ -10,10 +10,11 @@ import org.bukkit.entity.Player
 
 object CommandDeactivateOther : Subcommand(
     plugin,
-    "deactivateother",
+    "deactivate",
     "ecopets.command.deactivateother",
     false
 ) {
+
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             sender.sendMessage(plugin.langYml.getMessage("needs-player"))
