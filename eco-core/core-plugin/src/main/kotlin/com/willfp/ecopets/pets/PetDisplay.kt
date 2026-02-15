@@ -29,10 +29,12 @@ object PetDisplay : Listener {
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
-                tickPlayer(player)
-            } else {
-                remove(player)
+            plugin.scheduler.runTask(player) { // folia issue
+                if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
+                    tickPlayer(player)
+                } else {
+                    remove(player)
+                }
             }
         }
 

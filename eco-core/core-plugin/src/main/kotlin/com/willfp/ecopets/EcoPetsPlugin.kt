@@ -105,7 +105,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
             return
         }
 
-        this.scheduler.runTimer(1, 1) {
+        this.scheduler.runTaskTimer(1, 1) {
             petDisplay.tickAll()
         }
     }
