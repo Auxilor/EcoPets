@@ -1,5 +1,6 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.plugin
@@ -86,7 +87,10 @@ object PetDisplay : Listener {
             }
 
             if (location.world != null) {
-                entity.teleport(location)
+                if (Prerequisite.HAS_FOLIA.isMet)
+                    entity.teleportAsync(location)
+                else
+                    entity.teleport(location)
             }
 
             if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
