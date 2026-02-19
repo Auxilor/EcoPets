@@ -161,6 +161,12 @@ object PetDisplay : Listener {
         return player.location.clone().add(0.0, DEFAULT_EYE_HEIGHT, 0.0).add(offset)
     }
 
+    fun get(player: Player): Entity? {
+        val tracked = trackedEntities[player.uniqueId]
+        val existing = tracked?.entity
+        return existing
+    }
+
     private fun getOrNew(player: Player): Entity? {
         val tracked = trackedEntities[player.uniqueId]
         val existing = tracked?.entity
