@@ -2,6 +2,7 @@ package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.command.impl.Subcommand
+import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.plugin
 import org.bukkit.command.CommandSender
@@ -15,7 +16,7 @@ object CommandReload : Subcommand(
     override fun onExecute(sender: CommandSender, args: List<String>) {
         val runnable: Runnable = {
             sender.sendMessage(
-                plugin.langYml.getMessage("reloaded")
+                plugin.langYml.getMessage("reloaded", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                     .replace("%time%", plugin.reloadWithTime().toNiceString())
             )
         }
