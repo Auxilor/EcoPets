@@ -169,10 +169,26 @@ class Pet(
         }
 
         config.injectPlaceholders(
-            PlayerStaticPlaceholder(
-                "level"
-            ) { p ->
-                p.getPetLevel(this).toString()
+            PlayerStaticPlaceholder("percentage_progress") {
+                (it.getPetProgress(this) * 100).toNiceString()
+            },
+            PlayerStaticPlaceholder("current_xp") {
+                it.getPetXP(this).toNiceString()
+            },
+            PlayerStaticPlaceholder("required_xp") {
+                this.getFormattedExpForLevel(it.getPetLevel(this) + 1)
+            },
+            PlayerStaticPlaceholder("description") {
+                this.description
+            },
+            PlayerStaticPlaceholder("pet") {
+                this.name
+            },
+            PlayerStaticPlaceholder("level") {
+                it.getPetLevel(this).toString()
+            },
+            PlayerStaticPlaceholder("level_numeral") {
+                it.getPetLevel(this).toNumeral()
             }
         )
 
