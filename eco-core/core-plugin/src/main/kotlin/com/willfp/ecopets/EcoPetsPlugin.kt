@@ -115,6 +115,10 @@ class EcoPetsPlugin : LibreforgePlugin() {
         }
     }
 
+    override fun handleDisable() {
+        petDisplay.shutdown()
+    }
+
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("ModelEngine") {

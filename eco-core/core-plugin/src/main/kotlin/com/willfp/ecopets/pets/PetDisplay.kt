@@ -157,9 +157,7 @@ object PetDisplay : Listener {
 
         val pet = player.activePet
         if (pet != tracked?.pet) {
-            tracked?.entity?.let {
-                plugin.scheduler.runTask(it) { it.remove() }
-            }
+            tracked?.entity?.remove()
         }
 
         if (existing == null || existing.isDead || pet == null) {
@@ -172,7 +170,6 @@ object PetDisplay : Listener {
 
             val location = getLocation(player, 0.0)
             val entity = pet.makePetEntity().spawn(location)
-            entity.isPersistent = false
 
             trackedEntities[player.uniqueId] = PetDisplayEntity(entity, pet)
         }
@@ -180,21 +177,21 @@ object PetDisplay : Listener {
         return trackedEntities[player.uniqueId]?.entity
     }
 
-    private fun remove(player: Player) {
-        trackedEntities[player.uniqueId]?.entity?.let {
-            plugin.scheduler.runTask(it) {
-                it.remove()
-            }
+    fun shutdown() {
+        for (stand in trackedEntities.values) {
+            stand.entity.remove()
         }
+
+        trackedEntities.clear()
+    }
+
+    private fun remove(player: Player) {
+        trackedEntities[player.uniqueId]?.entity?.remove()
         trackedEntities.remove(player.uniqueId)
     }
 
     private fun remove(uuid: UUID) {
-        trackedEntities[uuid]?.entity?.let {
-            plugin.scheduler.runTask(it) {
-                it.remove()
-            }
-        }
+        trackedEntities[uuid]?.entity?.remove()
         trackedEntities.remove(uuid)
     }
 
