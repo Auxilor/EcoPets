@@ -15,6 +15,7 @@ import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.placeholder.context.placeholderContext
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
+import com.willfp.eco.core.recipe.recipes.CraftingRecipe
 import com.willfp.eco.core.registry.Registrable
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.NumberUtils.evaluateExpression
@@ -103,21 +104,21 @@ class Pet(
     val spawnEgg: ItemStack?
         get() = this.spawnEggBacker?.clone()
 
-    val recipe = run {
-        val egg = spawnEgg
+    val recipe: CraftingRecipe? = spawnEgg
+        ?.takeIf { config.getBool("spawn-egg.craftable") }
+        ?.let { egg ->
+            val recipeStrings = config.getStrings("spawn-egg.recipe")
+            if (recipeStrings.isEmpty()) return@let null
 
-        if (egg == null || !config.getBool("spawn-egg.craftable")) {
-            null
-        } else {
             Recipes.createAndRegisterRecipe(
                 plugin,
-                "${this.id}_spawn_egg",
+                "${id}_spawn_egg",
                 egg,
-                config.getStrings("spawn-egg.recipe"),
-                config.getStringOrNull("spawn-egg.recipe-permission")
+                recipeStrings,
+                config.getStringOrNull("spawn-egg.recipe-permission"),
+                config.getBool("spawn-egg.shapeless")
             )
         }
-    }
 
     val entityTexture = config.getString("entity-texture")
 

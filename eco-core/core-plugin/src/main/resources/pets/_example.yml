@@ -40,36 +40,6 @@ level-xp-requirements:
   - 50000
   - 75000
   - 100000
-  - 200000
-  - 300000
-  - 400000
-  - 500000
-  - 600000
-  - 700000
-  - 800000
-  - 900000
-  - 1000000
-  - 1100000
-  - 1200000
-  - 1300000
-  - 1400000
-  - 1500000
-  - 1600000
-  - 1700000
-  - 1800000
-  - 1900000
-  - 2000000
-  - 2100000
-  - 2200000
-  - 2300000
-  - 2400000
-  - 2500000
-  - 2600000
-  - 2750000
-  - 2900000
-  - 3100000
-  - 3400000
-  - 3700000
 
 # An XP Gain method takes a trigger as the ID and a multiplier
 # The multiplier takes the value produced by the trigger and multiplies it
@@ -141,6 +111,7 @@ spawn-egg:
     - ""
     - "&8&oPlace on the ground to"
     - "&8&ounlock the &r&6Tiger&8&o pet!"
-  craftable: false
+  craftable: false # Whether the spawn egg should be craftable
+  recipe-permission: ecopets.craft.tiger # (Optional) The permission required to see the crafting recipe
+  shapeless: false # (Optional) Whether the crafting recipe is shapeless, defaults to false
   recipe: [ ]
-  # recipe-permission: ecopets.craft.tiger
