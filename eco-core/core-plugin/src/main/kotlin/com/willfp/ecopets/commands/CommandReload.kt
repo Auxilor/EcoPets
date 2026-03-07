@@ -2,7 +2,6 @@ package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.plugin
 import org.bukkit.command.CommandSender
 
@@ -14,10 +13,8 @@ object CommandReload : Subcommand(
 ) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         val runnable: Runnable = {
-            sender.sendMessage(
-                plugin.langYml.getMessage("reloaded")
-                    .replace("%time%", plugin.reloadWithTime().toNiceString())
-            )
+            plugin.reload()
+            sender.sendMessage(plugin.langYml.getMessage("reloaded"))
         }
         if (Prerequisite.HAS_FOLIA.isMet)
             plugin.scheduler.runTask(runnable) // run on global thread
