@@ -212,10 +212,8 @@ object PetDisplay : Listener {
     @EventHandler
     fun onEntitiesUnload(event: EntitiesUnloadEvent) {
         trackedEntities.entries.forEach {
-            plugin.scheduler.runTask(it.value.entity.location) { // folia issue
-                if (event.chunk == it.value.entity.chunk) {
-                    remove(it.key)
-                }
+            if (event.chunk == it.value.entity.chunk) {
+                remove(it.key)
             }
         }
     }

@@ -7,6 +7,7 @@ import com.willfp.libreforge.mutators.Mutator
 import com.willfp.libreforge.mutators.parameterTransformers
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
+import org.bukkit.entity.LivingEntity
 
 object MutatorPlayerToPet : Mutator<NoCompileData>("player_to_pet") {
     override val parameterTransformers = parameterTransformers {
@@ -17,7 +18,7 @@ object MutatorPlayerToPet : Mutator<NoCompileData>("player_to_pet") {
         val player = data.player ?: return data
 
         return data.copy(
-            victim = PetDisplay.get(player)
+            victim = PetDisplay.get(player) as? LivingEntity
         )
     }
 }
