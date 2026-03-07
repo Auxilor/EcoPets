@@ -52,16 +52,16 @@ object PetDisplay : Listener {
             return
         }
 
-        if (!player.isOnline || player.isDead || player.isInvisible) {
-            remove(player)
-            return
-        }
-
         val entity = getOrNew(player) ?: return
         val pet = player.activePet
         val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
 
         if (pet != null) {
+            if (player.isInvisible || player.isDead || !player.isOnline) {
+                remove(player)
+                return
+            }
+
             if (showHologram) {
                 @Suppress("DEPRECATION")
                 entity.customName = plugin.configYml.getString("pet-entity.name")
@@ -74,32 +74,16 @@ object PetDisplay : Listener {
                 entity.isCustomNameVisible = false
             }
 
-            // makes the pet follow the player's sneaking state (so the name can be hidden when sneaking)
-            if (player.isSneaking)
-                entity.isSneaking = true
-            else
-                entity.isSneaking = false
-
             val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
             val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
             val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
 
-            val yOnPlayerSneaking = when {
-                player.isSneaking -> -0.3
-                else -> 0.0
-            }
 
-            // make the pet not be in the player's view when looking up or down
-            val yOnPlayerLookingUp = when {
-                player.pitch < -75 -> -1.5
-                player.pitch > 75 -> 0.5
-                else -> 0.0
-            }
 
             if (plugin.configYml.getBool("pet-entity.bobbing")) {
-                location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
+                location.y += offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
             } else {
-                location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset
+                location.y += offset
             }
 
             if (location.world != null) {
