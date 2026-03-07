@@ -116,8 +116,11 @@ gui:
       - "&eClick to activate this pet!"
 
     click:
+      enabled: true
       sound: ui_button_click
       pitch: 1
+      volume: 1
+      category: UI
 
   prev-page:
     item: arrow
