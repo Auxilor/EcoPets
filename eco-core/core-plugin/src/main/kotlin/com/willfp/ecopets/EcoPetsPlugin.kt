@@ -3,8 +3,6 @@ package com.willfp.ecopets
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
-import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.toNumeral
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
@@ -31,9 +29,6 @@ import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
-import com.willfp.ecopets.pets.getPetLevel
-import com.willfp.ecopets.pets.getPetProgress
-import com.willfp.ecopets.pets.getPetXP
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.conditions.Conditions
@@ -105,51 +100,6 @@ class EcoPetsPlugin : LibreforgePlugin() {
                     pets++
             }
             pets.toString()
-        }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_percentage_progress"
-        ) {
-            val pet = it.activePet
-            if (pet != null) (it.getPetProgress(pet) * 100).toNiceString() else ""
-        }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_current_xp"
-        ) {
-            val pet = it.activePet
-            if (pet != null) it.getPetXP(pet).toNiceString() else ""
-        }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_required_xp"
-        ) {
-            val pet = it.activePet
-            pet?.getFormattedExpForLevel(it.getPetLevel(pet) + 1) ?: ""
-        }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_description"
-        ) { it.activePet?.description ?: "" }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_level"
-        ) {
-            val pet = it.activePet
-            if (pet != null) it.getPetLevel(pet).toString() else ""
-        }.register()
-
-        PlayerPlaceholder(
-            this,
-            "pet_level_numeral"
-        ) {
-            val pet = it.activePet
-            if (pet != null) it.getPetLevel(pet).toNumeral() else ""
         }.register()
     }
 
