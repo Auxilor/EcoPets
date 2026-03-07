@@ -1,7 +1,6 @@
 package com.willfp.ecopets.libreforge
 
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.libreforge.Dispatcher

@@ -25,16 +25,15 @@ import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
-import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
+import com.willfp.ecopets.pets.hasPet
 import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.conditions.Conditions
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.filters.Filters
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
-import com.willfp.libreforge.registerHolderProvider
 import com.willfp.libreforge.registerSpecificHolderProvider
 import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.entity.Player

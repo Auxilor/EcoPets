@@ -10,8 +10,7 @@ import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.util.SoundConfigUtils
-import com.willfp.eco.util.SoundUtils
+import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.ecopets.EcoPetsPlugin
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -120,8 +119,7 @@ object PetsGUI {
                         if (player.activePet != pet) {
                             player.activePet = pet
                         }
-
-                        SoundConfigUtils.playIfEnabled(plugin.configYml, player, "gui.pet-icon.click")
+                        PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(player)
                     }
                 })
             }

@@ -1,7 +1,6 @@
 package com.willfp.ecopets.libreforge
 
 import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.ecopets.api.EcoPetsAPI
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
@@ -9,7 +8,6 @@ import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.arguments
 import com.willfp.libreforge.effects.Effect
 import com.willfp.libreforge.getFormattedString
-import com.willfp.libreforge.getFormattedStrings
 import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 

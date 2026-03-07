@@ -6,7 +6,6 @@ import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
-import com.willfp.ecopets.pets.setPetLevel
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
