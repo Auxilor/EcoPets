@@ -1,5 +1,6 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.util.SoundConfigUtils
 import com.willfp.eco.util.SoundUtils
 import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
@@ -21,19 +22,7 @@ class PetLevelListener(
         pet.levelUpEffects?.trigger(player.toDispatcher())
         pet.executeLevelCommands(player, level)
 
-        if (this.plugin.configYml.getBool("level-up.sound.enabled")) {
-            val sound = SoundUtils.getSound(this.plugin.configYml.getString("level-up.sound.id"))
-            val pitch = this.plugin.configYml.getDouble("level-up.sound.pitch")
-
-            if (sound != null) {
-                player.playSound(
-                    player.location,
-                    sound,
-                    100f,
-                    pitch.toFloat()
-                )
-            }
-        }
+        SoundConfigUtils.playIfEnabled(plugin.configYml, player, "level-up.sounds")
 
         if (this.plugin.configYml.getBool("level-up.message.enabled")) {
             for (message in pet.injectPlaceholdersInto(
