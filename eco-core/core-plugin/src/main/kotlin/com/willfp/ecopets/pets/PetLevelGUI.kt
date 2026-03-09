@@ -31,7 +31,10 @@ class PetLevelGUI(
 
         val progressionPattern = plugin.configYml.getStrings("level-gui.progression-slots.pattern")
 
-        val component = object : LevelComponent(progressionPattern, pet.maxLevel) {
+        val component = object : LevelComponent() {
+            override val pattern: List<String> = progressionPattern
+            override val maxLevel: Int = pet.maxLevel
+
             override fun getLevelItem(player: Player, menu: Menu, level: Int, levelState: LevelState): ItemStack {
                 val key = levelState.name.lowercase().replace("_", "-")
 
