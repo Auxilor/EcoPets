@@ -207,6 +207,48 @@ class Pet(
 
         PlayerPlaceholder(
             plugin,
+            "active_pet_level"
+        ) {
+            it.activePet?.let { pet -> it.getPetLevel(pet).toString() } ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "active_pet_level_numeral"
+        ) {
+            it.activePet?.let { pet -> it.getPetLevel(pet).toNumeral() } ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "active_pet_current_xp"
+        ) {
+            it.activePet?.let { pet -> it.getPetXP(pet).toNiceString() } ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "active_pet_required_xp"
+        ) {
+            it.activePet?.let { pet -> pet.getFormattedExpForLevel(it.getPetLevel(pet) + 1) } ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "active_pet_percentage_progress"
+        ) {
+            it.activePet?.let { pet -> (it.getPetProgress(pet) * 100).toNiceString() } ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "active_pet_description"
+        ) {
+            it.activePet?.description ?: ""
+        }.register()
+
+        PlayerPlaceholder(
+            plugin,
             "${id}_percentage_progress"
         ) {
             (it.getPetProgress(this) * 100).toNiceString()
