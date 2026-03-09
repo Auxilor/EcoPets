@@ -22,7 +22,6 @@ import com.willfp.eco.util.NumberUtils.evaluateExpression
 import com.willfp.eco.util.formatEco
 import com.willfp.eco.util.toNiceString
 import com.willfp.eco.util.toNumeral
-import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.api.event.PlayerPetActivateEvent
 import com.willfp.ecopets.api.event.PlayerPetDeactivateEvent
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
@@ -48,8 +47,7 @@ import kotlin.math.abs
 
 class Pet(
     val id: String,
-    val config: Config,
-    private val plugin: EcoPetsPlugin
+    val config: Config
 ) : Registrable {
 
     val name = config.getFormattedString("name")
@@ -128,9 +126,9 @@ class Pet(
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
-    val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements?.size ?: Int.MAX_VALUE
+    val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements.size
 
-    val levelGUI = PetLevelGUI(plugin, this)
+    val levelGUI = PetLevelGUI(this)
 
     private val baseItem: ItemStack = Items.lookup(config.getString("icon")).item
 
@@ -153,7 +151,7 @@ class Pet(
             LevelPlaceholder(
                 sub.getString("id")
             ) {
-                NumberUtils.evaluateExpression(
+                evaluateExpression(
                     sub.getString("value")
                         .replace("%level%", it.toString())
                 )
@@ -203,6 +201,7 @@ class Pet(
             ViolationContext(plugin, "Pet $id")
         )
 
+        @Suppress("DEPRECATION")
         manageLevelCommands(config)
 
         PlayerPlaceholder(
@@ -322,11 +321,11 @@ class Pet(
     )
 
     fun makePetEntity(): PetEntity {
-        return PetEntity.create(plugin, this)
+        return PetEntity.create(this)
     }
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
-        PetLevel(plugin, this, it, effects, conditions)
+        PetLevel(this, it, effects, conditions)
     }
 
     private fun getLevelUpMessages(level: Int, whitespace: Int = 0): List<String> = levelUpMessages.get(level) {

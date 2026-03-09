@@ -1,7 +1,7 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.StringUtils
+import com.willfp.ecopets.plugin
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,9 +9,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
-class SpawnEggHandler(
-    private val plugin: EcoPlugin
-) : Listener {
+object SpawnEggHandler : Listener {
     @EventHandler(
         ignoreCancelled = true
     )
