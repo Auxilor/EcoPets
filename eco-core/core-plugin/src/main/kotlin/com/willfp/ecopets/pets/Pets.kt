@@ -3,7 +3,6 @@ package com.willfp.ecopets.pets
 import com.google.common.collect.ImmutableList
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.registry.Registry
-import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.loader.configs.LegacyLocation
@@ -42,6 +41,6 @@ object Pets : ConfigCategory("pet", "pets") {
     }
 
     override fun acceptConfig(plugin: LibreforgePlugin, id: String, config: Config) {
-        registry.register(Pet(id, config, plugin as EcoPetsPlugin))
+        registry.register(Pet(id, config))
     }
 }

@@ -1,16 +1,15 @@
 package com.willfp.ecopets.pets.entity
 
 import com.willfp.eco.core.items.builder.SkullBuilder
-import com.willfp.ecopets.EcoPetsPlugin
 import com.willfp.ecopets.pets.Pet
+import com.willfp.ecopets.plugin
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.inventory.ItemStack
 
 class ItemDisplayPetEntity(
-    pet: Pet,
-    private val plugin: EcoPetsPlugin
+    pet: Pet
 ) : PetEntity(pet) {
     override fun spawn(location: Location): Entity {
         val skull: ItemStack = SkullBuilder()

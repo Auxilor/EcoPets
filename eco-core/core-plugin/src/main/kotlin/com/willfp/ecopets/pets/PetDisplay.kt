@@ -1,8 +1,8 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
+import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -19,9 +19,10 @@ import java.util.*
 import kotlin.math.PI
 import kotlin.math.abs
 
-class PetDisplay(
-    private val plugin: EcoPlugin
-) : Listener {
+object PetDisplay : Listener {
+    private const val DEFAULT_EYE_HEIGHT = 1.62
+    private const val MAX_Y_OFFSET = 0.5
+
     private var tick = 0
 
     private val trackedEntities = mutableMapOf<UUID, PetDisplayEntity>()
@@ -41,10 +42,6 @@ class PetDisplay(
     private val smoothYOffsetMap = mutableMapOf<UUID, Double>()
     private val lastUpdateMap = mutableMapOf<UUID, Long>()
     private val expireAfterMillis = 5_000L
-    companion object {
-        private const val DEFAULT_EYE_HEIGHT = 1.62
-        private const val MAX_Y_OFFSET = 0.5
-    }
 
     private fun tickPlayer(player: Player) {
         if (player.shouldHidePet) {
@@ -140,6 +137,12 @@ class PetDisplay(
 
         // Use base location, not eyeLocation, for static anchoring
         return player.location.clone().add(0.0, DEFAULT_EYE_HEIGHT, 0.0).add(offset)
+    }
+
+    fun get(player: Player): Entity? {
+        val tracked = trackedEntities[player.uniqueId]
+        val existing = tracked?.entity
+        return existing
     }
 
     private fun getOrNew(player: Player): Entity? {

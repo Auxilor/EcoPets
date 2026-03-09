@@ -24,7 +24,7 @@ private val expMultiplierCache = Caffeine.newBuilder()
     }
 
 val Player.petExperienceMultiplier: Double
-    get() = expMultiplierCache.get(this)!!
+    get() = expMultiplierCache.get(this)
 
 private fun Player.cachePetExperienceMultiplier(): Double {
     if (this.hasPermission("ecopets.xpmultiplier.quadruple")) {

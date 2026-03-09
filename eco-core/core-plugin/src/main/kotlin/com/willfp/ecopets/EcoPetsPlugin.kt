@@ -13,6 +13,8 @@ import com.willfp.ecopets.libreforge.EffectDeactivatePet
 import com.willfp.ecopets.libreforge.EffectGivePetXp
 import com.willfp.ecopets.libreforge.EffectPetXpMultiplier
 import com.willfp.ecopets.libreforge.FilterPet
+import com.willfp.ecopets.libreforge.MutatorPlayerToPet
+import com.willfp.ecopets.libreforge.MutatorPlayerToPetLocation
 import com.willfp.ecopets.libreforge.TriggerGainPetXp
 import com.willfp.ecopets.libreforge.TriggerLevelUpPet
 import com.willfp.ecopets.libreforge.TriggerPetActivate
@@ -34,6 +36,7 @@ import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.filters.Filters
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
+import com.willfp.libreforge.mutators.Mutators
 import com.willfp.libreforge.registerSpecificHolderProvider
 import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.entity.Player
@@ -43,7 +46,7 @@ internal lateinit var plugin: EcoPetsPlugin
     private set
 
 class EcoPetsPlugin : LibreforgePlugin() {
-    private val petDisplay = PetDisplay(this)
+    private val petDisplay = PetDisplay
 
     init {
         plugin = this
@@ -68,6 +71,8 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Triggers.register(TriggerPetActivate)
         Triggers.register(TriggerPetDeactivate)
         Filters.register(FilterPet)
+        Mutators.register(MutatorPlayerToPet)
+        Mutators.register(MutatorPlayerToPetLocation)
 
         registerSpecificHolderProvider<Player> {
             it.activePetLevel?.let { p ->
@@ -99,7 +104,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
     }
 
     override fun handleReload() {
-        PetsGUI.update(this)
+        PetsGUI.update()
 
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return
@@ -118,7 +123,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
         return listOf(
             IntegrationLoader("ModelEngine") {
                 PetEntity.registerPetEntity("modelengine") { pet, id ->
-                    ModelEnginePetEntity(pet, id, this)
+                    ModelEnginePetEntity(pet, id)
                 }
             }
         )
@@ -126,17 +131,17 @@ class EcoPetsPlugin : LibreforgePlugin() {
 
     override fun loadPluginCommands(): List<PluginCommand> {
         return listOf(
-            CommandEcoPets(this),
-            CommandPets(this)
+            CommandEcoPets,
+            CommandPets
         )
     }
 
     override fun loadListeners(): List<Listener> {
         return listOf(
-            PetLevelListener(this),
-            SpawnEggHandler(this),
+            PetLevelListener,
+            SpawnEggHandler,
             petDisplay,
-            DiscoverRecipeListener(this)
+            DiscoverRecipeListener
         )
     }
 }

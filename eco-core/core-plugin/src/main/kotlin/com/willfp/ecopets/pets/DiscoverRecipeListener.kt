@@ -1,6 +1,6 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.EcoPlugin
+import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Keyed
 import org.bukkit.event.EventHandler
@@ -8,7 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.Recipe
 
-class DiscoverRecipeListener(private val plugin: EcoPlugin) : Listener {
+object DiscoverRecipeListener : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         if (!plugin.configYml.getBool("discover-recipes")) {
