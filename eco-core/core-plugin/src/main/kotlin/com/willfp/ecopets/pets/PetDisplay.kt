@@ -94,13 +94,14 @@ object PetDisplay : Listener {
                 location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset
             }
 
-            if (location.world != null) {
-                entity.teleport(location)
-            }
-
             if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
                 val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
-                entity.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
+                location.yaw = (intensity * tick / (2 * PI)).toFloat()
+                location.pitch = 0f
+            }
+
+            if (location.world != null) {
+                entity.teleport(location)
             }
         }
     }
