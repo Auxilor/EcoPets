@@ -11,7 +11,6 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
 object PetLevelListener : Listener {
-    @Suppress("DEPRECATION")
     @EventHandler(priority = EventPriority.MONITOR)
     fun onLevelUp(event: PlayerPetLevelUpEvent) {
         val pet = event.pet
@@ -19,7 +18,6 @@ object PetLevelListener : Listener {
         val level = event.level
 
         pet.levelUpEffects?.trigger(player.toDispatcher())
-        pet.executeLevelCommands(player, level)
 
         PlayableSound.create(plugin.configYml.getSubsection("level-up.sound"))?.playTo(player)
 
