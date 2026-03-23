@@ -67,10 +67,7 @@ object PetDisplay : Listener {
             }
 
             // makes the pet follow the player's sneaking state (so the name can be hidden when sneaking)
-            if (player.isSneaking)
-                entity.isSneaking = true
-            else
-                entity.isSneaking = false
+            entity.isSneaking = player.isSneaking
 
             val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
             val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
