@@ -144,8 +144,6 @@ class Pet(
 
     private val levelUpMessages = Caffeine.newBuilder().build<Int, List<String>>()
 
-    private val levelCommands = mutableMapOf<Int, MutableList<String>>()
-
     private val levelPlaceholders = config.getSubsections("level-placeholders")
         .map { sub ->
             LevelPlaceholder(
@@ -200,9 +198,6 @@ class Pet(
             config.getSubsections("conditions"),
             ViolationContext(plugin, "Pet $id")
         )
-
-        @Suppress("DEPRECATION")
-        manageLevelCommands(config)
 
         PlayerPlaceholder(
             plugin,
@@ -287,31 +282,6 @@ class Pet(
         ) {
             it.getPetLevel(this).toString()
         }.register()
-    }
-
-    @Deprecated("Use level-up-effects instead")
-    private fun manageLevelCommands(config: Config) {
-        if (config.getStrings("level-commands").isNotEmpty()) {
-            plugin.logger.warning("$id pet: The `level-commands` key is deprecated and will be removed in future versions. Switch to `level-up-effects` instead. Refer to the wiki for more info.")
-        }
-        for (string in config.getStrings("level-commands")) {
-            val split = string.split(":")
-
-            if (split.size == 1) {
-                for (level in 1..maxLevel) {
-                    val commands = levelCommands[level] ?: mutableListOf()
-                    commands.add(string)
-                    levelCommands[level] = commands
-                }
-            } else {
-                val level = split[0].toInt()
-
-                val command = string.removePrefix("$level:")
-                val commands = levelCommands[level] ?: mutableListOf()
-                commands.add(command)
-                levelCommands[level] = commands
-            }
-        }
     }
 
     val levelUpEffects = Effects.compileChain(
@@ -512,23 +482,6 @@ class Pet(
         }
     }
 
-    @Deprecated("Use level-up-effects instead")
-    fun executeLevelCommands(player: Player, level: Int) {
-        val commands = levelCommands[level] ?: emptyList()
-
-        for (command in commands) {
-            var filledCommand = command.replace("%player%", player.name).replace("%level%", level.toString())
-
-            for (placeholder in levelPlaceholders) {
-                val value = placeholder(level)
-                filledCommand = filledCommand.replace("%${placeholder.id}%", value.toString())
-                filledCommand = filledCommand.replace("%${placeholder.id}_int%", value.toInt().toString())
-                filledCommand = filledCommand.replace("%${placeholder.id}_formatted%", value.toNiceString())
-            }
-
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), filledCommand)
-        }
-    }
 
     override fun getID(): String {
         return this.id

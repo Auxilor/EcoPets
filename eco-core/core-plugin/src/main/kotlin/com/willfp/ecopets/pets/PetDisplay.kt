@@ -109,8 +109,12 @@ object PetDisplay : Listener {
     private fun getLocation(player: Player, d: Double): Location {
         val direction = player.eyeLocation.direction.clone().normalize()
 
-        val locationXZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_xz_offset") ?: 0.75
-        val offset = direction.clone().multiply(-locationXZOffset)
+        val locationXOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_x_offset") ?: 0.75
+        val locationZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_z_offset") ?: 0.75
+        val offset = direction.clone().apply {
+            x *= -locationXOffset
+            z *= -locationZOffset
+        }
 
         val uuid = player.uniqueId
         val currentTime = System.currentTimeMillis()

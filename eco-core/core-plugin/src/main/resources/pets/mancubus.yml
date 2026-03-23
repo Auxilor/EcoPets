@@ -77,7 +77,6 @@ level-up-messages:
   1:
     - "&8» &8Gives a &a+%ignite_chance%%&8 chance to set enemy on fire"
 
-level-commands: [ ]
 
 effects:
   - id: ignite
