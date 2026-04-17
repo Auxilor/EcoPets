@@ -124,8 +124,6 @@ class Pet(
 
     val offset = config.getDouble("offset")
 
-    val rotatable = config.getBool("rotatable")
-
     private val xpFormula = config.getStringOrNull("xp-formula")
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")

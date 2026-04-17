@@ -10,9 +10,6 @@ name: "&6Tiger"
 # Offset of pet display position on the y-axis (default is 0.0)
 offset: 0.0
 
-# Whether the pet will rotate on its own (default is false)
-rotatable: true
-
 # The description of the pet
 description: "&8&oLevel up by dealing melee damage"
 
