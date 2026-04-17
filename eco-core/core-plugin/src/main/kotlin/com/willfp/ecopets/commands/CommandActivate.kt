@@ -2,10 +2,12 @@ package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
+import com.willfp.ecopets.api.event.PlayerPetSwapEvent
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.plugin
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
@@ -42,6 +44,14 @@ object CommandActivate : Subcommand(
             plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)
         )
+        player.activePet?.let { oldPet ->
+            val event = PlayerPetSwapEvent(player, pet, oldPet)
+            Bukkit.getServer().pluginManager.callEvent(event)
+            if (event.isCancelled) {
+                player.sendMessage(plugin.langYml.getMessage("cancelled-swap"))
+                return
+            }
+        }
         player.activePet = pet
     }
 
