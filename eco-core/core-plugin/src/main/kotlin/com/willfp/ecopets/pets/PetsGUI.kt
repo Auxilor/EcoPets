@@ -1,6 +1,5 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.config.updating.ConfigUpdater
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.page.Page
@@ -11,9 +10,9 @@ import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.ecopets.EcoPetsPlugin
+import com.willfp.eco.core.sound.PlayableSound
+import com.willfp.ecopets.plugin
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
@@ -24,25 +23,23 @@ object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
 
-    @JvmStatic
-    @ConfigUpdater
-    fun update(plugin: EcoPetsPlugin) {
+    internal fun update() {
         val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
         val topLeftColumn = plugin.configYml.getInt("gui.pet-area.top-left.column")
         val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
         val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
 
         petAreaSlots.clear()
-        for (row in topLeftRow .. bottomRightRow) {
-            for (column in topLeftColumn .. bottomRightColumn) {
+        for (row in topLeftRow..bottomRightRow) {
+            for (column in topLeftColumn..bottomRightColumn) {
                 petAreaSlots.add(Pair(row, column))
             }
         }
 
-        menu = buildMenu(plugin)
+        menu = buildMenu()
     }
 
-    private fun buildMenu(plugin: EcoPetsPlugin): Menu {
+    private fun buildMenu(): Menu {
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 
@@ -51,6 +48,22 @@ object PetsGUI {
                     .setDisplayName(plugin.configYml.getFormattedString("gui.pet-info.no-active.name"))
                     .addLoreLines(plugin.configYml.getFormattedStrings("gui.pet-info.no-active.lore"))
                     .build()
+        }
+
+        val togglePetItemBuilder = { player: Player, _: Menu ->
+            val isPetVisible = !player.shouldHidePet
+
+            if (isPetVisible) {
+                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.hide-pet.item")))
+                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.hide-pet.name"))
+                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.hide-pet.lore"))
+                    .build()
+            } else {
+                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.toggle.show-pet.item")))
+                    .setDisplayName(plugin.configYml.getFormattedString("gui.toggle.show-pet.name"))
+                    .addLoreLines(plugin.configYml.getFormattedStrings("gui.toggle.show-pet.lore"))
+                    .build()
+            }
         }
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
@@ -106,13 +119,7 @@ object PetsGUI {
                         if (player.activePet != pet) {
                             player.activePet = pet
                         }
-
-                        player.playSound(
-                            player.location,
-                            Sound.valueOf(plugin.configYml.getString("gui.pet-icon.click.sound").uppercase()),
-                            1f,
-                            plugin.configYml.getDouble("gui.pet-icon.click.pitch").toFloat()
-                        )
+                        PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(player)
                     }
                 })
             }
@@ -178,18 +185,23 @@ object PetsGUI {
                 }
             )
 
-            setSlot(plugin.configYml.getInt("gui.close.location.row"),
-                plugin.configYml.getInt("gui.close.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.close.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ -> event.whoClicked.closeInventory() }
-                }
-            )
+            val closeEnabled = plugin.configYml.getBoolOrNull("gui.close.enabled") ?: true
+            if (closeEnabled) {
+                setSlot(
+                    plugin.configYml.getInt("gui.close.location.row"),
+                    plugin.configYml.getInt("gui.close.location.column"),
+                    slot(
+                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
+                            .setDisplayName(plugin.configYml.getString("gui.close.name"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ -> event.whoClicked.closeInventory() }
+                    }
+                )
+            }
 
-            setSlot(plugin.configYml.getInt("gui.deactivate-pet.location.row"),
+            setSlot(
+                plugin.configYml.getInt("gui.deactivate-pet.location.row"),
                 plugin.configYml.getInt("gui.deactivate-pet.location.column"),
                 slot(
                     ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
@@ -199,6 +211,17 @@ object PetsGUI {
                     onLeftClick { event, _ ->
                         val player = event.whoClicked as Player
                         player.activePet = null
+                    }
+                }
+            )
+
+            setSlot(
+                plugin.configYml.getInt("gui.toggle.location.row"),
+                plugin.configYml.getInt("gui.toggle.location.column"),
+                slot(togglePetItemBuilder) {
+                    onLeftClick { event, _ ->
+                        val player = event.whoClicked as Player
+                        player.shouldHidePet = !player.shouldHidePet
                     }
                 }
             )

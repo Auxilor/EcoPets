@@ -102,7 +102,7 @@ interface EcoPetsAPI {
     fun getPetXPRequired(
         player: OfflinePlayer,
         pet: Pet
-    ): Int
+    ): Double
 
     /**
      * Get experience to the next level.

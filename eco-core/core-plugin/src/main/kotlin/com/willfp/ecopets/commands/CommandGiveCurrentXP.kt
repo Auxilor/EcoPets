@@ -1,20 +1,22 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.eco.util.toNiceString
-import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
+import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
 
-class CommandGiveCurrentXP(plugin: EcoPlugin) : Subcommand(plugin, "givecurrentxp", "ecopets.command.givecurrentxp", false) {
+object CommandGiveCurrentXP : Subcommand(
+    plugin,
+    "givecurrentxp",
+    "ecopets.command.givecurrentxp",
+    false
+) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             sender.sendMessage(plugin.langYml.getMessage("needs-player"))

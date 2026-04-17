@@ -1,7 +1,7 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.EcoPlugin
-import org.bukkit.entity.Player
+import com.willfp.eco.util.StringUtils
+import com.willfp.ecopets.plugin
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,9 +9,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
-class SpawnEggHandler(
-    private val plugin: EcoPlugin
-) : Listener {
+object SpawnEggHandler : Listener {
     @EventHandler(
         ignoreCancelled = true
     )
@@ -35,12 +33,16 @@ class SpawnEggHandler(
 
         if (event.hand == EquipmentSlot.HAND) {
             val hand = event.player.inventory.itemInMainHand
-            hand.amount = hand.amount - 1
+            hand.amount -= 1
         } else {
             val hand = event.player.inventory.itemInOffHand
-            hand.amount = hand.amount - 1
+            hand.amount -= 1
         }
 
         player.setPetLevel(pet, 1)
+        player.sendMessage(
+            plugin.langYml.getMessage("pet-spawned", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                .replace("%pet%", pet.name)
+        )
     }
 }

@@ -1,5 +1,9 @@
 name: "&#FF6600Blaze"
 description: "&7Earn more XP from killing mobs"
+
+entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0="
+icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
+
 level-xp-requirements:
   - 50
   - 125
@@ -50,24 +54,32 @@ level-xp-requirements:
   - 3100000
   - 3400000
   - 3700000
+
 xp-gain-methods:
   - id: kill
     multiplier: 1
+
 level-placeholders:
   - id: "xp_multiplier"
     value: "%level% * 2"
+
 effects-description:
   1:
     - "&6Â» &7Increased XP gain by %xp_multiplier%%!"
+    -
 rewards-description: []
+
 level-up-messages: []
-level-commands: []
+
+level-up-effects: []
+
 effects:
   - id: xp_multiplier
     args:
       multiplier: "%level% * 0.02 + 1"
-entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0="
-icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjIwNjU3ZTI0YjU2ZTFiMmY4ZmMyMTlkYTFkZTc4OGMwYzI0ZjM2Mzg4YjFhNDA5ZDBjZDJkOGRiYTQ0YWEzYiJ9fX0=
+
+conditions: [ ]
+
 spawn-egg:
   enabled: true # If the pet should have a spawn egg
   item: blaze_spawn_egg unbreaking:1 hide_enchants

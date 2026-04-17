@@ -2,20 +2,18 @@ package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
+import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
-import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
 
-object CommandGive : Subcommand(
+object CommandActivateOther : Subcommand(
     plugin,
-    "give",
-    "ecopets.command.give",
+    "activate",
+    "ecopets.command.activateother",
     false
 ) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
@@ -35,53 +33,54 @@ object CommandGive : Subcommand(
         val player = Bukkit.getOfflinePlayer(playerName)
 
         if (!player.hasPlayedBefore() && player !is Player) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("invalid-player")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
         val pet = Pets.getByID(args[1])
 
         if (pet == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
+            sender.sendMessage(
+                plugin.langYml.getMessage("invalid-pet")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
-        if (player.hasPet(pet)) {
-            sender.sendMessage(plugin.langYml.getMessage("already-has-pet"))
+        if (!player.hasPet(pet)) {
+            sender.sendMessage(
+                plugin.langYml.getMessage("doesnt-have-pet")
+                    .replace("%player%", playerName)
+            )
             return
         }
 
-        player.setPetLevel(pet, 1)
+        if (player.activePet == pet) {
+            sender.sendMessage(
+                plugin.langYml.getMessage("pet-already-active")
+                    .replace("%player%", playerName)
+            )
+            return
+        }
+
         sender.sendMessage(
-            plugin.langYml.getMessage("gave-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
+            plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)
+                .replace("%player%", playerName)
         )
+        player.activePet = pet
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        val completions = mutableListOf<String>()
-        if (args.isEmpty()) {
-            // Currently, this case is not ever reached
+        if (args.size == 1) {
             return Bukkit.getOnlinePlayers().map { it.name }
         }
 
-        if (args.size == 1) {
-            StringUtil.copyPartialMatches(
-                args[0],
-                Bukkit.getOnlinePlayers().map { it.name },
-                completions
-            )
-            return completions
-        }
-
         if (args.size == 2) {
-            StringUtil.copyPartialMatches(
-                args[1],
-                Pets.values().map { it.id },
-                completions
-            )
-            return completions
+            return Pets.values().map { it.id }
         }
 
         return emptyList()

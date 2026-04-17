@@ -1,17 +1,21 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
-import com.willfp.ecopets.pets.setPetLevel
+import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
 
-class CommandGiveEgg(plugin: EcoPlugin) : Subcommand(plugin, "giveegg", "ecopets.command.giveegg", false) {
+object CommandGiveEgg : Subcommand(
+    plugin,
+    "giveegg",
+    "ecopets.command.giveegg",
+    false
+) {
     override fun onExecute(sender: CommandSender, args: List<String>) {
         if (args.isEmpty()) {
             sender.sendMessage(plugin.langYml.getMessage("needs-player"))

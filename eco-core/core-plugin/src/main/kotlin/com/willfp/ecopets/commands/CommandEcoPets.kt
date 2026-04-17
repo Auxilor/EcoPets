@@ -1,17 +1,24 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.EcoPlugin
 import com.willfp.eco.core.command.impl.PluginCommand
+import com.willfp.ecopets.plugin
 import org.bukkit.command.CommandSender
 
-class CommandEcoPets(plugin: EcoPlugin) : PluginCommand(plugin, "ecopets", "ecopets.command.ecopets", false) {
+object CommandEcoPets : PluginCommand(
+    plugin,
+    "ecopets",
+    "ecopets.command.ecopets",
+    false
+) {
     init {
-        this.addSubcommand(CommandReload(plugin))
-            .addSubcommand(CommandGive(plugin))
-            .addSubcommand(CommandGiveEgg(plugin))
-            .addSubcommand(CommandGiveXP(plugin))
-            .addSubcommand(CommandReset(plugin))
-            .addSubcommand(CommandGiveCurrentXP(plugin))
+        this.addSubcommand(CommandReload)
+            .addSubcommand(CommandGive)
+            .addSubcommand(CommandGiveEgg)
+            .addSubcommand(CommandGiveXP)
+            .addSubcommand(CommandReset)
+            .addSubcommand(CommandGiveCurrentXP)
+            .addSubcommand(CommandActivateOther)
+            .addSubcommand(CommandDeactivateOther)
     }
 
     override fun onExecute(sender: CommandSender, args: List<String>) {

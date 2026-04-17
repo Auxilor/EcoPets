@@ -17,6 +17,15 @@ rotatable: true
 description: "&8&oLevel up by dealing melee damage"
 
 # The xp requirements for each pet level - add new levels by adding more to this list
+# There are two ways to specify level XP requirements:
+#  1. A formula to calculate for infinite levels
+#  2. A list of XP requirements for each level
+
+# Formula
+# xp-formula: (2 ^ %level%) * 25
+# max-level: 100 # The max level of the pet
+
+# List
 level-xp-requirements:
   - 50
   - 125
@@ -37,36 +46,6 @@ level-xp-requirements:
   - 50000
   - 75000
   - 100000
-  - 200000
-  - 300000
-  - 400000
-  - 500000
-  - 600000
-  - 700000
-  - 800000
-  - 900000
-  - 1000000
-  - 1100000
-  - 1200000
-  - 1300000
-  - 1400000
-  - 1500000
-  - 1600000
-  - 1700000
-  - 1800000
-  - 1900000
-  - 2000000
-  - 2100000
-  - 2200000
-  - 2300000
-  - 2400000
-  - 2500000
-  - 2600000
-  - 2750000
-  - 2900000
-  - 3100000
-  - 3400000
-  - 3700000
 
 # An XP Gain method takes a trigger as the ID and a multiplier
 # The multiplier takes the value produced by the trigger and multiplies it
@@ -103,10 +82,13 @@ level-up-messages:
     - "&8» &8Gives a &a+%damage_multiplier%%&8 bonus to"
     - "   &8melee damage"
 
-# Commands to be sent on levelup, can be formatted two ways:
-# level:command (e.g. 10:eco give %player% 1000), which would execute that command for level 10
-# command (e.g. eco give %player% 5000), which would execute that command for all levels
-level-commands: [ ]
+# Effects to run when the pet levels up
+# %level% is the level the pet leveled up to.
+# If you want to restrict this to certain levels, you can use
+# require: %level% = 20, or require: %level% < 50, etc.
+# If you want a reward to run every x levels, you can use
+# every: 1, or every: 12, etc
+level-up-effects: [ ]
 
 # The effects for the pet, has %level% as a placeholder
 effects:
@@ -137,6 +119,7 @@ spawn-egg:
     - ""
     - "&8&oPlace on the ground to"
     - "&8&ounlock the &r&6Tiger&8&o pet!"
-  craftable: false
+  craftable: false # Whether the spawn egg should be craftable
+  recipe-permission: ecopets.craft.tiger # (Optional) The permission required to see the crafting recipe
+  shapeless: false # (Optional) Whether the crafting recipe is shapeless, defaults to false
   recipe: [ ]
-  # recipe-permission: ecopets.craft.tiger
