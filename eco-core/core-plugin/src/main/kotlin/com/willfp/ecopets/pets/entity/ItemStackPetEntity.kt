@@ -10,14 +10,12 @@ class ItemStackPetEntity(
     pet: Pet,
     private val itemStack: String
 ) : PetEntity(pet) {
+
     override fun spawn(location: Location): ArmorStand {
-        val stand = emptyArmorStandAt(location, pet)
-
+        val stand = emptyArmorStandAt(location, pet, isSkull = false)
         val itemStack: ItemStack = Items.lookup(itemStack).item
-
-        @Suppress("UNNECESSARY_SAFE_CALL") // Can be null.
-        stand.equipment?.helmet = itemStack
-
+        stand.equipment.helmet = itemStack
         return stand
     }
+
 }

@@ -71,9 +71,9 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): 
         isCollidable = false
         isPersistent = false
 
-    for (slot in EquipmentSlot.entries) {
-        stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
-    }
+        for (slot in EquipmentSlot.entries) {
+            stand.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING)
+        }
 
         isCustomNameVisible = true
         @Suppress("DEPRECATION")
