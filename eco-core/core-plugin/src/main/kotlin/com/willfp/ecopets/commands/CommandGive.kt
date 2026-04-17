@@ -3,6 +3,7 @@ package com.willfp.ecopets.commands
 import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
+import com.willfp.ecopets.api.event.PetAdoptEvent
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
@@ -48,6 +49,13 @@ object CommandGive : Subcommand(
 
         if (player.hasPet(pet)) {
             sender.sendMessage(plugin.langYml.getMessage("already-has-pet"))
+            return
+        }
+
+        val event = PetAdoptEvent(player, pet)
+        Bukkit.getPluginManager().callEvent(event)
+        if (event.isCancelled) {
+            sender.sendMessage(plugin.langYml.getMessage("cancelled-adoption"))
             return
         }
 
