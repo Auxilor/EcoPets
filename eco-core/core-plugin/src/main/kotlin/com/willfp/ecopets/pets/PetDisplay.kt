@@ -29,10 +29,12 @@ object PetDisplay : Listener {
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
-                tickPlayer(player)
-            } else {
-                remove(player)
+            plugin.scheduler.runTask(player) { // folia issue
+                if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
+                    tickPlayer(player)
+                } else {
+                    remove(player)
+                }
             }
         }
 
@@ -50,55 +52,57 @@ object PetDisplay : Listener {
         }
 
         val entity = getOrNew(player) ?: return
-        val pet = player.activePet
-        val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
+        plugin.scheduler.runTask(entity) { // folia issue
+            val pet = player.activePet
+            val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
 
-        if (pet != null) {
-            if (showHologram) {
-                @Suppress("DEPRECATION")
-                entity.customName = plugin.configYml.getString("pet-entity.name")
-                    .replace("%player%", player.displayName)
-                    .replace("%pet%", pet.name)
-                    .replace("%level%", player.getPetLevel(pet).toString())
-                    .formatEco(player)
-                entity.isCustomNameVisible = true
-            } else {
-                entity.isCustomNameVisible = false
-            }
+            if (pet != null) {
+                if (showHologram) {
+                    @Suppress("DEPRECATION")
+                    entity.customName = plugin.configYml.getString("pet-entity.name")
+                        .replace("%player%", player.displayName)
+                        .replace("%pet%", pet.name)
+                        .replace("%level%", player.getPetLevel(pet).toString())
+                        .formatEco(player)
+                    entity.isCustomNameVisible = true
+                } else {
+                    entity.isCustomNameVisible = false
+                }
 
-            // makes the pet follow the player's sneaking state (so the name can be hidden when sneaking)
-            entity.isSneaking = player.isSneaking
+                // makes the pet follow the player's sneaking state (so the name can be hidden when sneaking)
+                entity.isSneaking = player.isSneaking
 
-            val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
-            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
-            val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
+                val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
+                val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
+                val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
 
-            val yOnPlayerSneaking = when {
-                player.isSneaking -> -0.3
-                else -> 0.0
-            }
+                val yOnPlayerSneaking = when {
+                    player.isSneaking -> -0.3
+                    else -> 0.0
+                }
 
-            // make the pet not be in the player's view when looking up or down
-            val yOnPlayerLookingUp = when {
-                player.pitch < -75 -> -1.5
-                player.pitch > 75 -> 0.5
-                else -> 0.0
-            }
+                // make the pet not be in the player's view when looking up or down
+                val yOnPlayerLookingUp = when {
+                    player.pitch < -75 -> -1.5
+                    player.pitch > 75 -> 0.5
+                    else -> 0.0
+                }
 
-            if (plugin.configYml.getBool("pet-entity.bobbing")) {
-                location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
-            } else {
-                location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset
-            }
+                if (plugin.configYml.getBool("pet-entity.bobbing")) {
+                    location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
+                } else {
+                    location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset
+                }
 
-            if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
-                val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
-                location.yaw = (intensity * tick / (2 * PI)).toFloat()
-                location.pitch = 0f
-            }
+                if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
+                    val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
+                    location.yaw = (intensity * tick / (2 * PI)).toFloat()
+                    location.pitch = 0f
+                }
 
-            if (location.world != null) {
-                entity.teleport(location)
+                if (location.world != null) {
+                    entity.teleport(location)
+                }
             }
         }
     }
@@ -186,12 +190,15 @@ object PetDisplay : Listener {
     }
 
     private fun remove(player: Player) {
-        trackedEntities[player.uniqueId]?.entity?.remove()
-        trackedEntities.remove(player.uniqueId)
+        this.remove(player.uniqueId)
     }
 
     private fun remove(uuid: UUID) {
-        trackedEntities[uuid]?.entity?.remove()
+        trackedEntities[uuid]?.entity?.let {
+            plugin.scheduler.runTask(it) {
+                it.remove()
+            }
+        }
         trackedEntities.remove(uuid)
     }
 
@@ -218,8 +225,10 @@ object PetDisplay : Listener {
     @EventHandler
     fun onEntitiesUnload(event: EntitiesUnloadEvent) {
         trackedEntities.entries.forEach {
-            if (event.chunk == it.value.entity.chunk) {
-                remove(it.key)
+            plugin.scheduler.runTask(it.value.entity) { // folia issue
+                if (event.chunk == it.value.entity.chunk) {
+                    remove(it.key)
+                }
             }
         }
     }
