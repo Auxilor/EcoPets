@@ -68,7 +68,13 @@ class PetLevelGUI(
         }
 
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
-            title = pet.name
+            title = plugin.langYml.getString("menu.level-title").takeIf { it.isNotEmpty() } ?: run {
+                plugin.langYml.set("menu.level-title", "%pet%")
+                plugin.langYml.save()
+                plugin.langYml.getString("menu.level-title")
+            }
+
+            title = title.replace("%pet%", pet.name)
 
             maxPages(component.pages)
 
@@ -117,19 +123,22 @@ class PetLevelGUI(
                 )
             )
 
-            setSlot(
-                plugin.configYml.getInt("level-gui.progression-slots.close.location.row"),
-                plugin.configYml.getInt("level-gui.progression-slots.close.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))
-                        .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.close.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ ->
-                        event.whoClicked.closeInventory()
+            val closeEnabled = plugin.configYml.getBoolOrNull("level-gui.progression-slots.close.enabled") ?: true
+            if (closeEnabled) {
+                setSlot(
+                    plugin.configYml.getInt("level-gui.progression-slots.close.location.row"),
+                    plugin.configYml.getInt("level-gui.progression-slots.close.location.column"),
+                    slot(
+                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))
+                            .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.close.name"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ ->
+                            event.whoClicked.closeInventory()
+                        }
                     }
-                }
-            )
+                )
+            }
 
             for (config in plugin.configYml.getSubsections("level-gui.custom-slots")) {
                 setSlot(

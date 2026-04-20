@@ -9,21 +9,24 @@ dependencies {
     implementation("com.willfp:ModelEngineBridge:1.3.0")
 }
 
+tasks {
+    build {
+        dependsOn(publishToMavenLocal)
+    }
+}
+
 publishing {
     publications {
-        register<MavenPublication>("maven") {
-            groupId = project.group.toString()
-            version = project.version.toString()
+        create<MavenPublication>("shadow") {
+            from(components["java"])
             artifactId = rootProject.name
-
-            artifact(rootProject.tasks.shadowJar.get().archiveFile)
         }
     }
 
     publishing {
         repositories {
             maven {
-                name = "auxilor"
+                name = "Auxilor"
                 url = uri("https://repo.auxilor.io/repository/maven-releases/")
                 credentials {
                     username = System.getenv("MAVEN_USERNAME")
@@ -31,11 +34,5 @@ publishing {
                 }
             }
         }
-    }
-}
-
-tasks {
-    build {
-        dependsOn(publishToMavenLocal)
     }
 }

@@ -25,8 +25,12 @@ messages:
   no-pet-active: "&cYou don't have a pet active!"
   activated-pet: "&fYou have activated the %pet%&f pet!"
   deactivated-pet: "&fYou have deactivated the %pet%&f pet!"
+  cancelled-adoption: "&cThat player is not allowed to adopt that pet!"
+  cancelled-swap: "&cYou are not allowed to swap to that pet!"
+  cancelled-swap-other: "&cThat player is not allowed to swap to that pet!"
 
 menu:
   title: "Pets"
+  level-title: "%pet%"
 
 infinity: "∞"
