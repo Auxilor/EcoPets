@@ -77,6 +77,7 @@ object PetDisplay : Listener {
 
 
 
+            location.y += pet.offset
             if (plugin.configYml.getBool("pet-entity.bobbing")) {
                 location.y += offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
             } else {

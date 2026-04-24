@@ -122,6 +122,8 @@ class Pet(
 
     val entityTexture = config.getString("entity-texture")
 
+    val offset = config.getDouble("offset")
+
     private val xpFormula = config.getStringOrNull("xp-formula")
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
