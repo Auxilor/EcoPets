@@ -29,6 +29,7 @@ import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
 import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
+import com.willfp.ecopets.pets.entity.CustomItemPetEntity
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.conditions.Conditions
@@ -73,6 +74,10 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Filters.register(FilterPet)
         Mutators.register(MutatorPlayerToPet)
         Mutators.register(MutatorPlayerToPetLocation)
+        
+        PetEntity.registerPetEntity("item") { pet, id ->
+            CustomItemPetEntity(pet, id)
+        }
 
         registerSpecificHolderProvider<Player> {
             it.activePetLevel?.let { p ->
