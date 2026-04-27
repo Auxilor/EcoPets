@@ -8,6 +8,9 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
+import org.bukkit.Material
+import com.willfp.eco.core.items.Items
 
 abstract class PetEntity(
     val pet: Pet
@@ -84,4 +87,12 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): 
     }
 
     return stand
+}
+
+internal fun lookupItem(id: String): ItemStack {
+    return try {
+        Items.lookup(id).item ?: ItemStack(Material.BARRIER)
+    } catch (e: Exception) {
+        ItemStack(Material.BARRIER)
+    }
 }
