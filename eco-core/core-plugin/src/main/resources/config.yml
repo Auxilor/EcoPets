@@ -281,7 +281,7 @@ pet-entity:
   location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
   location_z_offset: 0.75 # How far the pet should be from the player on the Z axis (Default: 0.75)
   bobbing: true # If the pet should bob up and down
-  bobbing-intensity: 0.15 # How much the pet should bob up and down (Default: 0.15)
+  bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
   rotation: true # If the pet should rotate/spin
   rotation-intensity: 20 # How fast the pet should rotate/spin (Default: 20)
   scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
