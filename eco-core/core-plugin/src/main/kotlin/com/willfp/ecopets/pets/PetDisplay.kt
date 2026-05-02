@@ -158,17 +158,15 @@ object PetDisplay : Listener {
             tracked?.entity?.remove()
         }
 
-        if (existing == null || existing.isDead || pet == null) {
+        val isNotArmorStand = existing?.isDead == true && existing !is ArmorStand
+        if (existing == null || isNotArmorStand || pet == null) {
             existing?.remove()
             trackedEntities.remove(player.uniqueId)
-
             if (pet == null) {
                 return null
             }
-
             val location = getLocation(player, 0.0)
             val entity = pet.makePetEntity().spawn(location)
-
             trackedEntities[player.uniqueId] = PetDisplayEntity(entity, pet)
         }
 
