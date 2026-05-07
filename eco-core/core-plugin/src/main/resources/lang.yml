@@ -17,6 +17,7 @@ messages:
   already-has-pet: "&cPlayer already has this pet!"
   doesnt-have-pet: "&cPlayer doesn't have this pet!"
   gave-pet: "&fSuccessfully gave %player%&f the %pet%&f pet!"
+  took-pet: "&fSuccessfully took %player%&f's %pet%&f pet!"
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
   pet-spawned: "&fYou've spawned your %pet%&f pet! Visit &a/pets&f to activate it!"
