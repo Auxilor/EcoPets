@@ -11,6 +11,7 @@ import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
+import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.plugin
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -117,6 +118,13 @@ object PetsGUI {
                         val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
 
                         if (player.activePet != pet) {
+                            if (!pet.canActivate(player)) {
+                                player.sendMessage(
+                                    plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                                        .replace("%pet%", pet.name)
+                                )
+                                return@onLeftClick
+                            }
                             player.activePet = pet
                         }
                         PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(player)

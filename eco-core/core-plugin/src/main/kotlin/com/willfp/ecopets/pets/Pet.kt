@@ -29,6 +29,7 @@ import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.plugin
 import com.willfp.ecopets.util.LevelInjectable
+import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.ViolationContext
 import com.willfp.libreforge.conditions.ConditionList
 import com.willfp.libreforge.conditions.Conditions
@@ -36,6 +37,7 @@ import com.willfp.libreforge.counters.Counters
 import com.willfp.libreforge.effects.EffectList
 import com.willfp.libreforge.effects.Effects
 import com.willfp.libreforge.effects.executors.impl.NormalExecutorFactory
+import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.InvalidConfigurationException
@@ -136,6 +138,8 @@ class Pet(
 
     private val conditions: ConditionList
 
+    private val activateConditions: ConditionList
+
     private val levels = Caffeine.newBuilder().build<Int, PetLevel>()
 
     private val effectsDescription = Caffeine.newBuilder().build<Int, List<String>>()
@@ -197,6 +201,11 @@ class Pet(
         conditions = Conditions.compile(
             config.getSubsections("conditions"),
             ViolationContext(plugin, "Pet $id")
+        )
+
+        activateConditions = Conditions.compile(
+            config.getSubsections("activate-conditions"),
+            ViolationContext(plugin, "Pet $id activate-conditions")
         )
 
         PlayerPlaceholder(
@@ -282,6 +291,13 @@ class Pet(
         ) {
             it.getPetLevel(this).toString()
         }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "${id}_can_activate"
+        ) {
+            canActivate(it).toString()
+        }.register()
     }
 
     val levelUpEffects = Effects.compileChain(
@@ -296,6 +312,12 @@ class Pet(
 
     fun getLevel(level: Int): PetLevel = levels.get(level) {
         PetLevel(this, it, effects, conditions)
+    }
+
+    fun canActivate(player: Player): Boolean {
+        if (activateConditions.isEmpty()) return true
+        val petLevel = getLevel(player.getPetLevel(this))
+        return activateConditions.areMet(player.toDispatcher(), SimpleProvidedHolder(petLevel))
     }
 
     private fun getLevelUpMessages(level: Int, whitespace: Int = 0): List<String> = levelUpMessages.get(level) {
