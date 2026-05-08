@@ -88,6 +88,7 @@ effects:
       - melee_attack
 
 conditions: [ ]
+activate-conditions: [ ]
 
 spawn-egg:
   enabled: true # If the pet should have a spawn egg

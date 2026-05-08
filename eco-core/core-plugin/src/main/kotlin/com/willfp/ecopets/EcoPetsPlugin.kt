@@ -109,14 +109,16 @@ class EcoPetsPlugin : LibreforgePlugin() {
         PetsGUI.update()
 
         this.scheduler.runTimer(20, 20) {
-            for (player in Bukkit.getOnlinePlayers()) {
-                val activePet = player.activePet ?: continue
-                if (!activePet.canActivate(player)) {
-                    player.activePet = null
-                    player.sendMessage(
-                        this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                            .replace("%pet%", activePet.name)
-                    )
+            if (this.configYml.getBool("auto-deactivate-on-condition-fail")) {
+                for (player in Bukkit.getOnlinePlayers()) {
+                    val activePet = player.activePet ?: continue
+                    if (!activePet.canActivate(player)) {
+                        player.activePet = null
+                        player.sendMessage(
+                            this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                                .replace("%pet%", activePet.name)
+                        )
+                    }
                 }
             }
         }

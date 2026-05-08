@@ -10,6 +10,9 @@ use-local-storage: false
 
 discover-recipes: true
 
+# If a pet should be automatically deactivated when its activate-conditions are no longer met
+auto-deactivate-on-condition-fail: true
+
 gui:
   rows: 6
 
