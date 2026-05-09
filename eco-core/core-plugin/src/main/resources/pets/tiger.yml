@@ -89,6 +89,7 @@ effects:
       - melee_attack
 
 conditions: [ ]
+activate-conditions: [ ]
 
 spawn-egg:
   enabled: true

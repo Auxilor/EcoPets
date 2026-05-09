@@ -3,6 +3,7 @@ package com.willfp.ecopets
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
+import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
@@ -39,6 +40,7 @@ import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.mutators.Mutators
 import com.willfp.libreforge.registerSpecificHolderProvider
 import com.willfp.libreforge.triggers.Triggers
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
@@ -105,6 +107,21 @@ class EcoPetsPlugin : LibreforgePlugin() {
 
     override fun handleReload() {
         PetsGUI.update()
+
+        this.scheduler.runTimer(20, 20) {
+            if (this.configYml.getBool("auto-deactivate-on-condition-fail")) {
+                for (player in Bukkit.getOnlinePlayers()) {
+                    val activePet = player.activePet ?: continue
+                    if (!activePet.canActivate(player)) {
+                        player.activePet = null
+                        player.sendMessage(
+                            this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                                .replace("%pet%", activePet.name)
+                        )
+                    }
+                }
+            }
+        }
 
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return

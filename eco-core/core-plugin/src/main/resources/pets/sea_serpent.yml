@@ -106,6 +106,7 @@ effects:
 
 conditions:
   - id: in_water
+activate-conditions: [ ]
 
 spawn-egg:
   enabled: true # If the pet should have a spawn egg

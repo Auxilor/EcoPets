@@ -40,6 +40,14 @@ object CommandActivate : Subcommand(
             return
         }
 
+        if (!pet.canActivate(player)) {
+            player.sendMessage(
+                plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%pet%", pet.name)
+            )
+            return
+        }
+
         player.sendMessage(
             plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)
