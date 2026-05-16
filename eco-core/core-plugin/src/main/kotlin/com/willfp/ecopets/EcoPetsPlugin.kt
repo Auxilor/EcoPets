@@ -1,5 +1,6 @@
 package com.willfp.ecopets
 
+import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
@@ -161,4 +162,20 @@ class EcoPetsPlugin : LibreforgePlugin() {
             DiscoverRecipeListener
         )
     }
+
+    override fun getCustomCharts() = listOf(
+        EcoMetricsChart.SingleLine("total_pets") { Pets.values().size },
+        EcoMetricsChart.SimplePie("pet_entity_enabled") {
+            if (configYml.getBool("pet-entity.enabled")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("pet_hologram_enabled") {
+            if (configYml.getBool("pet-entity.show-hologram")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("auto_deactivate_on_fail") {
+            if (configYml.getBool("auto-deactivate-on-condition-fail")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("level_up_messages") {
+            if (configYml.getBool("level-up.message.enabled")) "enabled" else "disabled"
+        }
+    )
 }
