@@ -1,0 +1,316 @@
+---
+title: "Plugin Config"
+sidebar_position: 5
+---
+
+## Default config.yml
+
+```yaml
+# Even if eco is set up to use a database, you can
+# force EcoPets to save to local storage to disable
+# cross-server sync.
+use-local-storage: false
+
+discover-recipes: true
+
+# If a pet should be automatically deactivated when its activate-conditions are no longer met
+auto-deactivate-on-condition-fail: true
+
+gui:
+  rows: 6
+
+  mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
+
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111101111"
+      - "111111111"
+      - "100000001"
+      - "100000001"
+      - "100000001"
+      - "101000111"
+
+  pet-area:
+    top-left:
+      row: 3
+      column: 2
+    bottom-right:
+      row: 5
+      column: 8
+
+  pet-info:
+    row: 1
+    column: 5
+
+    no-active:
+      name: "&cNo Active Pet"
+      lore:
+        - ""
+        - "&cYou do not currently have a pet active"
+        - "&fPick one from the options below!"
+        - ""
+      item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19
+
+    active:
+      name: "%pet% &fLvl. &a%level%"
+      lore:
+        - "%description%"
+        - "&f"
+        - "&fEffects:"
+        - "%effects%"
+        - ""
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+        - ""
+        - "&eClick to view Level Progression!"
+
+      # By default, the lore for the max level is the same,
+      # but you can change this if you want.
+      max-level-lore:
+        - "%description%"
+        - "&f"
+        - "&fEffects:"
+        - "%effects%"
+        - ""
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+        - ""
+        - "&eClick to view Level Progression!"
+
+  pet-icon:
+    name: "%pet% &fLvl. &a%level%"
+    lore:
+      - "%description%"
+      - "&f"
+      - "&fEffects:"
+      - "%effects%"
+      - ""
+      - "&fProgress:"
+      - "&8» &e%percentage_progress%%"
+      - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
+    # By default, the lore for the max level is the same,
+    # but you can change this if you want.
+    max-level-lore:
+      - "%description%"
+      - "&f"
+      - "&fEffects:"
+      - "%effects%"
+      - ""
+      - "&fProgress:"
+      - "&8» &e%percentage_progress%%"
+      - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
+    active-lore:
+      - ""
+      - "&cThis pet is already active!"
+
+    not-active-lore:
+      - ""
+      - "&eClick to activate this pet!"
+
+    click:
+      enabled: true
+      sound: ui_button_click
+      pitch: 1
+      volume: 1
+      category: UI
+
+  prev-page:
+    item: arrow
+    name: "&fPrevious Page"
+    location:
+      row: 6
+      column: 4
+
+  next-page:
+    item: arrow
+    name: "&fNext Page"
+    location:
+      row: 6
+      column: 6
+
+  close:
+    enabled: true
+    item: barrier
+    name: "&cClose"
+    location:
+      row: 6
+      column: 5
+
+  deactivate-pet:
+    item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZDlhNDViOTY4MWNlYTViMjhjNzBmNzVhNjk1NmIxZjU5NGZlYzg0MGI5NjA3Nzk4ZmIxZTcwNzc2NDQzMCJ9fX0=
+    name: "&cDeactivate Pet"
+    location:
+      row: 6
+      column: 2
+
+  toggle:
+    hide-pet:
+      item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI1YjhlZWQ1YzU2NWJkNDQwZWM0N2M3OWMyMGQ1Y2YzNzAxNjJiMWQ5YjVkZDMxMDBlZDYyODNmZTAxZDZlIn19fQ==
+      name: "&cHide Pet"
+      lore:
+        - "&f"
+        - "&eClick to hide your pet"
+    show-pet:
+      item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjNmNzliMjA3ZDYxZTEyMjUyM2I4M2Q2MTUwOGQ5OWNmYTA3OWQ0NWJmMjNkZjJhOWE1MTI3ZjkwNzFkNGIwMCJ9fX0=
+      name: "&aShow Pet"
+      lore:
+        - "&f"
+        - "&eClick to show your pet"
+    location:
+      row: 6
+      column: 8
+
+  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  custom-slots: [ ]
+
+level-gui:
+  rows: 6
+
+  mask:
+    # The way the mask works is by having a list of materials
+    # And then a pattern to use those materials.
+
+    # The pattern is the rows in the GUI
+    # Each line must be 9 long, and the amount of rows should be the amount of rows in the GUI
+    # A zero represents nothing
+    # A 1 represents the first material
+    # A 2 represents the second material
+    # And so on, you can add up to 9.
+
+    materials:
+      - black_stained_glass_pane
+    pattern:
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+      - "111111111"
+
+  progression-slots:
+    # To set the order of the pattern,
+    # Use 1-9 and then a-z: a goes after 9.
+    pattern:
+      - "109ab0jkl"
+      - "2080c0i0m"
+      - "3070d0h0n"
+      - "4560efg0o"
+      - "00000000p"
+      - "00000000q"
+
+    # If the amount of the item should be the level
+    level-as-amount: true
+
+    prev-page:
+      material: arrow
+      name: "&fPrevious Page"
+      location:
+        row: 6
+        column: 4
+
+    next-page:
+      material: arrow
+      name: "&fNext Page"
+      location:
+        row: 6
+        column: 6
+
+    close:
+      enabled: true
+      material: barrier
+      name: "&cClose"
+      location:
+        row: 6
+        column: 5
+
+    unlocked:
+      item: lime_stained_glass_pane
+      name: "%pet% &fLvl. &a%level%"
+      lore:
+        - "&f"
+        - "&fRewards:"
+        - "%rewards%"
+        - "&f"
+        - "&aUNLOCKED"
+    in-progress:
+      item: yellow_stained_glass_pane
+      name: "%pet% &fLvl. &a%level%"
+      lore:
+        - "&f"
+        - "&fRewards:"
+        - "%rewards%"
+        - "&f"
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+
+      # By default, the lore for the max level is the same,
+      # but you can change this if you want.
+      max-level-lore:
+        - "&f"
+        - "&fRewards:"
+        - "%rewards%"
+        - "&f"
+        - "&fProgress:"
+        - "&8» &e%percentage_progress%%"
+        - "&8» &e%current_xp%&8/&7%required_xp% &fXP"
+    locked:
+      item: red_stained_glass_pane
+      name: "%pet% &fLvl. &a%level%"
+      lore:
+        - "&f"
+        - "&fRewards:"
+        - "%rewards%"
+
+  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  custom-slots: [ ]
+
+pet-entity:
+  enabled: true # If you disable this, there will be no floating pets
+  show-hologram: true # If the pet's name should be shown above the pet
+  name: "%player%&f's %pet%&f (Lvl. %level%)"
+  location-x-offset: 0.75 # How far the pet should be from the player on the X axis (Default: 0.75)
+  location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
+  location_z_offset: 0.75 # How far the pet should be from the player on the Z axis (Default: 0.75)
+  bobbing: true # If the pet should bob up and down
+  bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
+  rotation: true # If the pet should rotate/spin
+  rotation-intensity: 20 # How fast the pet should rotate/spin (Default: 20)
+  scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
+  item-display:
+    enabled: false
+    teleport-duration: 3
+
+
+level-up:
+  message:
+    enabled: true
+    message:
+      - "&f"
+      - " &#d977c2You levelled up your %pet%&#d977c2 pet to &eLevel %level%&#d977c2!"
+      - "&f"
+      - " &#d977c2&lREWARDS:"
+      - " %level_up_messages%"
+      - "&f"
+  sound:
+    enabled: true
+    sound: entity_player_levelup
+    pitch: 1.3
+    volume: 0.8
+    category: PLAYER
+
+```
