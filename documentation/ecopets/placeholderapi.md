@@ -3,6 +3,8 @@ title: "PlaceholderAPI"
 sidebar_position: 3
 ---
 
+These placeholders expose a player's pet levels, XP, and active pet anywhere PlaceholderAPI is supported, e.g. scoreboards, holograms, and chat. Swap `<id>` for a pet's ID. PlaceholderAPI must be installed.
+
 | Placeholder                                | Description                                                                           |
 |--------------------------------------------|---------------------------------------------------------------------------------------|
 | `%ecopets_<id>%`                           | Get the level that a player has for any given pet                                     |
@@ -18,3 +20,10 @@ sidebar_position: 3
 | `%ecopets_active_pet_required_xp%`         | Shows the XP required for the active pet's next level                                 |
 | `%ecopets_pet%`                            | Shows the name of the active pet                                                      |
 | `%ecopets_pet_id%`                         | Shows the id of the active pet                                                        |
+
+<hr/>
+
+## Where to go next
+
+- **Make a pet:** [How to Make a Pet](how-to-make-a-custom-pet), where pet IDs come from.
+- **Plugin config:** [Plugin Config](plugin-config) to customise the pet GUIs and entity name.

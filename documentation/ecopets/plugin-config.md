@@ -3,6 +3,12 @@ title: "Plugin Config"
 sidebar_position: 5
 ---
 
+This is the main `config.yml` for EcoPets, found at `/plugins/EcoPets/config.yml`. It controls the pet GUIs, the floating pet entity, level-up messages, and storage. Apply changes by running `/ecopets reload`.
+
+:::warning
+Changing `use-local-storage` switches the storage backend, so it needs a full server restart to take effect, not just a reload.
+:::
+
 ## Default config.yml
 
 ```yaml
@@ -314,3 +320,12 @@ level-up:
     category: PLAYER
 
 ```
+
+<hr/>
+
+## Where to go next
+
+- **Make a pet:** [How to Make a Pet](how-to-make-a-custom-pet) for per-pet config.
+- **Custom GUI slots:** [Custom GUI Slots](https://plugins.auxilor.io/all-plugins/custom-gui-slots) to add your own slots to the menus.
+- **Commands:** [Commands and Permissions](commands-and-permissions) for reloading, giving, and resetting pets.
+

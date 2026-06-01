@@ -3,15 +3,18 @@ title: "API"
 sidebar_position: 6
 ---
 
-## Source Code
+This page is for developers who want to hook into EcoPets from their own plugin, e.g. to read or modify a player's pets and levels. EcoPets is open-source, so you can browse the full API in the repo.
 
-The source code can be found [here](https://github.com/Auxilor/EcoPets):
+## Source code
 
-## API
+The source code is on [GitHub](https://github.com/Auxilor/EcoPets).
 
-Add this to your build.gradle.kts:
+## Adding the dependency
 
-```kts
+1. Add the Auxilor repository to your `build.gradle.kts`.
+2. Add EcoPets as a `compileOnly` dependency.
+
+```kotlin
 repositories {
     maven("https://repo.auxilor.io/repository/maven-public/")
 }
@@ -21,4 +24,11 @@ dependencies {
 }
 ```
 
-The latest version available on the repo can be found [here](https://github.com/Auxilor/EcoPets/tags)
+The latest version available on the repo can be found [here](https://github.com/Auxilor/EcoPets/tags).
+
+<hr/>
+
+## Where to go next
+
+- **Shared APIs:** the [eco framework](https://github.com/Auxilor/eco), where the shared APIs live.
+- **Config side:** [How to Make a Pet](how-to-make-a-custom-pet) for building pets in config.

@@ -3,6 +3,8 @@ title: "Commands and Permissions"
 sidebar_position: 4
 ---
 
+Every EcoPets command and permission node, for giving, resetting, importing, and managing pets. Admin commands sit under `/ecopets`; player-facing ones under `/pets`.
+
 | Command                                   | Description                                          | Permission                   |
 |-------------------------------------------|------------------------------------------------------|------------------------------|
 | `/ecopets give <player> <pet>`            | Give a pet                                           | `ecopets.command.give`       |
@@ -15,7 +17,7 @@ sidebar_position: 4
 | `/ecopets import <id>`                    | Import a pet from [lrcdb](https://lrcdb.auxilor.io/) | `ecopets.command.import`     |
 | `/ecopets export <id>`                    | Export a pet to [lrcdb](https://lrcdb.auxilor.io/)   | `ecopets.command.export`     |
 
-### Additional Permissions
+### Additional permissions
 
 | Permission                         | Description                                                                                         |
 |------------------------------------|-----------------------------------------------------------------------------------------------------|
@@ -24,3 +26,11 @@ sidebar_position: 4
 | `ecopets.xpmultiplier.double`      | Gives double pet XP (2x multiplier)                                                                 |
 | `ecopets.xpmultiplier.triple`      | Gives triple pet XP (3x multiplier)                                                                 |
 | `ecopets.xpmultiplier.quadruple`   | Gives quadruple pet XP (4x multiplier)                                                              |
+
+<hr/>
+
+## Where to go next
+
+- **Make a pet:** [How to Make a Pet](how-to-make-a-custom-pet) to create the pets you give out.
+- **Plugin config:** [Plugin Config](plugin-config) to customise the GUIs and pet entity.
+- **Import and export:** browse or share pets on [lrcdb](https://lrcdb.auxilor.io/).
