@@ -135,15 +135,14 @@ gui:
       category: UI
 
   prev-page:
-    item: arrow
-    name: "&fPrevious Page"
+    item: arrow name:"&fPrevious Page"
     location:
       row: 6
       column: 4
 
   next-page:
-    item: arrow
-    name: "&fNext Page"
+    item: arrow name:"&fNext Page"
+    item-inactive: gray_dye name:"&7Next Page"
     location:
       row: 6
       column: 6
@@ -222,15 +221,14 @@ level-gui:
     level-as-amount: true
 
     prev-page:
-      material: arrow
-      name: "&fPrevious Page"
+      item: arrow name:"&fPrevious Page"
       location:
         row: 6
         column: 4
 
     next-page:
-      material: arrow
-      name: "&fNext Page"
+      item: arrow name:"&fNext Page"
+      item-inactive: gray_dye name:"&7Next Page"
       location:
         row: 6
         column: 6
