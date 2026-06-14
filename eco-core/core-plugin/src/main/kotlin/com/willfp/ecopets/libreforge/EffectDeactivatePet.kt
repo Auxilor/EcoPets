@@ -8,6 +8,14 @@ import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 
 object EffectDeactivatePet : Effect<NoCompileData>("deactivate_pet") {
+    override val description = "Removes the player's currently active pet, if they have one active."
+
+    override val categories = setOf("player")
+
+    override val additionalInfo = listOf(
+        "Has no effect if the player has no active pet."
+    )
+
     override val parameters = setOf(
         TriggerParameter.PLAYER
     )
