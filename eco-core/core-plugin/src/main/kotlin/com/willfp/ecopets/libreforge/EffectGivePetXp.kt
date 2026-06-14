@@ -24,7 +24,7 @@ object EffectGivePetXp : Effect<NoCompileData>("give_pet_xp") {
         require(
             "amount",
             "You must specify the amount of xp to give!",
-            description = "The amount of pet experience to give. Supports expressions.",
+            description = "The amount of pet experience to give.",
             type = ArgType.EXPRESSION
         )
         require(
