@@ -66,29 +66,6 @@ object PetsGUI {
             }
         }
 
-        fun pageButtonItem(basePath: String, state: String): ItemStack? {
-            val itemString = if (state == "active") {
-                plugin.configYml.getStringOrNull("$basePath.item")
-            } else {
-                plugin.configYml.getStringOrNull("$basePath.item-inactive")
-            } ?: return null
-
-            // Deprecated: use the item/item-inactive keys to set the name instead
-            val name = if (state == "active") {
-                plugin.configYml.getStringOrNull("$basePath.name")
-            } else {
-                plugin.configYml.getStringOrNull("$basePath.name-inactive")
-            }
-
-            val builder = ItemStackBuilder(Items.lookup(itemString))
-
-            if (name != null) {
-                builder.setDisplayName(name)
-            }
-
-            return builder.build()
-        }
-
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
@@ -156,27 +133,8 @@ object PetsGUI {
                 })
             }
 
-            pageButtonItem("gui.prev-page", "active")?.let { active ->
-                addPageChanger(
-                    PageChanger.Direction.BACKWARDS,
-                    active,
-                    pageButtonItem("gui.prev-page", "inactive"),
-                    pageChangeSound,
-                    plugin.configYml.getInt("gui.prev-page.location.row"),
-                    plugin.configYml.getInt("gui.prev-page.location.column")
-                )
-            }
-
-            pageButtonItem("gui.next-page", "active")?.let { active ->
-                addPageChanger(
-                    PageChanger.Direction.FORWARDS,
-                    active,
-                    pageButtonItem("gui.next-page", "inactive"),
-                    pageChangeSound,
-                    plugin.configYml.getInt("gui.next-page.location.row"),
-                    plugin.configYml.getInt("gui.next-page.location.column")
-                )
-            }
+            addPageChanger(plugin.configYml, "gui.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
+            addPageChanger(plugin.configYml, "gui.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
             setSlot(
                 plugin.configYml.getInt("gui.pet-info.row"),
