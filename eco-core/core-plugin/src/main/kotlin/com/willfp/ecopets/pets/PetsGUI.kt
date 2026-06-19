@@ -1,9 +1,10 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.page.Page
-import com.willfp.eco.core.gui.page.PageChangeEvent
+import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.gui.slot.FillerMask
@@ -17,8 +18,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
-import kotlin.math.max
-import kotlin.math.min
 
 object PetsGUI {
     private lateinit var menu: Menu
@@ -66,6 +65,8 @@ object PetsGUI {
                     .build()
             }
         }
+
+        val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
         val petIconBuilder = { player: Player, menu: Menu, index: Int ->
             val page = menu.getPage(player)
@@ -132,55 +133,8 @@ object PetsGUI {
                 })
             }
 
-            // I do this for backwards compatibility because with PageChanger if you don't have any more pages, the item will disappear and this would require an update of the config for all users
-            // This is terrible imo, but everything for compatibility!
-            setSlot(
-                plugin.configYml.getInt("gui.prev-page.location.row"),
-                plugin.configYml.getInt("gui.prev-page.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.prev-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.prev-page.name"))
-                        .build()
-                )
-                {
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        val page = menu.getPage(player)
-                        val newPage = max(1, min(page + -1, menu.getMaxPage(player)))
-
-                        if (newPage == page) {
-                            return@onLeftClick
-                        }
-
-                        menu.setState(player, Page.PAGE_KEY, newPage)
-                        menu.callEvent(player, PageChangeEvent(newPage, page))
-                    }
-                }
-            )
-
-            setSlot(
-                plugin.configYml.getInt("gui.next-page.location.row"),
-                plugin.configYml.getInt("gui.next-page.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.next-page.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.next-page.name"))
-                        .build()
-                )
-                {
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        val page = menu.getPage(player)
-                        val newPage = max(1, min(page + 1, menu.getMaxPage(player)))
-
-                        if (newPage == page) {
-                            return@onLeftClick
-                        }
-
-                        menu.setState(player, Page.PAGE_KEY, newPage)
-                        menu.callEvent(player, PageChangeEvent(newPage, page))
-                    }
-                }
-            )
+            addPageChanger(plugin.configYml, "gui.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
+            addPageChanger(plugin.configYml, "gui.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
             setSlot(
                 plugin.configYml.getInt("gui.pet-info.row"),

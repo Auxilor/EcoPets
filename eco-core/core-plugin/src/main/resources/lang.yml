@@ -33,7 +33,7 @@ messages:
   cancelled-swap-other: "&cThat player is not allowed to swap to that pet!"
 
 menu:
-  title: "Pets"
-  level-title: "%pet%"
+  title: "Pets (%page%/%max_page%)"
+  level-title: "%pet% (%page%/%max_page%)"
 
 infinity: "∞"
