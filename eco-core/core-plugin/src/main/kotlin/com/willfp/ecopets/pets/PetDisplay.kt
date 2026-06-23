@@ -96,13 +96,13 @@ object PetDisplay : Listener {
     }
 
     private fun getLocation(player: Player, d: Double): Location {
-        val direction = player.eyeLocation.direction.clone().normalize()
+        val bodyDirection = player.location.direction.clone().normalize()
 
         val locationXOffset = plugin.configYml.getDoubleOrNull("pet-entity.location-x-offset")
             ?: plugin.configYml.getDoubleOrNull("pet-entity.location_x_offset") ?: 0.75
         val locationZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location-z-offset")
             ?: plugin.configYml.getDoubleOrNull("pet-entity.location_z_offset") ?: 0.75
-        val offset = direction.clone().apply {
+        val offset = bodyDirection.clone().apply {
             x *= -locationXOffset
             z *= -locationZOffset
         }
