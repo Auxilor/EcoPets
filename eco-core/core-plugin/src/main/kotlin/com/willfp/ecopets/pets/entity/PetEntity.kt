@@ -100,6 +100,7 @@ internal fun lookupItem(id: String): ItemStack {
     if (lookup is EmptyTestableItem) {
         return ItemStack(Material.BARRIER)
     }
+    return lookup.item ?: ItemStack(Material.BARRIER)
 }
 
 private fun itemPetEntity(pet: Pet, itemLookup: String): PetEntity = object : PetEntity(pet) {
