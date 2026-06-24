@@ -12,6 +12,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.Material
 import com.willfp.eco.core.items.Items
+import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 
 abstract class PetEntity(
     val pet: Pet
