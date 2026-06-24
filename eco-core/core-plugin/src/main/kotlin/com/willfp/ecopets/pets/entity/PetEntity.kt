@@ -96,10 +96,9 @@ internal fun emptyArmorStandAt(location: Location, pet: Pet, isSkull: Boolean): 
 }
 
 internal fun lookupItem(id: String): ItemStack {
-    return try {
-        Items.lookup(id).item ?: ItemStack(Material.BARRIER)
-    } catch (e: Exception) {
-        ItemStack(Material.BARRIER)
+    val lookup = Items.lookup(id)
+    if (lookup is EmptyTestableItem) {
+        return ItemStack(Material.BARRIER)
     }
 }
 
