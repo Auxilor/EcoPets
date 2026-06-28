@@ -72,7 +72,8 @@ object PetDisplay : Listener {
             }
 
             val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
-            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
+            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset")
+                ?: plugin.configYml.getDoubleOrNull("pet-entity.location_y_offset") ?: 0.0
             val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
 
 
@@ -95,11 +96,13 @@ object PetDisplay : Listener {
     }
 
     private fun getLocation(player: Player, d: Double): Location {
-        val direction = player.eyeLocation.direction.clone().normalize()
+        val bodyDirection = player.location.direction.clone().normalize()
 
-        val locationXOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_x_offset") ?: 0.75
-        val locationZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_z_offset") ?: 0.75
-        val offset = direction.clone().apply {
+        val locationXOffset = plugin.configYml.getDoubleOrNull("pet-entity.location-x-offset")
+            ?: plugin.configYml.getDoubleOrNull("pet-entity.location_x_offset") ?: 0.75
+        val locationZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location-z-offset")
+            ?: plugin.configYml.getDoubleOrNull("pet-entity.location_z_offset") ?: 0.75
+        val offset = bodyDirection.clone().apply {
             x *= -locationXOffset
             z *= -locationZOffset
         }
