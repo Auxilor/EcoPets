@@ -1,16 +1,13 @@
 name: ${pluginName}
 version: ${version}
 main: com.willfp.ecopets.EcoPetsPlugin
-api-version: 1.17
+api-version: 1.21.8
 authors: [ Auxilor ]
 website: willfp.com
-folia-supported: true
-
 depend:
   - eco
 softdepend:
   - libreforge
-
 commands:
   ecopets:
     description: Base Command
@@ -36,6 +33,7 @@ permissions:
       ecopets.command.reload: true
       ecopets.command.pets: true
       ecopets.command.give: true
+      ecopets.command.take: true
       ecopets.command.giveegg: true
       ecopets.command.givexp: true
       ecopets.command.givecurrentxp: true
@@ -56,6 +54,9 @@ permissions:
     default: true
   ecopets.command.give:
     description: Allows the use of /ecopets give.
+    default: op
+  ecopets.command.take:
+    description: Allows the use of /ecopets take.
     default: op
   ecopets.command.giveegg:
     description: Allows the use of /ecopets giveegg.

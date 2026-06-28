@@ -1,6 +1,5 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.plugin
@@ -30,12 +29,10 @@ object PetDisplay : Listener {
 
     fun tickAll() {
         for (player in Bukkit.getOnlinePlayers()) {
-            plugin.scheduler.runTask(player) { // folia issue
-                if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
-                    tickPlayer(player)
-                } else {
-                    remove(player)
-                }
+            if (player.isOnline && player.location.chunk.isLoaded && player.location.chunk.isEntitiesLoaded) {
+                tickPlayer(player)
+            } else {
+                remove(player)
             }
         }
 
@@ -47,66 +44,52 @@ object PetDisplay : Listener {
     private val expireAfterMillis = 5_000L
 
     private fun tickPlayer(player: Player) {
-        if (player.shouldHidePet || player.isInvisible || player.isDead || !player.isOnline) {
+        if (player.shouldHidePet) {
             remove(player)
             return
         }
 
         val entity = getOrNew(player) ?: return
-        plugin.scheduler.runTask(entity) { // folia issue
-            val pet = player.activePet
-            val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
+        val pet = player.activePet
+        val showHologram = plugin.configYml.getBool("pet-entity.show-hologram")
 
-            if (pet != null) {
-                if (showHologram) {
-                    @Suppress("DEPRECATION")
-                    entity.customName = plugin.configYml.getString("pet-entity.name")
-                        .replace("%player%", player.displayName)
-                        .replace("%pet%", pet.name)
-                        .replace("%level%", player.getPetLevel(pet).toString())
-                        .formatEco(player)
-                    entity.isCustomNameVisible = true
-                } else {
-                    entity.isCustomNameVisible = false
-                }
+        if (pet != null) {
+            if (player.isInvisible || player.isDead || !player.isOnline) {
+                remove(player)
+                return
+            }
 
-                // makes the pet follow the player's sneaking state (so the name can be hidden when sneaking)
-                entity.isSneaking = player.isSneaking
+            if (showHologram) {
+                @Suppress("DEPRECATION")
+                entity.customName = plugin.configYml.getString("pet-entity.name")
+                    .replace("%player%", player.displayName)
+                    .replace("%pet%", pet.name)
+                    .replace("%level%", player.getPetLevel(pet).toString())
+                    .formatEco(player)
+                entity.isCustomNameVisible = true
+            } else {
+                entity.isCustomNameVisible = false
+            }
 
-                val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
-                val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
-                val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
+            val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
+            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
+            val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
 
-                val yOnPlayerSneaking = when {
-                    player.isSneaking -> -0.3
-                    else -> 0.0
-                }
 
-                // make the pet not be in the player's view when looking up or down
-                val yOnPlayerLookingUp = when {
-                    player.pitch < -75 -> -1.5
-                    player.pitch > 75 -> 0.5
-                    else -> 0.0
-                }
 
-                if (plugin.configYml.getBool("pet-entity.bobbing")) {
-                    location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
-                } else {
-                    location.y += yOnPlayerSneaking + yOnPlayerLookingUp + offset
-                }
+            if (plugin.configYml.getBool("pet-entity.bobbing")) {
+                location.y += offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
+            } else {
+                location.y += offset
+            }
 
-                if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
-                    val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
-                    location.yaw = (intensity * tick / (2 * PI)).toFloat()
-                    location.pitch = 0f
-                }
+            if (location.world != null) {
+                entity.teleport(location)
+            }
 
-                if (location.world != null) {
-                    if (Prerequisite.HAS_PAPER.isMet)
-                        entity.teleportAsync(location)
-                    else
-                        entity.teleport(location) // damn spigot!
-                }
+            if (!pet.entityTexture.contains(":") && plugin.configYml.getBool("pet-entity.rotation")) {
+                val intensity = plugin.configYml.getDoubleOrNull("pet-entity.rotation-intensity") ?: 20.0
+                entity.setRotation((intensity * tick / (2 * PI)).toFloat(), 0f)
             }
         }
     }
@@ -185,7 +168,6 @@ object PetDisplay : Listener {
 
             val location = getLocation(player, 0.0)
             val entity = pet.makePetEntity().spawn(location)
-                .apply { isPersistent = false }
 
             trackedEntities[player.uniqueId] = PetDisplayEntity(entity, pet)
         }
@@ -193,16 +175,21 @@ object PetDisplay : Listener {
         return trackedEntities[player.uniqueId]?.entity
     }
 
+    fun shutdown() {
+        for (stand in trackedEntities.values) {
+            stand.entity.remove()
+        }
+
+        trackedEntities.clear()
+    }
+
     private fun remove(player: Player) {
-        this.remove(player.uniqueId)
+        trackedEntities[player.uniqueId]?.entity?.remove()
+        trackedEntities.remove(player.uniqueId)
     }
 
     private fun remove(uuid: UUID) {
-        trackedEntities[uuid]?.entity?.let {
-            plugin.scheduler.runTask(it) {
-                it.remove()
-            }
-        }
+        trackedEntities[uuid]?.entity?.remove()
         trackedEntities.remove(uuid)
     }
 
@@ -229,10 +216,8 @@ object PetDisplay : Listener {
     @EventHandler
     fun onEntitiesUnload(event: EntitiesUnloadEvent) {
         trackedEntities.entries.forEach {
-            plugin.scheduler.runTask(it.value.entity) { // folia issue
-                if (event.chunk == it.value.entity.chunk) {
-                    remove(it.key)
-                }
+            if (event.chunk == it.value.entity.chunk) {
+                remove(it.key)
             }
         }
     }

@@ -2,11 +2,22 @@ package com.willfp.ecopets.libreforge
 
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.api.event.PetEvent
+import com.willfp.libreforge.ArgType
 import com.willfp.libreforge.NoCompileData
 import com.willfp.libreforge.filters.Filter
 import com.willfp.libreforge.triggers.TriggerData
 
 object FilterPet : Filter<NoCompileData, Collection<String>>("pet") {
+    override val description = "Matches when the pet involved in the trigger is one of the given pet IDs."
+
+    override val categories = setOf("player")
+
+    override val valueType = ArgType.STRING_LIST
+
+    override val additionalInfo = listOf(
+        "Does not match if the trigger data's event is not pet-related."
+    )
+
     override fun getValue(config: Config, data: TriggerData?, key: String): Collection<String> {
         return config.getStrings(key)
     }

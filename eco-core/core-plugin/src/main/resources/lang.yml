@@ -17,6 +17,7 @@ messages:
   already-has-pet: "&cPlayer already has this pet!"
   doesnt-have-pet: "&cPlayer doesn't have this pet!"
   gave-pet: "&fSuccessfully gave %player%&f the %pet%&f pet!"
+  took-pet: "&fSuccessfully took %player%&f's %pet%&f pet!"
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
   pet-spawned: "&fYou've spawned your %pet%&f pet! Visit &a/pets&f to activate it!"
@@ -25,12 +26,14 @@ messages:
   no-pet-active: "&cYou don't have a pet active!"
   activated-pet: "&fYou have activated the %pet%&f pet!"
   deactivated-pet: "&fYou have deactivated the %pet%&f pet!"
+  cannot-activate-pet: "&cYou don't meet the conditions to activate the %pet%&f pet!"
+  pet-auto-deactivated: "&cYour %pet%&f pet has been deactivated as you no longer meet the activation conditions!"
   cancelled-adoption: "&cThat player is not allowed to adopt that pet!"
   cancelled-swap: "&cYou are not allowed to swap to that pet!"
   cancelled-swap-other: "&cThat player is not allowed to swap to that pet!"
 
 menu:
-  title: "Pets"
-  level-title: "%pet%"
+  title: "Pets (%page%/%max_page%)"
+  level-title: "%pet% (%page%/%max_page%)"
 
 infinity: "∞"

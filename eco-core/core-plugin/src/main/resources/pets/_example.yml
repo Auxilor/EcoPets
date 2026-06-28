@@ -95,6 +95,11 @@ effects:
 # The conditions for the pet, also has %level% as a placeholder
 conditions: [ ]
 
+# Conditions that must be met for a player to activate this pet.
+# If the pet is active and conditions are no longer met, it will be automatically deactivated.
+# Use the %<pet_id>_can_activate% placeholder to check if a player can activate this pet.
+activate-conditions: [ ]
+
 # The texture of the pet entity in game
 # Option 1: A base64 skull texture value
 # Option 2: A vanilla or custom item (prefix with item:)

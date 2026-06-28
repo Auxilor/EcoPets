@@ -1,8 +1,10 @@
 package com.willfp.ecopets
 
+import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
+import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
@@ -39,6 +41,7 @@ import com.willfp.libreforge.loader.configs.ConfigCategory
 import com.willfp.libreforge.mutators.Mutators
 import com.willfp.libreforge.registerSpecificHolderProvider
 import com.willfp.libreforge.triggers.Triggers
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
@@ -106,13 +109,32 @@ class EcoPetsPlugin : LibreforgePlugin() {
     override fun handleReload() {
         PetsGUI.update()
 
+        this.scheduler.runTimer(20, 20) {
+            if (this.configYml.getBool("auto-deactivate-on-condition-fail")) {
+                for (player in Bukkit.getOnlinePlayers()) {
+                    val activePet = player.activePet ?: continue
+                    if (!activePet.canActivate(player)) {
+                        player.activePet = null
+                        player.sendMessage(
+                            this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                                .replace("%pet%", activePet.name)
+                        )
+                    }
+                }
+            }
+        }
+
         if (!this.configYml.getBool("pet-entity.enabled")) {
             return
         }
 
-        this.scheduler.runTaskTimer(1, 1) {
+        this.scheduler.runTimer(1, 1) {
             petDisplay.tickAll()
         }
+    }
+
+    override fun handleDisable() {
+        petDisplay.shutdown()
     }
 
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
@@ -140,4 +162,20 @@ class EcoPetsPlugin : LibreforgePlugin() {
             DiscoverRecipeListener
         )
     }
+
+    override fun getCustomCharts() = listOf(
+        EcoMetricsChart.SingleLine("total_pets") { Pets.values().size },
+        EcoMetricsChart.SimplePie("pet_entity_enabled") {
+            if (configYml.getBool("pet-entity.enabled")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("pet_hologram_enabled") {
+            if (configYml.getBool("pet-entity.show-hologram")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("auto_deactivate_on_fail") {
+            if (configYml.getBool("auto-deactivate-on-condition-fail")) "enabled" else "disabled"
+        },
+        EcoMetricsChart.SimplePie("level_up_messages") {
+            if (configYml.getBool("level-up.message.enabled")) "enabled" else "disabled"
+        }
+    )
 }

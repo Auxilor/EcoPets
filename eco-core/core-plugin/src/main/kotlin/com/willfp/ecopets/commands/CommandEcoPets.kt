@@ -13,6 +13,7 @@ object CommandEcoPets : PluginCommand(
     init {
         this.addSubcommand(CommandReload)
             .addSubcommand(CommandGive)
+            .addSubcommand(CommandTake)
             .addSubcommand(CommandGiveEgg)
             .addSubcommand(CommandGiveXP)
             .addSubcommand(CommandReset)
