@@ -46,7 +46,12 @@ Here is one complete pet with every part in place:
 # === Display: name, icon, and in-world appearance ===
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# Texture of the floating pet entity; use modelengine:id for ModelEngine
+# The texture of the pet entity in game
+# Option 1: A base64 skull texture value
+# Option 2: A vanilla or custom item (prefix with item:)
+# entity-texture: item:diamond_sword
+# Option 3: A ModelEngine model (prefix with modelengine:)
+# entity-texture: modelengine:my_model
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 
@@ -127,7 +132,12 @@ Sets the pet's name, description, GUI icon, and the texture of the floating enti
 ```yaml
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# Texture of the floating pet entity; use modelengine:id for ModelEngine
+# The texture of the pet entity in game
+# Option 1: A base64 skull texture value
+# Option 2: A vanilla or custom item (prefix with item:)
+# entity-texture: item:diamond_sword
+# Option 3: A ModelEngine model (prefix with modelengine:)
+# entity-texture: modelengine:my_model
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 ```
