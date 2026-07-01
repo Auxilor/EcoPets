@@ -177,6 +177,38 @@ object PetsGUI {
                 }
             )
 
+            val withdrawEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.enabled") ?: true
+            if (withdrawEnabled) {
+                setSlot(
+                    plugin.configYml.getInt("gui.withdraw-pet.location.row"),
+                    plugin.configYml.getInt("gui.withdraw-pet.location.column"),
+                    slot(
+                        { player: Player, _: Menu ->
+                            ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.withdraw-pet.item")))
+                                .setDisplayName(plugin.configYml.getFormattedString("gui.withdraw-pet.name"))
+                                .addLoreLines {
+                                    val pet = player.activePet
+                                    plugin.configYml.getStrings("gui.withdraw-pet.lore").map { line ->
+                                        line.replace("%withdraw_price%", pet?.withdrawPrice?.getDisplay(player) ?: "")
+                                    }
+                                }
+                                .build()
+                        }
+                    ) {
+                        onLeftClick { event, _ ->
+                            val player = event.whoClicked as Player
+                            val pet = player.activePet
+                            val result = canWithdraw(player, pet)
+                            if (result != WithdrawResult.OK || pet == null) {
+                                result.notifyFail(player, pet)
+                                return@onLeftClick
+                            }
+                            WithdrawConfirmGUI.open(player, pet)
+                        }
+                    }
+                )
+            }
+
             setSlot(
                 plugin.configYml.getInt("gui.toggle.location.row"),
                 plugin.configYml.getInt("gui.toggle.location.column"),

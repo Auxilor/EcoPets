@@ -38,9 +38,17 @@ object CommandGiveEgg : Subcommand(
 
         val pet = Pets.getByID(args[1])
 
-        val egg = pet?.spawnEgg
+        if (pet == null) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
+            return
+        }
 
-        if (pet == null || egg == null) {
+        val level = args.getOrNull(2)?.toIntOrNull() ?: 1
+        val xp = args.getOrNull(3)?.toDoubleOrNull() ?: 0.0
+
+        val egg = pet.makeSpawnEgg(level, xp)
+
+        if (egg == null) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
             return
         }
@@ -80,6 +88,14 @@ object CommandGiveEgg : Subcommand(
                 completions
             )
             return completions
+        }
+
+        if (args.size == 3) {
+            return listOf("<level>")
+        }
+
+        if (args.size == 4) {
+            return listOf("<xp>")
         }
 
         return emptyList()

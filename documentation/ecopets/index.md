@@ -14,6 +14,7 @@ Every pet is defined in config, so you can build your own without writing any co
 - XP can come from any libreforge trigger (melee, mining, fishing, and more), with per-method multipliers and conditions.
 - Buffs use the same effects system as the rest of the eco ecosystem, so anything you can do with an effect, a pet can do.
 - Levels scale with a fixed list or an infinite formula, your choice.
+- Pets can be withdrawn into tradeable spawn eggs that carry the baked level and XP, so players can trade or gift their progress.
 
 <hr/>
 

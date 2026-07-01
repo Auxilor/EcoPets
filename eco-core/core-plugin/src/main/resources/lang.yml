@@ -20,6 +20,7 @@ messages:
   took-pet: "&fSuccessfully took %player%&f's %pet%&f pet!"
   gave-pet-egg: "&fSuccessfully gave %player%&f the %pet%&f pet egg!"
   cannot-spawn-pet: "&cYou already have this pet unlocked!"
+  egg-lower-level: "&cThis egg's pet level is not higher than your current one!"
   pet-spawned: "&fYou've spawned your %pet%&f pet! Visit &a/pets&f to activate it!"
   invalid-amount: "&cInvalid amount!"
   pet-already-active: "&cYou already have this pet active!"
@@ -31,6 +32,10 @@ messages:
   cancelled-adoption: "&cThat player is not allowed to adopt that pet!"
   cancelled-swap: "&cYou are not allowed to swap to that pet!"
   cancelled-swap-other: "&cThat player is not allowed to swap to that pet!"
+  no-active-pet-to-withdraw: "&cYou have no active pet to withdraw!"
+  pet-not-withdrawable: "&cThis pet cannot be withdrawn!"
+  cannot-afford-withdraw: "&cYou cannot afford to withdraw this pet! Cost: &e%price%"
+  pet-withdrawn: "&fYou withdrew your %pet%&f pet into an egg!"
 
 menu:
   title: "Pets (%page%/%max_page%)"
