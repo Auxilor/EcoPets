@@ -26,20 +26,29 @@ object SpawnEggHandler : Listener {
         event.isCancelled = true
         event.setUseItemInHand(Event.Result.DENY)
 
-        if (player.hasPet(pet)) {
-            player.sendMessage(plugin.langYml.getMessage("cannot-spawn-pet"))
-            return
+        val eggLevel = item.petEggLevel
+        val eggXp = item.petEggXp
+        val ownedLevel = player.getPetLevel(pet)
+
+        if (ownedLevel > 0) {
+            val policy = plugin.configYml.getString("pet-egg.redeem-conflict").lowercase()
+            if (policy == "reject" || eggLevel <= ownedLevel) {
+                player.sendMessage(
+                    if (policy == "reject") plugin.langYml.getMessage("cannot-spawn-pet")
+                    else plugin.langYml.getMessage("egg-lower-level")
+                )
+                return
+            }
         }
 
         if (event.hand == EquipmentSlot.HAND) {
-            val hand = event.player.inventory.itemInMainHand
-            hand.amount -= 1
+            event.player.inventory.itemInMainHand.amount -= 1
         } else {
-            val hand = event.player.inventory.itemInOffHand
-            hand.amount -= 1
+            event.player.inventory.itemInOffHand.amount -= 1
         }
 
-        player.setPetLevel(pet, 1)
+        player.setPetLevel(pet, maxOf(eggLevel, 1))
+        player.setPetXP(pet, eggXp)
         player.sendMessage(
             plugin.langYml.getMessage("pet-spawned", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                 .replace("%pet%", pet.name)

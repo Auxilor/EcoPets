@@ -96,3 +96,4 @@ spawn-egg:
   craftable: false
   recipe: [ ]
   recipe-permission: ecopets.craft.ravager
+  withdrawable: true
