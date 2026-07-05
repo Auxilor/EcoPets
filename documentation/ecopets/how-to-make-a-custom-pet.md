@@ -21,7 +21,7 @@ Pets are upgradable **companions** that float around a player and grant **buffs*
 
 ## Naming and IDs
 
-The file name without `.yml` is the pet's ID. You use this ID in commands, effects, and placeholders. See the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) for how IDs resolve across eco plugins.
+The file name without `.yml` is the pet's ID. You use this ID in commands, effects, and placeholders. See the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) for how IDs resolve across eco plugins.
 
 :::warning ID rules
 IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the pet will not load.
@@ -156,7 +156,7 @@ xp-requirements: # XP to reach each level from level 1; list length is the max l
 ```
 
 ```yaml
-xp-formula: (2 ^ %level%) * 25 # XP per level, where %level% is the level being calculated; see https://plugins.auxilor.io/all-plugins/math
+xp-formula: (2 ^ %level%) * 25 # XP per level, where %level% is the level being calculated; see https://hub.auxilor.io/wiki/eco/math
 max-level: 100 # Optional; with a formula there is no max level unless you set one
 ```
 
@@ -229,8 +229,8 @@ You can make a pet auto-deactivate when its `activate-conditions` stop being met
 :::danger Effects are their own system
 Effects, conditions, filters, mutators, and triggers are a shared eco system with their own docs.
 
-- [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect)
-- [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain)
+- [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect)
+- [Configuring an Effect Chain](https://hub.auxilor.io/wiki/libreforge/configuring-a-chain)
 :::
 
 ### Spawn egg
@@ -252,7 +252,7 @@ spawn-egg:
 ```
 
 :::tip
-We support shaped and shapeless recipes. Check out [Recipes](https://plugins.auxilor.io/the-item-lookup-system/recipes) for how to configure these.
+We support shaped and shapeless recipes. Check out [Recipes](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system/recipes) for how to configure these.
 :::
 
 ## Internal placeholders
@@ -277,7 +277,7 @@ These placeholders are available inside this pet's config (descriptions, message
 
 ## Where to go next
 
-- **Configuring effects:** [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) for the buffs your pet grants.
+- **Configuring effects:** [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect) for the buffs your pet grants.
 - **Plugin config:** [Plugin Config](plugin-config) to customise the GUIs and pet entity.
 - **Default pets:** the shipped configs on [GitHub](https://github.com/Auxilor/EcoPets/tree/master/eco-core/core-plugin/src/main/resources/pets).
 - **Community configs:** browse user-made pets on [lrcdb](https://lrcdb.auxilor.io/).

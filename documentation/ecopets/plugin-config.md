@@ -179,7 +179,7 @@ gui:
       row: 6
       column: 8
 
-  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  # Custom GUI slots; see here for a how-to: https://hub.auxilor.io/wiki/eco/pages
   custom-slots: [ ]
 
 level-gui:
@@ -280,7 +280,7 @@ level-gui:
         - "&fRewards:"
         - "%rewards%"
 
-  # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+  # Custom GUI slots; see here for a how-to: https://hub.auxilor.io/wiki/eco/pages
   custom-slots: [ ]
 
 pet-entity:
@@ -324,6 +324,6 @@ level-up:
 ## Where to go next
 
 - **Make a pet:** [How to Make a Pet](how-to-make-a-custom-pet) for per-pet config.
-- **Custom GUI slots:** [Custom GUI Slots](https://plugins.auxilor.io/all-plugins/custom-gui-slots) to add your own slots to the menus.
+- **Custom GUI slots:** [Custom GUI Slots](https://hub.auxilor.io/wiki/eco/pages) to add your own slots to the menus.
 - **Commands:** [Commands and Permissions](commands-and-permissions) for reloading, giving, and resetting pets.
 
