@@ -4,6 +4,7 @@ import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.core.drops.DropQueue
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
+import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
@@ -38,9 +39,17 @@ object CommandGiveEgg : Subcommand(
 
         val pet = Pets.getByID(args[1])
 
-        val egg = pet?.spawnEgg
+        if (pet == null) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
+            return
+        }
 
-        if (pet == null || egg == null) {
+        val level = args.getOrNull(2)?.toIntOrNull() ?: 1
+        val xp = args.getOrNull(3)?.toDoubleOrNull() ?: 0.0
+
+        val egg = pet.makeSpawnEgg(level, xp)
+
+        if (egg == null) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
             return
         }
@@ -80,6 +89,25 @@ object CommandGiveEgg : Subcommand(
                 completions
             )
             return completions
+        }
+
+        if (args.size == 3) {
+            val pet = Pets.getByID(args[1])
+            val maxLevel = pet?.maxLevel ?: 1
+            return listOf("1", "10", "50", maxLevel.toString()).distinct()
+        }
+
+        if (args.size == 4) {
+            val pet = Pets.getByID(args[1])
+            val level = args[2].toIntOrNull() ?: 1
+            val maxXp = pet?.getExpForLevel(level)?.takeIf { it.isFinite() }
+
+            val options = listOf(10.0, 50.0, 100.0, 10000.0)
+            return if (maxXp != null) {
+                (options.filter { it < maxXp } + maxXp).distinct().map { it.toNiceString() }
+            } else {
+                options.map { it.toNiceString() }
+            }
         }
 
         return emptyList()

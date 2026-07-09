@@ -19,6 +19,12 @@ use-local-storage: false
 
 discover-recipes: true
 
+# How redeeming a pet egg behaves when the player ALREADY owns that pet:
+# keep-higher - overwrite only if the egg's level is higher than the owned level, else reject
+# reject - never redeem if the pet is already owned (player must withdraw theirs first)
+pet-egg:
+  redeem-conflict: keep-higher
+
 # If a pet should be automatically deactivated when its activate-conditions are no longer met
 auto-deactivate-on-condition-fail: true
 
@@ -134,6 +140,13 @@ gui:
       volume: 1
       category: UI
 
+  page-change-sound:
+    enabled: true
+    sound: ui_button_click
+    pitch: 1
+    volume: 1
+    category: UI
+
   prev-page:
     item: arrow name:"&fPrevious Page"
     location:
@@ -161,6 +174,60 @@ gui:
     location:
       row: 6
       column: 2
+
+  withdraw-pet:
+    enabled: true
+    item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19
+    name: "&cWithdraw Pet"
+    lore:
+      - "&7Withdraw your active pet into an egg"
+      - "&7you can trade or give to others."
+      - ""
+      - "&cYou will lose all progress on this pet!"
+      - "&7Cost: &e%withdraw_price%"
+    location:
+      row: 6
+      column: 3
+    confirm:
+      rows: 3
+      title: "&cConfirm Withdrawal"
+
+      mask:
+        materials:
+          - black_stained_glass_pane
+        pattern:
+          - "111111111"
+          - "100000001"
+          - "111111111"
+
+      confirm:
+        item: lime_stained_glass_pane
+        name: "&aConfirm Withdrawal"
+        lore:
+          - "&7Withdraw your active pet into an egg."
+        row: 2
+        column: 3
+        sound:
+          enabled: true
+          sound: ui_button_click
+          pitch: 1
+          volume: 1
+          category: UI
+      cancel:
+        item: red_stained_glass_pane
+        name: "&cCancel"
+        lore: [ ]
+        row: 2
+        column: 7
+        sound:
+          enabled: true
+          sound: ui_button_click
+          pitch: 1
+          volume: 1
+          category: UI
+
+      # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
+      custom-slots: [ ]
 
   toggle:
     hide-pet:
@@ -219,6 +286,13 @@ level-gui:
 
     # If the amount of the item should be the level
     level-as-amount: true
+
+    page-change-sound:
+      enabled: true
+      sound: ui_button_click
+      pitch: 1
+      volume: 1
+      category: UI
 
     prev-page:
       item: arrow name:"&fPrevious Page"
@@ -316,8 +390,19 @@ level-up:
     pitch: 1.3
     volume: 0.8
     category: PLAYER
-
 ```
+
+## pet-egg
+
+Controls behaviour when a withdrawn spawn egg is redeemed.
+
+| Key | Values | Description |
+| --- | --- | --- |
+| `redeem-conflict` | `keep-higher`, `reject` | What happens when a player redeems an egg for a pet they already own. `keep-higher` keeps whichever level is higher (egg or existing); `reject` refuses the redemption and returns the egg. |
+
+## gui.withdraw-pet
+
+The withdraw button shown in the pet GUI when the active pet has `withdrawable: true` in its config. Clicking it opens the `confirm` sub-GUI before the withdrawal is processed and the egg is created. Use `%withdraw_price%` in the lore to show the configured cost for the current player.
 
 <hr/>
 

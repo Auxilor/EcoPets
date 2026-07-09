@@ -123,6 +123,12 @@ spawn-egg:
   craftable: false # Whether the egg can be crafted
   recipe: [ ]
   recipe-permission: ecopets.craft.tiger # Optional; permission needed to craft the egg
+  withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
+  withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
+    enabled: false
+    type: coins
+    value: 10000
+    display: "%value% coins"
 ```
 
 ### Display
@@ -249,11 +255,41 @@ spawn-egg:
   craftable: false # Whether the egg can be crafted
   recipe: [ ]
   recipe-permission: ecopets.craft.tiger # Optional; permission needed to craft the egg
+  withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
+  withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
+    enabled: false
+    type: coins
+    value: 10000
+    display: "%value% coins"
 ```
 
 :::tip
 We support shaped and shapeless recipes. Check out [Recipes](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system/recipes) for how to configure these.
 :::
+
+#### Withdrawal
+
+Set `withdrawable: true` to let players withdraw their active pet into a tradeable spawn egg from the pet GUI. The egg carries the pet's current level and XP; whoever redeems it unlocks the pet at the baked level. A confirm GUI prevents accidental withdrawals.
+
+```yaml
+withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
+withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
+  enabled: false
+  type: coins
+  value: 10000
+  display: "%value% coins"
+```
+
+Set `withdraw-price.type` to `coins` for an economy cost, or to `<id>_pet_level` to charge pet levels instead. Remove the `withdraw-price` block entirely (or set `enabled: false`) to make withdrawal free.
+
+The egg `lore` supports these extra placeholders when displaying a withdrawn egg:
+
+| Placeholder | Value |
+| --- | --- |
+| `%level%` | The baked level stored in the egg |
+| `%current_xp%` | The baked XP stored in the egg |
+| `%level_numeral%` | The baked level as a Roman numeral |
+| `%level_+N%` / `%level_-N%` | The baked level offset by N, e.g. `%level_+1%` |
 
 ## Internal placeholders
 

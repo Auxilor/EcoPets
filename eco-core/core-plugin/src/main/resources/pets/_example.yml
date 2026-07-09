@@ -124,3 +124,15 @@ spawn-egg:
   recipe-permission: ecopets.craft.tiger # (Optional) The permission required to see the crafting recipe
   shapeless: false # (Optional) Whether the crafting recipe is shapeless, defaults to false
   recipe: [ ]
+
+  # Whether players can withdraw this pet into a tradeable egg via the GUI button.
+  withdrawable: true
+
+  # Cost to withdraw. Any registered currency (coins, points, eco-bits, items...),
+  # or this pet's level currency: type: tiger_pet_level (charges pet levels).
+  # See https://plugins.auxilor.io/all-plugins/prices
+  withdraw-price:
+    enabled: false
+    type: blaze_pet_level
+    value: 10
+    display: "%value% pet levels"

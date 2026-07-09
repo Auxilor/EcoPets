@@ -20,6 +20,7 @@ These placeholders expose a player's pet levels, XP, and active pet anywhere Pla
 | `%ecopets_active_pet_required_xp%`         | Shows the XP required for the active pet's next level                                 |
 | `%ecopets_pet%`                            | Shows the name of the active pet                                                      |
 | `%ecopets_pet_id%`                         | Shows the id of the active pet                                                        |
+| `%ecopets_<id>_withdraw_price%`            | Shows the withdrawal cost for the given pet for the viewing player                    |
 
 <hr/>
 
