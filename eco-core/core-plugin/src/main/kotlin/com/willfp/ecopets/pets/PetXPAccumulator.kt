@@ -1,9 +1,9 @@
 package com.willfp.ecopets.pets
 
-import com.github.benmanes.caffeine.cache.Caffeine
+import com.willfp.eco.core.cache.EcoCache
 import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.entity.Player
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 
 class PetXPAccumulator(
     private val pet: Pet
@@ -17,14 +17,14 @@ class PetXPAccumulator(
     }
 }
 
-private val expMultiplierCache = Caffeine.newBuilder()
-    .expireAfterWrite(10, TimeUnit.SECONDS)
-    .build<Player, Double> {
+private val expMultiplierCache = EcoCache.builder<Player, Double>()
+    .expireAfterWrite(Duration.ofSeconds(10))
+    .build {
         it.cachePetExperienceMultiplier()
     }
 
 val Player.petExperienceMultiplier: Double
-    get() = expMultiplierCache.get(this)
+    get() = expMultiplierCache.get(this) { it.cachePetExperienceMultiplier() }
 
 private fun Player.cachePetExperienceMultiplier(): Double {
     if (this.hasPermission("ecopets.xpmultiplier.quadruple")) {

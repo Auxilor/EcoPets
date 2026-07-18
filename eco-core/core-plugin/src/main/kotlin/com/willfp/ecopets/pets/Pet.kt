@@ -1,6 +1,6 @@
 package com.willfp.ecopets.pets
 
-import com.github.benmanes.caffeine.cache.Caffeine
+import com.willfp.eco.core.cache.EcoCache
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.data.keys.PersistentDataKey
 import com.willfp.eco.core.data.keys.PersistentDataKeyType
@@ -157,13 +157,13 @@ class Pet(
 
     private val activateConditions: ConditionList
 
-    private val levels = Caffeine.newBuilder().build<Int, PetLevel>()
+    private val levels = EcoCache.builder<Int, PetLevel>().build()
 
-    private val effectsDescription = Caffeine.newBuilder().build<Int, List<String>>()
+    private val effectsDescription = EcoCache.builder<Int, List<String>>().build()
 
-    private val rewardsDescription = Caffeine.newBuilder().build<Int, List<String>>()
+    private val rewardsDescription = EcoCache.builder<Int, List<String>>().build()
 
-    private val levelUpMessages = Caffeine.newBuilder().build<Int, List<String>>()
+    private val levelUpMessages = EcoCache.builder<Int, List<String>>().build()
 
     private val levelPlaceholders = config.getSubsections("level-placeholders")
         .map { sub ->

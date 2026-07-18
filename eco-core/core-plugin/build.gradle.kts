@@ -3,7 +3,6 @@ version = rootProject.version
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    compileOnly("com.github.ben-manes.caffeine:caffeine:3.0.2")
 
     implementation("com.willfp:ecomponent:1.5.0")
     implementation("com.willfp:ModelEngineBridge:1.4.0")

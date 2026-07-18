@@ -21,7 +21,7 @@ Pets are upgradable **companions** that float around a player and grant **buffs*
 
 ## Naming and IDs
 
-The file name without `.yml` is the pet's ID. You use this ID in commands, effects, and placeholders. See the [Item Lookup System](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system) for how IDs resolve across eco plugins.
+The file name without `.yml` is the pet's ID. You use this ID in commands, effects, and placeholders. See the [Item Lookup System](https://plugins.auxilor.io/the-item-lookup-system) for how IDs resolve across eco plugins.
 
 :::warning ID rules
 IDs may only contain lowercase letters, numbers, and underscores (a-z, 0-9, _). No spaces, capitals, or hyphens, or the pet will not load.
@@ -46,12 +46,7 @@ Here is one complete pet with every part in place:
 # === Display: name, icon, and in-world appearance ===
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# The texture of the pet entity in game
-# Option 1: A base64 skull texture value
-# Option 2: A vanilla or custom item (prefix with item:)
-# entity-texture: item:diamond_sword
-# Option 3: A ModelEngine model (prefix with modelengine:)
-# entity-texture: modelengine:my_model
+# Texture of the floating pet entity; use modelengine:id for ModelEngine
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 
@@ -123,12 +118,6 @@ spawn-egg:
   craftable: false # Whether the egg can be crafted
   recipe: [ ]
   recipe-permission: ecopets.craft.tiger # Optional; permission needed to craft the egg
-  withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
-  withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
-    enabled: false
-    type: coins
-    value: 10000
-    display: "%value% coins"
 ```
 
 ### Display
@@ -138,12 +127,7 @@ Sets the pet's name, description, GUI icon, and the texture of the floating enti
 ```yaml
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# The texture of the pet entity in game
-# Option 1: A base64 skull texture value
-# Option 2: A vanilla or custom item (prefix with item:)
-# entity-texture: item:diamond_sword
-# Option 3: A ModelEngine model (prefix with modelengine:)
-# entity-texture: modelengine:my_model
+# Texture of the floating pet entity; use modelengine:id for ModelEngine
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 ```
@@ -162,7 +146,7 @@ xp-requirements: # XP to reach each level from level 1; list length is the max l
 ```
 
 ```yaml
-xp-formula: (2 ^ %level%) * 25 # XP per level, where %level% is the level being calculated; see https://hub.auxilor.io/wiki/eco/math
+xp-formula: (2 ^ %level%) * 25 # XP per level, where %level% is the level being calculated; see https://plugins.auxilor.io/all-plugins/math
 max-level: 100 # Optional; with a formula there is no max level unless you set one
 ```
 
@@ -235,8 +219,8 @@ You can make a pet auto-deactivate when its `activate-conditions` stop being met
 :::danger Effects are their own system
 Effects, conditions, filters, mutators, and triggers are a shared eco system with their own docs.
 
-- [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect)
-- [Configuring an Effect Chain](https://hub.auxilor.io/wiki/libreforge/configuring-a-chain)
+- [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect)
+- [Configuring an Effect Chain](https://plugins.auxilor.io/effects/configuring-a-chain)
 :::
 
 ### Spawn egg
@@ -255,41 +239,11 @@ spawn-egg:
   craftable: false # Whether the egg can be crafted
   recipe: [ ]
   recipe-permission: ecopets.craft.tiger # Optional; permission needed to craft the egg
-  withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
-  withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
-    enabled: false
-    type: coins
-    value: 10000
-    display: "%value% coins"
 ```
 
 :::tip
-We support shaped and shapeless recipes. Check out [Recipes](https://hub.auxilor.io/wiki/eco/the-item-lookup-system-the-item-lookup-system/recipes) for how to configure these.
+We support shaped and shapeless recipes. Check out [Recipes](https://plugins.auxilor.io/the-item-lookup-system/recipes) for how to configure these.
 :::
-
-#### Withdrawal
-
-Set `withdrawable: true` to let players withdraw their active pet into a tradeable spawn egg from the pet GUI. The egg carries the pet's current level and XP; whoever redeems it unlocks the pet at the baked level. A confirm GUI prevents accidental withdrawals.
-
-```yaml
-withdrawable: true # Allow players to withdraw this pet into a tradeable egg via the GUI
-withdraw-price: # Optional cost to withdraw; omit or set enabled: false for free
-  enabled: false
-  type: coins
-  value: 10000
-  display: "%value% coins"
-```
-
-Set `withdraw-price.type` to `coins` for an economy cost, or to `<id>_pet_level` to charge pet levels instead. Remove the `withdraw-price` block entirely (or set `enabled: false`) to make withdrawal free.
-
-The egg `lore` supports these extra placeholders when displaying a withdrawn egg:
-
-| Placeholder | Value |
-| --- | --- |
-| `%level%` | The baked level stored in the egg |
-| `%current_xp%` | The baked XP stored in the egg |
-| `%level_numeral%` | The baked level as a Roman numeral |
-| `%level_+N%` / `%level_-N%` | The baked level offset by N, e.g. `%level_+1%` |
 
 ## Internal placeholders
 
@@ -313,7 +267,7 @@ These placeholders are available inside this pet's config (descriptions, message
 
 ## Where to go next
 
-- **Configuring effects:** [Configuring an Effect](https://hub.auxilor.io/wiki/libreforge/configuring-an-effect) for the buffs your pet grants.
+- **Configuring effects:** [Configuring an Effect](https://plugins.auxilor.io/effects/configuring-an-effect) for the buffs your pet grants.
 - **Plugin config:** [Plugin Config](plugin-config) to customise the GUIs and pet entity.
 - **Default pets:** the shipped configs on [GitHub](https://github.com/Auxilor/EcoPets/tree/master/eco-core/core-plugin/src/main/resources/pets).
 - **Community configs:** browse user-made pets on [lrcdb](https://lrcdb.auxilor.io/).
