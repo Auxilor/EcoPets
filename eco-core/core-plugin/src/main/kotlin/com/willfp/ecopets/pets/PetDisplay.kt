@@ -95,14 +95,26 @@ object PetDisplay : Listener {
     }
 
     private fun getLocation(player: Player, d: Double): Location {
-        val direction = player.eyeLocation.direction.clone().normalize()
-
         val locationXOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_x_offset") ?: 0.75
         val locationZOffset = plugin.configYml.getDoubleOrNull("pet-entity.location_z_offset") ?: 0.75
-        val offset = direction.clone().apply {
-            x *= -locationXOffset
-            z *= -locationZOffset
+
+        // Calculate horizontal forward direction from player yaw, ignoring vertical pitch
+        val forward = player.location.direction.clone()
+        forward.y = 0.0
+
+        if (forward.lengthSquared() > 0.0) {
+            forward.normalize()
         }
+
+        // Calculate right-side vector from forward direction
+        val right = forward.clone().rotateAroundY(-Math.PI / 2)
+
+        // Apply stable local-space offset:
+        // X = left/right offset
+        // Z = forward/backward offset
+        val offset = forward.clone()
+            .multiply(-locationZOffset)
+            .add(right.multiply(locationXOffset))
 
         val uuid = player.uniqueId
         val currentTime = System.currentTimeMillis()
@@ -132,11 +144,6 @@ object PetDisplay : Listener {
 
         offset.y = smoothedYOffset
 
-        // Smooth X/Z bias
-        if (abs(offset.x) < 0.3) offset.x *= 1.5
-        if (abs(offset.z) < 0.3) offset.z *= 1.5
-
-        offset.rotateAroundY(Math.PI / 12)
         cleanupOldEntries(currentTime)
 
         // Use base location, not eyeLocation, for static anchoring
