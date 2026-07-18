@@ -8,6 +8,10 @@ import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
 
 object TriggerPetDeactivate : Trigger("pet_deactivate") {
+    override val description = "Fires when the player's active pet changes."
+
+    override val categories = setOf("player")
+
     override val parameters = setOf(
         TriggerParameter.PLAYER,
         TriggerParameter.LOCATION,

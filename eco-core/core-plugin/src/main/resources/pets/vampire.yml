@@ -159,3 +159,4 @@ spawn-egg:
   craftable: false
   recipe: [ ]
   recipe-permission: ecopets.craft.vampire
+  withdrawable: true

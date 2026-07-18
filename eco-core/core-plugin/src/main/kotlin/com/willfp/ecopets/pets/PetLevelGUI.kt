@@ -1,5 +1,6 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.menu.MenuLayer
@@ -11,6 +12,7 @@ import com.willfp.eco.core.gui.slot.FillerMask
 import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.NumberUtils
 import com.willfp.ecomponent.components.LevelComponent
 import com.willfp.ecomponent.components.LevelState
@@ -67,9 +69,11 @@ class PetLevelGUI(
             }
         }
 
+        val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("level-gui.progression-slots.page-change-sound"))
+
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
             title = plugin.langYml.getString("menu.level-title").takeIf { it.isNotEmpty() } ?: run {
-                plugin.langYml.set("menu.level-title", "%pet%")
+                plugin.langYml.set("menu.level-title", "%pet% (%page%/%max_page%)")
                 plugin.langYml.save()
                 plugin.langYml.getString("menu.level-title")
             }
@@ -87,41 +91,21 @@ class PetLevelGUI(
 
             addComponent(1, 1, component)
 
-            // Instead of the page changer, this will show up when on the first page
             addComponent(
                 MenuLayer.LOWER,
                 plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.row"),
                 plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.column"),
                 slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.prev-page.material")))
-                        .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.prev-page.name"))
-                        .build()
+                    plugin.configYml.getStringOrNull("level-gui.progression-slots.prev-page.item")
+                        ?.let { Items.lookup(it).item }
+                        ?: ItemStackBuilder(Items.lookup("arrow")).build()
                 ) {
                     onLeftClick { player, _, _, _ -> PetsGUI.open(player) }
                 }
             )
 
-            addComponent(
-                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.row"),
-                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.column"),
-                PageChanger(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.prev-page.material")))
-                        .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.prev-page.name"))
-                        .build(),
-                    PageChanger.Direction.BACKWARDS
-                )
-            )
-
-            addComponent(
-                plugin.configYml.getInt("level-gui.progression-slots.next-page.location.row"),
-                plugin.configYml.getInt("level-gui.progression-slots.next-page.location.column"),
-                PageChanger(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.next-page.material")))
-                        .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.next-page.name"))
-                        .build(),
-                    PageChanger.Direction.FORWARDS
-                )
-            )
+            addPageChanger(plugin.configYml, "level-gui.progression-slots.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
+            addPageChanger(plugin.configYml, "level-gui.progression-slots.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
             val closeEnabled = plugin.configYml.getBoolOrNull("level-gui.progression-slots.close.enabled") ?: true
             if (closeEnabled) {

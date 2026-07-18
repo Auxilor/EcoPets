@@ -9,6 +9,8 @@ import com.willfp.eco.core.fast.fast
 import com.willfp.eco.core.items.CustomItem
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
+import com.willfp.eco.core.price.ConfiguredPrice
+import com.willfp.eco.core.price.Prices
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.core.placeholder.PlayerStaticPlaceholder
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
@@ -28,6 +30,7 @@ import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.price.PriceFactoryPetLevel
 import com.willfp.ecopets.util.LevelInjectable
 import com.willfp.libreforge.SimpleProvidedHolder
 import com.willfp.libreforge.ViolationContext
@@ -66,45 +69,52 @@ class Pet(
         plugin.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
     )
 
-    private val spawnEggBacker: ItemStack? = run {
-        val enabled = config.getBool("spawn-egg.enabled")
-        if (!enabled) {
-            return@run null
-        }
-
+    // Resolved and cloned at init time (before custom item registration) so that
+    // subsequent makeSpawnEgg calls always start from the clean raw item and never
+    // accidentally pick up the registered custom item's already-baked lore.
+    private val eggBaseItem: ItemStack? = run {
+        if (!config.getBool("spawn-egg.enabled")) return@run null
         val lookup = Items.lookup(config.getString("spawn-egg.item"))
+        if (lookup is EmptyTestableItem) null else lookup.item.clone()
+    }
 
-        if (lookup is EmptyTestableItem) {
-            return@run null
+    private val eggBaseName = config.getFormattedStringOrNull("spawn-egg.name")
+    private val eggBaseLore = config.getFormattedStrings("spawn-egg.lore")
+
+    private fun formatEggText(text: String, level: Int, xp: Double): String {
+        var result = text
+            .replace("%pet%", this.name)
+            .replace("%description%", this.description)
+            .replace("%current_xp%", xp.toNiceString())
+            .replace("%level%", level.toString())
+            .replace("%level_numeral%", level.toNumeral())
+        result = EGG_LEVEL_REGEX.replace(result) { match ->
+            val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
+            val isNumeral = match.groupValues[2].isNotEmpty()
+            val newLevel = level + offset
+            if (isNumeral) newLevel.toNumeral() else newLevel.toString()
         }
+        return result
+    }
 
-        val name = config.getFormattedStringOrNull("spawn-egg.name")
-
-        val item = ItemStackBuilder(lookup)
-            .addLoreLines(config.getFormattedStrings("spawn-egg.lore"))
+    fun makeSpawnEgg(level: Int = 1, xp: Double = 0.0): ItemStack? {
+        val base = eggBaseItem?.clone() ?: return null
+        val item = ItemStackBuilder(base)
+            .addLoreLines(eggBaseLore.map { formatEggText(it, level, xp) })
             .apply {
-                if (name != null) {
-                    setDisplayName(name)
+                if (eggBaseName != null) {
+                    setDisplayName(formatEggText(eggBaseName, level, xp))
                 }
             }
-            .build().apply { petEgg = this@Pet }
-
-        val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
-
-        Items.registerCustomItem(
-            key,
-            CustomItem(
-                key,
-                { it.petEgg == this },
-                item
-            )
-        )
-
-        item
+            .build()
+        item.petEgg = this
+        item.petEggLevel = level
+        item.petEggXp = xp
+        return item
     }
 
     val spawnEgg: ItemStack?
-        get() = this.spawnEggBacker?.clone()
+        get() = makeSpawnEgg(1, 0.0)
 
     val recipe: CraftingRecipe? = spawnEgg
         ?.takeIf { config.getBool("spawn-egg.craftable") }
@@ -129,6 +139,13 @@ class Pet(
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
 
     val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements.size
+
+    val withdrawable = config.getBool("spawn-egg.withdrawable")
+
+    val withdrawPrice: ConfiguredPrice by lazy {
+        ConfiguredPrice.create(config.getSubsection("spawn-egg.withdraw-price"))
+            ?: ConfiguredPrice.FREE
+    }
 
     val levelGUI = PetLevelGUI(this)
 
@@ -160,6 +177,8 @@ class Pet(
             }
         }
 
+    internal val priceFactory = PriceFactoryPetLevel(this)
+
     private val petXpGains = config.getSubsections("xp-gain-methods").mapNotNull {
         Counters.compile(it, ViolationContext(plugin, "Pet $id"))
     }
@@ -190,6 +209,9 @@ class Pet(
             },
             PlayerStaticPlaceholder("level_numeral") {
                 it.getPetLevel(this).toNumeral()
+            },
+            PlayerStaticPlaceholder("withdraw_price") {
+                this.withdrawPrice.getDisplay(it)
             }
         )
 
@@ -298,6 +320,21 @@ class Pet(
         ) {
             canActivate(it).toString()
         }.register()
+
+        PlayerPlaceholder(
+            plugin,
+            "${id}_withdraw_price"
+        ) {
+            this.withdrawPrice.getDisplay(it)
+        }.register()
+
+        makeSpawnEgg(1, 0.0)?.let { representative ->
+            val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
+            Items.registerCustomItem(
+                key,
+                CustomItem(key, { it.petEgg == this }, representative)
+            )
+        }
     }
 
     val levelUpEffects = Effects.compileChain(
@@ -430,10 +467,12 @@ class Pet(
 
     override fun onRegister() {
         petXpGains.forEach { it.bind(PetXPAccumulator(this)) }
+        Prices.registerPriceFactory(priceFactory)
     }
 
     override fun onRemove() {
         petXpGains.forEach { it.unbind() }
+        Prices.unregisterPriceFactory(priceFactory)
     }
 
     fun getIcon(player: Player): ItemStack {
@@ -537,6 +576,8 @@ private fun Collection<LevelPlaceholder>.format(string: String, level: Int): Str
     return process
 }
 
+private val EGG_LEVEL_REGEX = Regex("%level_([+-]?\\d+)(_numeral)?%")
+
 private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
     plugin.namespacedKeyFactory.create("active_pet"),
     PersistentDataKeyType.STRING,
@@ -549,13 +590,27 @@ private val shouldHidePetKey: PersistentDataKey<Boolean> = PersistentDataKey(
     false
 )
 
-private val petEggKey = plugin.namespacedKeyFactory.create("pet_egg")
+internal val petEggKey = plugin.namespacedKeyFactory.create("pet_egg")
+internal val petEggLevelKey = plugin.namespacedKeyFactory.create("pet_egg_level")
+internal val petEggXpKey = plugin.namespacedKeyFactory.create("pet_egg_xp")
 
 var ItemStack.petEgg: Pet?
     get() = Pets.getByID(this.fast().persistentDataContainer.get(petEggKey, PersistentDataType.STRING) ?: "")
     set(value) {
         value ?: return
         this.fast().persistentDataContainer.set(petEggKey, PersistentDataType.STRING, value.id)
+    }
+
+var ItemStack.petEggLevel: Int
+    get() = this.fast().persistentDataContainer.get(petEggLevelKey, PersistentDataType.INTEGER) ?: 1
+    set(value) {
+        this.fast().persistentDataContainer.set(petEggLevelKey, PersistentDataType.INTEGER, value)
+    }
+
+var ItemStack.petEggXp: Double
+    get() = this.fast().persistentDataContainer.get(petEggXpKey, PersistentDataType.DOUBLE) ?: 0.0
+    set(value) {
+        this.fast().persistentDataContainer.set(petEggXpKey, PersistentDataType.DOUBLE, value)
     }
 
 var OfflinePlayer.activePet: Pet?

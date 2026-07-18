@@ -119,3 +119,4 @@ spawn-egg:
   craftable: false
   recipe: [ ]
   recipe-permission: ecopets.craft.sea_serpent
+  withdrawable: true

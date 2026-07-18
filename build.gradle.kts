@@ -24,6 +24,58 @@ dependencies {
     }
 }
 
+java {
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        // maven-private: only the shaded jar
+        create<MavenPublication>("private") {
+            artifactId = rootProject.name
+        }
+        // maven-releases + GitHub: full set (none, all, sources, javadoc)
+        create<MavenPublication>("release") {
+            artifactId = rootProject.name
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "Auxilor"
+            url = uri("https://repo.auxilor.io/repository/maven-private/")
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "AuxilorReleases"
+            url = uri("https://repo.auxilor.io/repository/maven-releases/")
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    publishing.publications.named<MavenPublication>("private") {
+        artifact(tasks.named("libreforgeJar"))
+    }
+}
+
+tasks.matching { it.name.startsWith("generatePomFileFor") }.configureEach {
+    mustRunAfter(tasks.named("clean"))
+}
+tasks.register("publishToAuxilor") {
+    dependsOn(
+        "publishPrivatePublicationToAuxilorRepository",
+        "publishReleasePublicationToAuxilorReleasesRepository",
+    )
+}
+
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")

@@ -101,7 +101,11 @@ conditions: [ ]
 activate-conditions: [ ]
 
 # The texture of the pet entity in game
-# If you're using modelengine, use modelengine:id as the texture
+# Option 1: A base64 skull texture value
+# Option 2: A vanilla or custom item (prefix with item:)
+# entity-texture: item:diamond_sword
+# Option 3: A ModelEngine model (prefix with modelengine:)
+# entity-texture: modelengine:my_model
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 
 # The icon in GUIs
@@ -120,3 +124,15 @@ spawn-egg:
   recipe-permission: ecopets.craft.tiger # (Optional) The permission required to see the crafting recipe
   shapeless: false # (Optional) Whether the crafting recipe is shapeless, defaults to false
   recipe: [ ]
+
+  # Whether players can withdraw this pet into a tradeable egg via the GUI button.
+  withdrawable: true
+
+  # Cost to withdraw. Any registered currency (coins, points, eco-bits, items...),
+  # or this pet's level currency: type: tiger_pet_level (charges pet levels).
+  # See https://plugins.auxilor.io/all-plugins/prices
+  withdraw-price:
+    enabled: false
+    type: blaze_pet_level
+    value: 10
+    display: "%value% pet levels"

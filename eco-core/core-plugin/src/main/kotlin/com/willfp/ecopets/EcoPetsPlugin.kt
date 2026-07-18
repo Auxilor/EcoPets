@@ -3,10 +3,13 @@ package com.willfp.ecopets
 import com.willfp.eco.core.bstats.EcoMetricsChart
 import com.willfp.eco.core.command.impl.PluginCommand
 import com.willfp.eco.core.integrations.IntegrationLoader
+import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
+import com.willfp.ecopets.items.ArgParserPetLevel
+import com.willfp.ecopets.items.ArgParserPetXp
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
 import com.willfp.ecopets.libreforge.ConditionHasPet
 import com.willfp.ecopets.libreforge.ConditionHasPetLevel
@@ -76,6 +79,9 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Filters.register(FilterPet)
         Mutators.register(MutatorPlayerToPet)
         Mutators.register(MutatorPlayerToPetLocation)
+
+        Items.registerArgParser(ArgParserPetLevel)
+        Items.registerArgParser(ArgParserPetXp)
 
         registerSpecificHolderProvider<Player> {
             it.activePetLevel?.let { p ->
