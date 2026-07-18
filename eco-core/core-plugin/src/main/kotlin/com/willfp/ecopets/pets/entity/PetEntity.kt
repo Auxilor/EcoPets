@@ -116,9 +116,14 @@ private fun itemPetEntity(pet: Pet, itemLookup: String): PetEntity = object : Pe
     private fun spawnAsItemDisplay(location: Location, item: ItemStack): ItemDisplay {
         return location.world!!.spawn(location, ItemDisplay::class.java) {
             it.setItemStack(item)
+            it.itemDisplayTransform = ItemDisplay.ItemDisplayTransform.NONE
             it.isCustomNameVisible = true
             it.customName = pet.name
-            it.teleportDuration = plugin.configYml.getInt("pet-entity.item-display.teleport-duration", 3)
+            val interpolationTicks = plugin.configYml
+                .getInt("pet-entity.item-display.teleport-duration", 3)
+                .coerceIn(0, 59)
+            it.teleportDuration = interpolationTicks
+            it.interpolationDuration = interpolationTicks
 
             val scale = plugin.configYml.getDouble("pet-entity.scale")
             if (scale in 0.0625..16.0) {

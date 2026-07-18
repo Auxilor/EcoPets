@@ -18,10 +18,22 @@ class ItemDisplayPetEntity(
 
         val itemDisplay = location.world!!.spawn(location, ItemDisplay::class.java) {
             it.setItemStack(skull)
+            it.itemDisplayTransform = ItemDisplay.ItemDisplayTransform.NONE
             it.isCustomNameVisible = true
             @Suppress("DEPRECATION")
             it.customName = pet.name
-            it.teleportDuration = plugin.configYml.getInt("pet-entity.item-display.teleport-duration", 3)
+            val interpolationTicks = plugin.configYml
+                .getInt("pet-entity.item-display.teleport-duration", 3)
+                .coerceIn(0, 59)
+            it.teleportDuration = interpolationTicks
+            it.interpolationDuration = interpolationTicks
+
+            val scale = plugin.configYml.getDouble("pet-entity.scale")
+            if (scale in 0.0625..16.0) {
+                val transform = it.transformation
+                transform.scale.set(scale, scale, scale)
+                it.transformation = transform
+            }
         }
 
         return itemDisplay
