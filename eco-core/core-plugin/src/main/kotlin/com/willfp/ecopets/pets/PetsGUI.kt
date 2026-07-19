@@ -179,6 +179,7 @@ object PetsGUI {
 
             val withdrawEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.enabled") ?: true
             if (withdrawEnabled) {
+                val confirmEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.confirm.enabled") ?: true
                 setSlot(
                     plugin.configYml.getInt("gui.withdraw-pet.location.row"),
                     plugin.configYml.getInt("gui.withdraw-pet.location.column"),
@@ -203,7 +204,12 @@ object PetsGUI {
                                 result.notifyFail(player, pet)
                                 return@onLeftClick
                             }
-                            WithdrawConfirmGUI.open(player, pet)
+                            if (confirmEnabled) {
+                                WithdrawConfirmGUI.open(player, pet)
+                            } else {
+                                player.closeInventory()
+                                withdrawPet(player, pet)
+                            }
                         }
                     }
                 )
