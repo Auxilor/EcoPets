@@ -69,6 +69,18 @@ class Pet(
         plugin.namespacedKeyFactory.create("${id}_xp"), PersistentDataKeyType.DOUBLE, 0.0
     )
 
+    private val levelPlaceholders = config.getSubsections("level-placeholders")
+        .map { sub ->
+            LevelPlaceholder(
+                sub.getString("id")
+            ) {
+                evaluateExpression(
+                    sub.getString("value")
+                        .replace("%level%", it.toString())
+                )
+            }
+        }
+
     // Resolved and cloned at init time (before custom item registration) so that
     // subsequent makeSpawnEgg calls always start from the clean raw item and never
     // accidentally pick up the registered custom item's already-baked lore.
@@ -94,7 +106,7 @@ class Pet(
             val newLevel = level + offset
             if (isNumeral) newLevel.toNumeral() else newLevel.toString()
         }
-        return result
+        return levelPlaceholders.format(result, level)
     }
 
     fun makeSpawnEgg(level: Int = 1, xp: Double = 0.0): ItemStack? {
@@ -164,18 +176,6 @@ class Pet(
     private val rewardsDescription = EcoCache.builder<Int, List<String>>().build()
 
     private val levelUpMessages = EcoCache.builder<Int, List<String>>().build()
-
-    private val levelPlaceholders = config.getSubsections("level-placeholders")
-        .map { sub ->
-            LevelPlaceholder(
-                sub.getString("id")
-            ) {
-                evaluateExpression(
-                    sub.getString("value")
-                        .replace("%level%", it.toString())
-                )
-            }
-        }
 
     internal val priceFactory = PriceFactoryPetLevel(this)
 

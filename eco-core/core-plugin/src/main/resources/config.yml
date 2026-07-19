@@ -180,6 +180,7 @@ gui:
       row: 6
       column: 3
     confirm:
+      enabled: true
       rows: 3
       title: "&cConfirm Withdrawal"
 
