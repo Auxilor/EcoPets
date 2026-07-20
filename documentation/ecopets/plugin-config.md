@@ -291,7 +291,7 @@ pet-entity:
   name: "%player%&f's %pet%&f (Lvl. %level%)"
   location-x-offset: 0.75 # How far the pet should be from the player on the X axis (Default: 0.75)
   location-y-offset: 0.0 # How far the pet should be from the player on the Y axis (Default: 0.0)
-  location_z_offset: 0.75 # How far the pet should be from the player on the Z axis (Default: 0.75)
+  location-z-offset: 0.75 # How far the pet should be from the player on the Z axis (Default: 0.75)
   bobbing: true # If the pet should bob up and down
   bobbing-intensity: 1 # How much the pet should bob up and down (Default: 0.15)
   rotation: true # If the pet should rotate/spin
@@ -299,7 +299,11 @@ pet-entity:
   scale: 1 # Scale of the pet head entity only. (Default: 1, Min: 0.0625, Max: 16)
   item-display:
     enabled: false
-    teleport-duration: 3
+    teleport-duration: 3 # Client-side movement and squash smoothing in ticks (0-59)
+    # Playful animations require item-display.enabled. Armor stands and ModelEngine pets use legacy movement.
+    playful-animations:
+      enabled: true # Enable all ItemDisplay pet animations
+      chance: 25 # Chance per second to start a playful animation (0-100)
 
 
 level-up:
@@ -328,4 +332,3 @@ level-up:
 - **Make a pet:** [How to Make a Pet](how-to-make-a-custom-pet) for per-pet config.
 - **Custom GUI slots:** [Custom GUI Slots](https://plugins.auxilor.io/all-plugins/custom-gui-slots) to add your own slots to the menus.
 - **Commands:** [Commands and Permissions](commands-and-permissions) for reloading, giving, and resetting pets.
-

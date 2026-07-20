@@ -114,6 +114,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
 
     override fun handleReload() {
         PetsGUI.update()
+        petDisplay.reload()
 
         this.scheduler.runTimer(20, 20) {
             if (this.configYml.getBool("auto-deactivate-on-condition-fail")) {
