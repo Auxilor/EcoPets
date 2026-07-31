@@ -33,7 +33,8 @@ object ConditionHasPetLevel : Condition<NoCompileData>("has_pet_level") {
             "level",
             "You must specify the level!",
             description = "The minimum pet level required.",
-            type = ArgType.EXPRESSION
+            type = ArgType.EXPRESSION,
+            example = "5 + %level%"
         )
     }
 
