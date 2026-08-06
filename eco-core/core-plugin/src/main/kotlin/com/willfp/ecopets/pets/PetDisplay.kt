@@ -110,7 +110,7 @@ class PetDisplay(
             val location = getLocation(player)
             val stand = pet.makePetEntity().spawn(location)
 
-            trackedEntities[player.uniqueId] = PetArmorStand(stand, pet)
+            trackedEntities[player.uniqueId] = PetArmorStand(stand as ArmorStand, pet)
         }
 
         return trackedEntities[player.uniqueId]?.stand
