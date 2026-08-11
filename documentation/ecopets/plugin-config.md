@@ -1,6 +1,6 @@
 ---
 title: "Plugin Config"
-sidebar_position: 5
+sidebar_position: 4
 ---
 
 This is the main `config.yml` for EcoPets, found at `/plugins/EcoPets/config.yml`. It controls the pet GUIs, the floating pet entity, level-up messages, and storage. Apply changes by running `/ecopets reload`.

@@ -1,6 +1,6 @@
 ---
 title: "PlaceholderAPI"
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 These placeholders expose a player's pet levels, XP, and active pet anywhere PlaceholderAPI is supported, e.g. scoreboards, holograms, and chat. Swap `<id>` for a pet's ID. PlaceholderAPI must be installed.

@@ -1,6 +1,6 @@
 ---
 title: "Commands and Permissions"
-sidebar_position: 4
+sidebar_position: 3
 ---
 
 Every EcoPets command and permission node, for giving, resetting, importing, and managing pets. Admin commands sit under `/ecopets`; player-facing ones under `/pets`.
