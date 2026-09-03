@@ -146,6 +146,8 @@ class Pet(
 
     val entityTexture = config.getString("entity-texture")
 
+    val trail = PetTrail.fromConfig(config.getSubsection("trail"))
+
     private val xpFormula = config.getStringOrNull("xp-formula")
 
     private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
