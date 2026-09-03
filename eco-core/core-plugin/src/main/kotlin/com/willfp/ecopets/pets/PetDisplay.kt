@@ -8,6 +8,7 @@ import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
 import com.willfp.ecopets.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
@@ -33,6 +34,7 @@ object PetDisplay : Listener {
     private const val FULL_CIRCLE = 2 * PI
     private const val ITEM_DISPLAY_YAW_OFFSET = 180f
     private const val PLAYER_HEAD_VISUAL_CENTER_Y = -0.25f
+    private const val SMALL_ARMOR_STAND_HEAD_Y = 0.75
 
     private var tick = 0L
 
@@ -161,6 +163,30 @@ object PetDisplay : Listener {
             } else if (desiredYaw != null && tracked.shouldRotate(desiredYaw)) {
                 entity.setRotation(desiredYaw, 0f)
             }
+
+            val trail = pet.trail
+            if (trail != null && trail.shouldSpawnOn(tick)) {
+                trail.spawn(location, getTrailAnchorY(entity, pet))
+            }
+        }
+    }
+
+    /**
+     * The height above the entity's location that its model is visually centred at, so
+     * trails are drawn through the middle of the pet rather than at its feet.
+     */
+    private fun getTrailAnchorY(entity: Entity, pet: Pet): Double {
+        val isPlayerHead = !pet.entityTexture.contains(":")
+
+        return when {
+            entity is ItemDisplay -> if (isPlayerHead) {
+                PLAYER_HEAD_VISUAL_CENTER_Y * settings.baseScale
+            } else {
+                0.0
+            }
+
+            entity is ArmorStand -> SMALL_ARMOR_STAND_HEAD_Y * settings.baseScale
+            else -> 0.0
         }
     }
 

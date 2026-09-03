@@ -122,7 +122,7 @@ spawn-egg:
 
 ### Display
 
-Sets the pet's name, description, GUI icon, and the texture of the floating entity.
+Sets the pet's name, description, GUI icon, the texture of the floating entity, and an optional particle trail.
 
 ```yaml
 name: "&6Tiger" # Display name of the pet
@@ -130,6 +130,12 @@ description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
 # Texture of the floating pet entity; use modelengine:id for ModelEngine
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
+trail: # A particle trail left behind by the pet as it follows the player
+  enabled: false # If the pet should leave a particle trail
+  particle: flame # The particle to spawn, as an eco particle string
+  gap: 2 # How many ticks to wait between each particle of the trail
+  amount: 1 # How many particles to spawn each time
+  y-offset: 0.0 # How far above the centre of the pet to spawn the trail
 ```
 
 ### Progression
