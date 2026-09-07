@@ -44,7 +44,8 @@ object PetLevelListener : Listener {
                 location = player.location,
                 event = event,
                 value = level.toDouble()
-            )
+            ),
+            type = "level"
         )
 
         PlayableSound.create(plugin.configYml.getSubsection("level-up.sound"))?.playTo(player)

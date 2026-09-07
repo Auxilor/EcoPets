@@ -15,6 +15,7 @@ import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.core.placeholder.PlayerStaticPlaceholder
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.placeholder.context.placeholderContext
+import com.willfp.eco.core.progression.ProgressionPlaceholders
 import com.willfp.eco.core.progression.LevelCurve
 import com.willfp.eco.core.progression.LevelCurves
 import com.willfp.eco.core.progression.LevelProgression
@@ -96,19 +97,18 @@ class Pet(
     private val eggBaseLore = config.getFormattedStrings("spawn-egg.lore")
 
     private fun formatEggText(text: String, level: Int, xp: Double): String {
-        var result = text
+        val result = text
             .replace("%pet%", this.name)
             .replace("%description%", this.description)
             .replace("%current_xp%", xp.toNiceString())
-            .replace("%level%", level.toString())
-            .replace("%level_numeral%", level.toNumeral())
-        result = EGG_LEVEL_REGEX.replace(result) { match ->
-            val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-            val isNumeral = match.groupValues[2].isNotEmpty()
-            val newLevel = level + offset
-            if (isNumeral) newLevel.toNumeral() else newLevel.toString()
-        }
-        return levelPlaceholders.format(result, level)
+
+        // Egg lore was the only place that accepted an explicit sign, as in %level_+2%. The
+        // shared pattern is the superset of every copy of this regex, so that form still works
+        // here and now works everywhere else too.
+        return levelPlaceholders.format(
+            ProgressionPlaceholders.inject(result, "level", level),
+            level
+        )
     }
 
     fun makeSpawnEgg(level: Int = 1, xp: Double = 0.0): ItemStack? {
@@ -451,28 +451,19 @@ class Pet(
 
     fun injectPlaceholdersInto(lore: List<String>, player: Player, forceLevel: Int? = null): List<String> {
         val level = forceLevel ?: player.getPetLevel(this)
-        val regex = Regex("%level_(-?\\d+)(_numeral)?%")
 
         val withPlaceholders = lore.map { line ->
-            var result = line
+            val result = line
                 .replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
                 .replace("%current_xp%", player.getPetXP(this).toNiceString())
                 .replace("%required_xp%", this.getFormattedExpForLevel(level + 1))
                 .replace("%description%", this.description)
                 .replace("%pet%", this.name)
-                .replace("%level%", level.toString())
-                .replace("%level_numeral%", level.toNumeral())
 
-            // Handle dynamic %level_X% and %level_X_numeral%
-            result = regex.replace(result) { match ->
-                val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-                val isNumeral = match.groupValues[2].isNotEmpty()
-                val newLevel = level + offset
-
-                if (isNumeral) newLevel.toNumeral() else newLevel.toString()
-            }
-
-            result
+            // %level%, %level_numeral%, %previous_level%, %previous_level_numeral% and the
+            // %level_N% / %level_N_numeral% offsets, resolved by the shared helper in eco so a
+            // lore line and an effect chain can never disagree about what %level_2% means.
+            ProgressionPlaceholders.inject(result, "level", level)
         }.toMutableList()
 
         val processed = mutableListOf<List<String>>()
@@ -594,8 +585,6 @@ private fun Collection<LevelPlaceholder>.format(string: String, level: Int): Str
     }
     return process
 }
-
-private val EGG_LEVEL_REGEX = Regex("%level_([+-]?\\d+)(_numeral)?%")
 
 private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
     plugin.namespacedKeyFactory.create("active_pet"),
