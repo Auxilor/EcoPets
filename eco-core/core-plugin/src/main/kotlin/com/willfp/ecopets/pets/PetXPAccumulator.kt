@@ -4,7 +4,7 @@ import com.willfp.eco.core.cache.EcoCache
 import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.entity.Player
 import java.time.Duration
-import kotlin.math.max
+import com.willfp.eco.util.NumericalPermissions
 
 class PetXPAccumulator(
     private val pet: Pet
@@ -44,28 +44,13 @@ private fun Player.cachePetExperienceMultiplier(): Double {
         return 1.5
     }
 
-    // Take the highest matching permission rather than the first one iterated.
-    //
-    // effectivePermissions is not ordered, so returning on first match made the multiplier
-    // depend on iteration order whenever a player had two of these through different groups -
-    // the same player could get 1.5x or 3x across a relog with no config change. An
-    // unparseable suffix is skipped rather than treated as 100, which previously turned a
-    // typo such as `ecopets.xpmultiplier.abc` into a silent 2x.
-    //
-    // This matches EcoJobs' getNumericalPermission, which already resolved it this way.
-    val prefix = "ecopets.xpmultiplier."
-    var highest: Double? = null
-
-    for (permissionAttachmentInfo in this.effectivePermissions) {
-        val permission = permissionAttachmentInfo.permission
-
-        if (!permission.startsWith(prefix)) {
-            continue
-        }
-
-        val found = permission.substring(permission.lastIndexOf(".") + 1).toDoubleOrNull() ?: continue
-        highest = max(highest ?: found, found)
-    }
-
-    return highest?.let { (it / 100) + 1 } ?: 1.0
+    // Highest matching permission, not the first one iterated: effectivePermissions is
+    // unordered, so a player holding two of these through different groups used to get a
+    // different multiplier across a relog with no config change. Shared with the other
+    // plugins via eco so the four cannot drift apart again.
+    return 1 + NumericalPermissions.highest(
+        this.effectivePermissions.filter { it.value }.map { it.permission },
+        "ecopets.xpmultiplier",
+        0.0
+    ) / 100
 }
