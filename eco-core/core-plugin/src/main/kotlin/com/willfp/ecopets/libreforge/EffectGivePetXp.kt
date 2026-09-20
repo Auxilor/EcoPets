@@ -12,7 +12,8 @@ import com.willfp.libreforge.triggers.TriggerData
 import com.willfp.libreforge.triggers.TriggerParameter
 
 object EffectGivePetXp : Effect<NoCompileData>("give_pet_xp") {
-    override val description = "Gives the player experience towards the specified pet."
+    override val description = "Gives the player experience towards the specified pet. " +
+        "Does nothing if the player has not adopted the pet."
 
     override val categories = setOf("player", "economy")
 
@@ -39,7 +40,9 @@ object EffectGivePetXp : Effect<NoCompileData>("give_pet_xp") {
     override fun onTrigger(config: Config, data: TriggerData, compileData: NoCompileData): Boolean {
         val player = data.player ?: return false
 
-       player.givePetExperience(
+        // givePetExperience already guards on the player having adopted the pet - do not add a
+        // second check here.
+        player.givePetExperience(
             Pets.getByID(config.getFormattedString("pet", data)) ?: return false,
             config.getDoubleFromExpression("amount", player)
         )
