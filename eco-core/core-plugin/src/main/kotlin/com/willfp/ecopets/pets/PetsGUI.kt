@@ -17,11 +17,13 @@ import com.willfp.ecopets.plugin
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.util.UUID
 import kotlin.math.ceil
 
 object PetsGUI {
     private lateinit var menu: Menu
     private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
+    private val lastToggleTimes = mutableMapOf<UUID, Long>()
 
     internal fun update() {
         val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
@@ -221,6 +223,16 @@ object PetsGUI {
                 slot(togglePetItemBuilder) {
                     onLeftClick { event, _ ->
                         val player = event.whoClicked as Player
+
+                        // Toggling respawns/removes the pet entity, so rate-limit to prevent spam-click lag.
+                        val now = System.currentTimeMillis()
+                        val cooldown = plugin.configYml.getIntOrNull("gui.toggle.cooldown") ?: 500
+                        val lastToggle = lastToggleTimes[player.uniqueId]
+                        if (lastToggle != null && now - lastToggle < cooldown) {
+                            return@onLeftClick
+                        }
+                        lastToggleTimes[player.uniqueId] = now
+
                         player.shouldHidePet = !player.shouldHidePet
                     }
                 }
