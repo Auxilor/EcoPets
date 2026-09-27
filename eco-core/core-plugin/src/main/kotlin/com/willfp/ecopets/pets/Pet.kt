@@ -15,6 +15,11 @@ import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.core.placeholder.PlayerStaticPlaceholder
 import com.willfp.eco.core.placeholder.PlayerlessPlaceholder
 import com.willfp.eco.core.placeholder.context.placeholderContext
+import com.willfp.eco.core.progression.ProgressionPlaceholders
+import com.willfp.eco.core.progression.LevelCurve
+import com.willfp.eco.core.progression.LevelCurves
+import com.willfp.eco.core.progression.LevelProgression
+import com.willfp.eco.core.progression.StopReason
 import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.eco.core.recipe.recipes.CraftingRecipe
@@ -43,12 +48,10 @@ import com.willfp.libreforge.effects.executors.impl.NormalExecutorFactory
 import com.willfp.libreforge.toDispatcher
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
-import kotlin.math.abs
 
 class Pet(
     val id: String,
@@ -94,19 +97,18 @@ class Pet(
     private val eggBaseLore = config.getFormattedStrings("spawn-egg.lore")
 
     private fun formatEggText(text: String, level: Int, xp: Double): String {
-        var result = text
+        val result = text
             .replace("%pet%", this.name)
             .replace("%description%", this.description)
             .replace("%current_xp%", xp.toNiceString())
-            .replace("%level%", level.toString())
-            .replace("%level_numeral%", level.toNumeral())
-        result = EGG_LEVEL_REGEX.replace(result) { match ->
-            val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-            val isNumeral = match.groupValues[2].isNotEmpty()
-            val newLevel = level + offset
-            if (isNumeral) newLevel.toNumeral() else newLevel.toString()
-        }
-        return levelPlaceholders.format(result, level)
+
+        // Egg lore was the only place that accepted an explicit sign, as in %level_+2%. The
+        // shared pattern is the superset of every copy of this regex, so that form still works
+        // here and now works everywhere else too.
+        return levelPlaceholders.format(
+            ProgressionPlaceholders.inject(result, "level", level),
+            level
+        )
     }
 
     fun makeSpawnEgg(level: Int = 1, xp: Double = 0.0): ItemStack? {
@@ -148,11 +150,35 @@ class Pet(
 
     val trail = PetTrail.fromConfig(config.getSubsection("trail"))
 
-    private val xpFormula = config.getStringOrNull("xp-formula")
+    private val parsedCurve = LevelCurves.parse(
+        config.getStringOrNull("xp-formula"),
+        config.getDoublesOrNull("level-xp-requirements"),
+        config.getIntOrNull("max-level"),
+        startLevel = 0,
+        // The `listOf(0) + ...` padding this replaces is preserved, not removed. Adopting a
+        // pet sets its level to 0, and hasPet is `level > 0`, so the free 0 -> 1 transition is
+        // how a pet becomes owned. Dropping it would break adoption. The auto-adopt defect it
+        // enabled is fixed by the ownership guard in the give/giveExact functions instead.
+        freeFirstLevel = true
+    ) { expression, level ->
+        evaluateExpression(expression, placeholderContext(injectable = LevelInjectable(level - 1)))
+    }
 
-    private val levelXpRequirements = listOf(0) + config.getInts("level-xp-requirements")
+    val curve: LevelCurve = parsedCurve.curve
 
-    val maxLevel = config.getIntOrNull("max-level") ?: levelXpRequirements.size
+    val maxLevel: Int
+        get() = curve.maxLevel
+
+    private val warnedBrokenCurveLevels = mutableSetOf<Int>()
+
+    /**
+     * Log a broken-curve warning once per level, rather than on every XP gain that hits it.
+     */
+    fun warnBrokenCurveOnce(level: Int) {
+        if (warnedBrokenCurveLevels.add(level)) {
+            plugin.logger.warning("Pet $id: xp requirement for level $level is not usable - progression stopped there")
+        }
+    }
 
     val withdrawable = config.getBool("spawn-egg.withdrawable")
 
@@ -186,8 +212,9 @@ class Pet(
     }
 
     init {
-        if (xpFormula == null && levelXpRequirements == null) {
-            throw InvalidConfigurationException("Pet $id has no requirements or xp formula")
+        // Logged once at load, not per XP gain: a broken curve recurs on every grant.
+        for (problem in parsedCurve.problems) {
+            plugin.logger.warning("Pet $id: ${problem.path} - ${problem.message}")
         }
 
         config.injectPlaceholders(
@@ -424,28 +451,19 @@ class Pet(
 
     fun injectPlaceholdersInto(lore: List<String>, player: Player, forceLevel: Int? = null): List<String> {
         val level = forceLevel ?: player.getPetLevel(this)
-        val regex = Regex("%level_(-?\\d+)(_numeral)?%")
 
         val withPlaceholders = lore.map { line ->
-            var result = line
+            val result = line
                 .replace("%percentage_progress%", (player.getPetProgress(this) * 100).toNiceString())
                 .replace("%current_xp%", player.getPetXP(this).toNiceString())
                 .replace("%required_xp%", this.getFormattedExpForLevel(level + 1))
                 .replace("%description%", this.description)
                 .replace("%pet%", this.name)
-                .replace("%level%", level.toString())
-                .replace("%level_numeral%", level.toNumeral())
 
-            // Handle dynamic %level_X% and %level_X_numeral%
-            result = regex.replace(result) { match ->
-                val offset = match.groupValues[1].toIntOrNull() ?: return@replace match.value
-                val isNumeral = match.groupValues[2].isNotEmpty()
-                val newLevel = level + offset
-
-                if (isNumeral) newLevel.toNumeral() else newLevel.toString()
-            }
-
-            result
+            // %level%, %level_numeral%, %previous_level%, %previous_level_numeral% and the
+            // %level_N% / %level_N_numeral% offsets, resolved by the shared helper in eco so a
+            // lore line and an effect chain can never disagree about what %level_2% means.
+            ProgressionPlaceholders.inject(result, "level", level)
         }.toMutableList()
 
         val processed = mutableListOf<List<String>>()
@@ -517,24 +535,14 @@ class Pet(
     }
 
     /**
-     * Get the XP required to reach the next level, if currently at [level].
+     * Get the XP required to reach [level].
+     *
+     * Semantic change from the previous implementation: [level] == 1 now returns
+     * POSITIVE_INFINITY rather than 0.0, because the free 0 -> 1 transition is handled by
+     * [LevelCurve.freeLevel] via LevelProgression.progress rather than being priced as zero.
+     * Every other level is unchanged.
      */
-    fun getExpForLevel(level: Int): Double {
-        if (level !in 1..maxLevel) {
-            return Double.POSITIVE_INFINITY
-        }
-
-        if (xpFormula != null) {
-            return evaluateExpression(
-                xpFormula,
-                placeholderContext(
-                    injectable = LevelInjectable(level - 1)
-                )
-            )
-        }
-
-        return levelXpRequirements[level - 1].toDouble()
-    }
+    fun getExpForLevel(level: Int): Double = curve.xpToReach(level)
 
     fun getFormattedExpForLevel(level: Int): String {
         val required = getExpForLevel(level)
@@ -577,8 +585,6 @@ private fun Collection<LevelPlaceholder>.format(string: String, level: Int): Str
     }
     return process
 }
-
-private val EGG_LEVEL_REGEX = Regex("%level_([+-]?\\d+)(_numeral)?%")
 
 private val activePetKey: PersistentDataKey<String> = PersistentDataKey(
     plugin.namespacedKeyFactory.create("active_pet"),
@@ -647,9 +653,13 @@ fun OfflinePlayer.setPetLevel(pet: Pet, level: Int) =
     this.profile.write(pet.levelKey, level)
 
 fun OfflinePlayer.getPetProgress(pet: Pet): Double {
-    val currentXP = this.getPetXP(pet)
-    val requiredXP = pet.getExpForLevel(this.getPetLevel(pet) + 1)
-    return currentXP / requiredXP
+    val level = this.getPetLevel(pet)
+
+    return LevelProgression.progressFraction(
+        this.getPetXP(pet),
+        pet.curve.xpToReach(level + 1),
+        level >= pet.maxLevel
+    )
 }
 
 fun OfflinePlayer.getPetLevelObject(pet: Pet): PetLevel =
@@ -667,8 +677,38 @@ fun OfflinePlayer.setPetXP(pet: Pet, xp: Double) =
 fun OfflinePlayer.getPetXPRequired(pet: Pet) =
     this.profile.read(pet.xpKey)
 
+/**
+ * Reject an XP amount that cannot be granted.
+ *
+ * Deliberately not `abs()`: wrapping a negative amount in abs() turned a misconfigured effect
+ * expression into a silent *gain*, which is the worst of both worlds - the mistake is hidden
+ * and its effect is inverted.
+ */
+private fun validatePetXpAmount(amount: Double, context: String): Boolean {
+    if (!amount.isFinite() || amount <= 0.0) {
+        plugin.logger.warning("Refused a non-positive xp grant of $amount for $context")
+        return false
+    }
+
+    return true
+}
+
+/**
+ * Give pet experience.
+ *
+ * XP only applies to a pet the player has actually adopted; see the config comment near the
+ * top of config.yml for the decision this implements.
+ */
 fun Player.givePetExperience(pet: Pet, experience: Double, noMultiply: Boolean = false) {
-    val exp = abs(if (noMultiply) experience else experience * this.petExperienceMultiplier)
+    if (!this.hasPet(pet)) {
+        return
+    }
+
+    val exp = if (noMultiply) experience else experience * this.petExperienceMultiplier
+
+    if (!validatePetXpAmount(exp, "pet ${pet.id}")) {
+        return
+    }
 
     val gainEvent = PlayerPetExpGainEvent(this, pet, exp, !noMultiply)
     Bukkit.getPluginManager().callEvent(gainEvent)
@@ -680,19 +720,37 @@ fun Player.givePetExperience(pet: Pet, experience: Double, noMultiply: Boolean =
     this.giveExactPetExperience(pet, gainEvent.amount)
 }
 
+/**
+ * Give exact pet experience, without calling PlayerPetExpGainEvent.
+ *
+ * Guarded the same as [givePetExperience]: this function's documented purpose is to skip the
+ * gain event, and it is reachable directly from commands and the API.
+ */
 fun Player.giveExactPetExperience(pet: Pet, experience: Double) {
-    val level = this.getPetLevel(pet)
+    if (!this.hasPet(pet)) {
+        return
+    }
 
-    val progress = this.getPetXP(pet) + experience
+    if (!validatePetXpAmount(experience, "pet ${pet.id}")) {
+        return
+    }
 
-    if (progress >= pet.getExpForLevel(level + 1) && level + 1 <= pet.maxLevel) {
-        val overshoot = progress - pet.getExpForLevel(level + 1)
-        this.setPetXP(pet, 0.0)
-        this.setPetLevel(pet, level + 1)
-        val levelUpEvent = PlayerPetLevelUpEvent(this, pet, level + 1)
-        Bukkit.getPluginManager().callEvent(levelUpEvent)
-        this.giveExactPetExperience(pet, overshoot)
-    } else {
-        this.setPetXP(pet, progress)
+    val startLevel = this.getPetLevel(pet)
+    val change = LevelProgression.progress(pet.curve, startLevel, this.getPetXP(pet), experience)
+
+    if (change.stopReason == StopReason.INVALID_REQUIREMENT) {
+        pet.warnBrokenCurveOnce(startLevel + 1)
+    }
+
+    this.setPetXP(pet, change.newXp)
+
+    val gained = change.levelsGained ?: return
+
+    this.setPetLevel(pet, change.newLevel)
+
+    // One event per level crossed: a single grant spanning five levels must not swallow four
+    // of the level-up rewards.
+    for (level in gained) {
+        Bukkit.getPluginManager().callEvent(PlayerPetLevelUpEvent(this, pet, level))
     }
 }

@@ -8,6 +8,10 @@
 # cross-server sync.
 use-local-storage: false
 
+# XP only applies to pets a player has actually adopted. Granting XP for a pet a player has
+# not adopted - through the give_pet_xp effect or the API - does nothing and logs a warning;
+# it does not silently adopt the pet.
+
 discover-recipes: true
 
 # How redeeming a pet egg behaves when the player ALREADY owns that pet:

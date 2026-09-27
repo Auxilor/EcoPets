@@ -56,7 +56,7 @@ object CommandGiveXP : Subcommand(
 
         val amount = args[2].toDoubleOrNull()
 
-        if (amount == null) {
+        if (amount == null || !amount.isFinite() || amount <= 0.0) {
             sender.sendMessage(plugin.langYml.getMessage("invalid-amount"))
             return
         }

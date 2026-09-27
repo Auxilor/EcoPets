@@ -4,6 +4,7 @@ import com.willfp.eco.core.cache.EcoCache
 import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.entity.Player
 import java.time.Duration
+import com.willfp.eco.util.NumericalPermissions
 
 class PetXPAccumulator(
     private val pet: Pet
@@ -43,13 +44,13 @@ private fun Player.cachePetExperienceMultiplier(): Double {
         return 1.5
     }
 
-    val prefix = "ecopets.xpmultiplier."
-    for (permissionAttachmentInfo in this.effectivePermissions) {
-        val permission = permissionAttachmentInfo.permission
-        if (permission.startsWith(prefix)) {
-            return ((permission.substring(permission.lastIndexOf(".") + 1).toDoubleOrNull() ?: 100.0) / 100) + 1
-        }
-    }
-
-    return 1.0
+    // Highest matching permission, not the first one iterated: effectivePermissions is
+    // unordered, so a player holding two of these through different groups used to get a
+    // different multiplier across a relog with no config change. Shared with the other
+    // plugins via eco so the four cannot drift apart again.
+    return 1 + NumericalPermissions.highest(
+        this.effectivePermissions.filter { it.value }.map { it.permission },
+        "ecopets.xpmultiplier",
+        0.0
+    ) / 100
 }
