@@ -8,6 +8,9 @@
 # cross-server sync.
 use-local-storage: false
 
+# Worlds that EcoPets should be disabled in
+disabled-in-worlds: []
+
 # XP only applies to pets a player has actually adopted. Granting XP for a pet a player has
 # not adopted - through the give_pet_xp effect or the API - does nothing and logs a warning;
 # it does not silently adopt the pet.

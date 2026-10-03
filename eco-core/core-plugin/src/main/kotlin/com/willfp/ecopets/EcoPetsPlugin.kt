@@ -84,9 +84,10 @@ class EcoPetsPlugin : LibreforgePlugin() {
         Items.registerArgParser(ArgParserPetXp)
 
         registerSpecificHolderProvider<Player> {
-            it.activePetLevel?.let { p ->
-                listOf(SimpleProvidedHolder(p))
-            } ?: emptyList()
+            if (isDisabledIn(it.world)) emptyList() else
+                it.activePetLevel?.let { p ->
+                    listOf(SimpleProvidedHolder(p))
+                } ?: emptyList()
         }
 
         PlayerPlaceholder(
