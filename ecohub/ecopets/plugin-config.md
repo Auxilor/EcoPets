@@ -17,6 +17,9 @@ Changing `use-local-storage` switches the storage backend, so it needs a full se
 # cross-server sync.
 use-local-storage: false
 
+# Worlds that EcoPets should be disabled in
+disabled-in-worlds: []
+
 discover-recipes: true
 
 # If a pet should be automatically deactivated when its activate-conditions are no longer met

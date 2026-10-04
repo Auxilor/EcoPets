@@ -85,7 +85,7 @@ object PetDisplay : Listener {
     }
 
     private fun tickPlayer(player: Player) {
-        if (player.shouldHidePet) {
+        if (player.shouldHidePet || plugin.isDisabledIn(player.world)) {
             remove(player)
             return
         }

@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.cache.EcoCache
+import com.willfp.ecopets.plugin
 import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.entity.Player
 import java.time.Duration
@@ -10,6 +11,10 @@ class PetXPAccumulator(
     private val pet: Pet
 ) : Accumulator {
     override fun accept(player: Player, count: Double) {
+        if (plugin.isDisabledIn(player.world)) {
+            return
+        }
+
         if (player.activePet != pet) {
             return
         }
