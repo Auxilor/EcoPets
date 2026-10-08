@@ -9,6 +9,7 @@ import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.pets.setPetXP
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -53,19 +54,22 @@ object CommandTake : Subcommand(
             return
         }
 
-        val onlinePlayer = player.player
-        if (onlinePlayer != null && onlinePlayer.activePet == pet) {
-            onlinePlayer.activePet = null
+        // The console runs off the player's region on Folia.
+        player.runOwnedIfOnline {
+            val onlinePlayer = player.player
+            if (onlinePlayer != null && onlinePlayer.activePet == pet) {
+                onlinePlayer.activePet = null
+            }
+
+            player.setPetXP(pet, 0.0)
+            player.setPetLevel(pet, 0)
+
+            sender.sendMessage(
+                plugin.langYml.getMessage("took-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%player%", player.savedDisplayName)
+                    .replace("%pet%", pet.name)
+            )
         }
-
-        player.setPetXP(pet, 0.0)
-        player.setPetLevel(pet, 0)
-
-        sender.sendMessage(
-            plugin.langYml.getMessage("took-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
-                .replace("%pet%", pet.name)
-        )
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

@@ -52,6 +52,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 class Pet(
     val id: String,
@@ -169,7 +170,7 @@ class Pet(
     val maxLevel: Int
         get() = curve.maxLevel
 
-    private val warnedBrokenCurveLevels = mutableSetOf<Int>()
+    private val warnedBrokenCurveLevels = ConcurrentHashMap.newKeySet<Int>()
 
     /**
      * Log a broken-curve warning once per level, rather than on every XP gain that hits it.

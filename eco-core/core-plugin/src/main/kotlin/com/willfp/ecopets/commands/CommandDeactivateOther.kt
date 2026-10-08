@@ -4,6 +4,7 @@ import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -42,13 +43,16 @@ object CommandDeactivateOther : Subcommand(
             return
         }
 
-        sender.sendMessage(
-            plugin.langYml.getMessage("deactivated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%pet%", player.activePet?.name ?: "")
-                .replace("%player%", playerName)
-        )
+        // The console runs off the player's region on Folia.
+        player.runOwnedIfOnline {
+            sender.sendMessage(
+                plugin.langYml.getMessage("deactivated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%pet%", player.activePet?.name ?: "")
+                    .replace("%player%", playerName)
+            )
 
-        player.activePet = null
+            player.activePet = null
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

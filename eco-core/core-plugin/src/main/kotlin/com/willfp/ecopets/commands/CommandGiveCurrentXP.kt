@@ -8,6 +8,7 @@ import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
@@ -56,16 +57,19 @@ object CommandGiveCurrentXP : Subcommand(
             return
         }
 
-        player.givePetExperience(
-            pet,
-            amount
-        )
+        // The console runs off the player's region on Folia.
+        player.runOwned {
+            player.givePetExperience(
+                pet,
+                amount
+            )
 
-        sender.sendMessage(
-            plugin.langYml.getMessage("gave-current-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
-                .replace("%xp%", amount.toNiceString())
-        )
+            sender.sendMessage(
+                plugin.langYml.getMessage("gave-current-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%player%", player.savedDisplayName)
+                    .replace("%xp%", amount.toNiceString())
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

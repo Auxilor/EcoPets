@@ -117,17 +117,10 @@ class EcoPetsPlugin : LibreforgePlugin() {
         PetsGUI.update()
         petDisplay.reload()
 
-        this.scheduler.runTimer(20, 20) {
+        this.scheduler.global().runTimer(20, 20) {
             if (this.configYml.getBool("auto-deactivate-on-condition-fail")) {
                 for (player in Bukkit.getOnlinePlayers()) {
-                    val activePet = player.activePet ?: continue
-                    if (!activePet.canActivate(player)) {
-                        player.activePet = null
-                        player.sendMessage(
-                            this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                                .replace("%pet%", activePet.name)
-                        )
-                    }
+                    player.runOwned { autoDeactivate(player) }
                 }
             }
         }
@@ -136,8 +129,23 @@ class EcoPetsPlugin : LibreforgePlugin() {
             return
         }
 
-        this.scheduler.runTimer(1, 1) {
+        this.scheduler.global().runTimer(1, 1) {
             petDisplay.tickAll()
+        }
+    }
+
+    private fun autoDeactivate(player: Player) {
+        if (!player.isOnline) {
+            return
+        }
+
+        val activePet = player.activePet ?: return
+        if (!activePet.canActivate(player)) {
+            player.activePet = null
+            player.sendMessage(
+                this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%pet%", activePet.name)
+            )
         }
     }
 

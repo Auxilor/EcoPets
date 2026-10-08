@@ -8,6 +8,7 @@ import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -52,19 +53,22 @@ object CommandGive : Subcommand(
             return
         }
 
-        val event = PetAdoptEvent(player, pet)
-        Bukkit.getPluginManager().callEvent(event)
-        if (event.isCancelled) {
-            sender.sendMessage(plugin.langYml.getMessage("cancelled-adoption"))
-            return
-        }
+        // The console runs off the player's region on Folia.
+        player.runOwnedIfOnline {
+            val event = PetAdoptEvent(player, pet)
+            Bukkit.getPluginManager().callEvent(event)
+            if (event.isCancelled) {
+                sender.sendMessage(plugin.langYml.getMessage("cancelled-adoption"))
+                return@runOwnedIfOnline
+            }
 
-        player.setPetLevel(pet, 1)
-        sender.sendMessage(
-            plugin.langYml.getMessage("gave-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
-                .replace("%pet%", pet.name)
-        )
+            player.setPetLevel(pet, 1)
+            sender.sendMessage(
+                plugin.langYml.getMessage("gave-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%player%", player.savedDisplayName)
+                    .replace("%pet%", pet.name)
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

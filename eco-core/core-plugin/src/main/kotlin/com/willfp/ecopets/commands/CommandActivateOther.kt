@@ -7,6 +7,7 @@ import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -67,20 +68,23 @@ object CommandActivateOther : Subcommand(
             return
         }
 
-        sender.sendMessage(
-            plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%pet%", pet.name)
-                .replace("%player%", playerName)
-        )
-        player.activePet?.let { oldPet ->
-            val event = PlayerPetSwapEvent(player, pet, oldPet)
-            Bukkit.getServer().pluginManager.callEvent(event)
-            if (event.isCancelled) {
-                sender.sendMessage(plugin.langYml.getMessage("cancelled-swap-other"))
-                return
+        // The console runs off the player's region on Folia.
+        player.runOwnedIfOnline {
+            sender.sendMessage(
+                plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%pet%", pet.name)
+                    .replace("%player%", playerName)
+            )
+            player.activePet?.let { oldPet ->
+                val event = PlayerPetSwapEvent(player, pet, oldPet)
+                Bukkit.getServer().pluginManager.callEvent(event)
+                if (event.isCancelled) {
+                    sender.sendMessage(plugin.langYml.getMessage("cancelled-swap-other"))
+                    return@runOwnedIfOnline
+                }
             }
+            player.activePet = pet
         }
-        player.activePet = pet
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

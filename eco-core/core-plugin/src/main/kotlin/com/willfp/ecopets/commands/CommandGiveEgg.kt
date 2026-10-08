@@ -7,6 +7,7 @@ import com.willfp.eco.util.savedDisplayName
 import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.util.StringUtil
@@ -54,16 +55,19 @@ object CommandGiveEgg : Subcommand(
             return
         }
 
-        DropQueue(player)
-            .addItem(egg)
-            .forceTelekinesis()
-            .push()
+        // The console runs off the player's region on Folia.
+        player.runOwned {
+            DropQueue(player)
+                .addItem(egg)
+                .forceTelekinesis()
+                .push()
 
-        sender.sendMessage(
-            plugin.langYml.getMessage("gave-pet-egg", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
-                .replace("%pet%", pet.name)
-        )
+            sender.sendMessage(
+                plugin.langYml.getMessage("gave-pet-egg", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%player%", player.savedDisplayName)
+                    .replace("%pet%", pet.name)
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

@@ -18,12 +18,17 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.ceil
 
 object PetsGUI {
+    @Volatile
     private lateinit var menu: Menu
-    private val petAreaSlots = mutableListOf<Pair<Int, Int>>()
-    private val lastToggleTimes = mutableMapOf<UUID, Long>()
+
+    @Volatile
+    private var petAreaSlots = emptyList<Pair<Int, Int>>()
+
+    private val lastToggleTimes = ConcurrentHashMap<UUID, Long>()
 
     internal fun update() {
         val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
@@ -31,10 +36,11 @@ object PetsGUI {
         val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
         val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
 
-        petAreaSlots.clear()
-        for (row in topLeftRow..bottomRightRow) {
-            for (column in topLeftColumn..bottomRightColumn) {
-                petAreaSlots.add(Pair(row, column))
+        petAreaSlots = buildList {
+            for (row in topLeftRow..bottomRightRow) {
+                for (column in topLeftColumn..bottomRightColumn) {
+                    add(Pair(row, column))
+                }
             }
         }
 
@@ -42,6 +48,8 @@ object PetsGUI {
     }
 
     private fun buildMenu(): Menu {
+        val petAreaSlots = petAreaSlots
+
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 
