@@ -1,11 +1,14 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.Eco
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.util.NumberUtils
 import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.pets.entity.DEFAULT_PET_SCALE
 import com.willfp.ecopets.pets.entity.MAX_PET_SCALE
 import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -20,6 +23,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -36,9 +40,12 @@ object PetDisplay : Listener {
     private const val PLAYER_HEAD_VISUAL_CENTER_Y = -0.25f
     private const val SMALL_ARMOR_STAND_HEAD_Y = 0.75
 
+    @Volatile
     private var tick = 0L
 
-    private val trackedEntities = mutableMapOf<UUID, PetDisplayEntity>()
+    private val trackedEntities = ConcurrentHashMap<UUID, PetDisplayEntity>()
+
+    @Volatile
     private var settings = DisplaySettings()
 
     fun reload() {
@@ -72,19 +79,22 @@ object PetDisplay : Listener {
     }
 
     fun tickAll() {
+        val currentTick = tick
         for (player in Bukkit.getOnlinePlayers()) {
-            val chunk = player.chunk
-            if (player.isOnline && chunk.isLoaded && chunk.isEntitiesLoaded) {
-                tickPlayer(player)
-            } else {
-                remove(player)
+            player.runOwned {
+                val chunk = player.chunk
+                if (player.isOnline && chunk.isLoaded && chunk.isEntitiesLoaded) {
+                    tickPlayer(player, currentTick)
+                } else {
+                    remove(player)
+                }
             }
         }
 
         tick++
     }
 
-    private fun tickPlayer(player: Player) {
+    private fun tickPlayer(player: Player, tick: Long) {
         if (player.shouldHidePet || plugin.isDisabledIn(player.world)) {
             remove(player)
             return
@@ -158,7 +168,11 @@ object PetDisplay : Listener {
 
             val teleported = location.world != null && tracked.shouldTeleport(location)
             if (teleported) {
-                entity.teleport(location)
+                if (Prerequisite.HAS_FOLIA.isMet) {
+                    entity.teleportAsync(location)
+                } else {
+                    entity.teleport(location)
+                }
                 desiredYaw?.let(tracked::recordYaw)
             } else if (desiredYaw != null && tracked.shouldRotate(desiredYaw)) {
                 entity.setRotation(desiredYaw, 0f)
@@ -289,11 +303,11 @@ object PetDisplay : Listener {
 
         val pet = player.activePet
         if (pet != tracked?.pet) {
-            tracked?.entity?.remove()
+            tracked?.entity?.let(::removeEntity)
         }
 
         if (existing == null || existing.isDead || pet == null) {
-            existing?.remove()
+            existing?.let(::removeEntity)
             trackedEntities.remove(player.uniqueId)
 
             if (pet == null) {
@@ -319,21 +333,28 @@ object PetDisplay : Listener {
     }
 
     fun shutdown() {
-        for (stand in trackedEntities.values) {
-            stand.entity.remove()
+        // Removed per key: other regions may track new pets while this runs.
+        for ((uuid, tracked) in trackedEntities) {
+            val entity = tracked.entity
+            if (Eco.get().isOwnedByCurrentRegion(entity)) {
+                entity.remove()
+            } else if (plugin.isEnabled) {
+                plugin.scheduler.on(entity).run { entity.remove() }
+            }
+            trackedEntities.remove(uuid, tracked)
         }
-
-        trackedEntities.clear()
     }
 
     private fun remove(player: Player) {
-        trackedEntities[player.uniqueId]?.entity?.remove()
-        trackedEntities.remove(player.uniqueId)
+        remove(player.uniqueId)
     }
 
     private fun remove(uuid: UUID) {
-        trackedEntities[uuid]?.entity?.remove()
-        trackedEntities.remove(uuid)
+        trackedEntities.remove(uuid)?.entity?.let(::removeEntity)
+    }
+
+    private fun removeEntity(entity: Entity) {
+        entity.runOwned { entity.remove() }
     }
 
     @EventHandler
@@ -361,6 +382,9 @@ object PetDisplay : Listener {
         val iterator = trackedEntities.iterator()
         while (iterator.hasNext()) {
             val tracked = iterator.next().value
+            if (!Eco.get().isOwnedByCurrentRegion(tracked.entity)) {
+                continue
+            }
             if (event.chunk == tracked.entity.chunk) {
                 tracked.entity.remove()
                 iterator.remove()

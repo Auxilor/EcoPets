@@ -18,16 +18,16 @@ internal object EcoPetsAPIImpl : EcoPetsAPI {
     override fun getActivePet(player: OfflinePlayer): Pet? = player.activePet
 
     override fun setActivePet(player: OfflinePlayer, pet: Pet?) {
-        player.activePet = pet
+        player.runOwnedIfOnline { player.activePet = pet }
     }
 
     override fun getPetLevel(player: OfflinePlayer, pet: Pet) = player.getPetLevel(pet)
 
     override fun givePetExperience(player: Player, pet: Pet, amount: Double) =
-        player.givePetExperience(pet, amount)
+        player.runOwned { player.givePetExperience(pet, amount) }
 
     override fun givePetExperience(player: Player, pet: Pet, amount: Double, applyMultipliers: Boolean) =
-        player.givePetExperience(pet, amount, noMultiply = !applyMultipliers)
+        player.runOwned { player.givePetExperience(pet, amount, noMultiply = !applyMultipliers) }
 
     override fun getPetProgress(player: OfflinePlayer, pet: Pet) =
         player.getPetProgress(pet)

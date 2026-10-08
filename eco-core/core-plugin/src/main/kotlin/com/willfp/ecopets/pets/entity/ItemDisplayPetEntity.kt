@@ -1,5 +1,6 @@
 package com.willfp.ecopets.pets.entity
 
+import com.willfp.eco.core.Prerequisite
 import com.willfp.eco.core.items.builder.SkullBuilder
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.plugin
@@ -35,6 +36,11 @@ internal fun spawnPetItemDisplay(
     it.isCustomNameVisible = true
     @Suppress("DEPRECATION")
     it.customName = pet.name
+
+    // Folia can't remove pets in other regions on disable, so they must not be saved.
+    if (Prerequisite.HAS_FOLIA.isMet) {
+        it.isPersistent = false
+    }
 
     val smoothingTicks = plugin.configYml
         .getInt("pet-entity.item-display.teleport-duration", DEFAULT_SMOOTHING_TICKS)

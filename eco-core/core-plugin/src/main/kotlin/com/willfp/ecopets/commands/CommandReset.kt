@@ -9,6 +9,7 @@ import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.pets.setPetXP
 import com.willfp.ecopets.plugin
+import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
@@ -50,17 +51,20 @@ object CommandReset : Subcommand(
             return
         }
 
-        if (player.activePet == pet) {
-            player.activePet = null
-        }
-        player.setPetXP(pet, 0.0)
-        player.setPetLevel(pet, 0)
+        // The console runs off the player's region on Folia.
+        player.runOwned {
+            if (player.activePet == pet) {
+                player.activePet = null
+            }
+            player.setPetXP(pet, 0.0)
+            player.setPetLevel(pet, 0)
 
-        sender.sendMessage(
-            plugin.langYml.getMessage("reset-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%player%", player.savedDisplayName)
-                .replace("%pet%", pet.name)
-        )
+            sender.sendMessage(
+                plugin.langYml.getMessage("reset-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%player%", player.savedDisplayName)
+                    .replace("%pet%", pet.name)
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {

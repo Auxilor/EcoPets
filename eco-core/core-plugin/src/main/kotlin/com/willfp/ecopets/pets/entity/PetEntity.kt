@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import java.util.concurrent.ConcurrentHashMap
 
 // Shared range matches Bukkit's SCALE attribute limits used by ArmorStand pets.
 internal const val DEFAULT_PET_SCALE = 1.0
@@ -24,7 +25,7 @@ abstract class PetEntity(
     abstract fun spawn(location: Location): Entity
 
     companion object {
-        private val registrations = mutableMapOf<String, (Pet, String) -> PetEntity>()
+        private val registrations = ConcurrentHashMap<String, (Pet, String) -> PetEntity>()
 
         init {
             registrations["item"] = ::itemPetEntity
