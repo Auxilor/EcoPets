@@ -11,7 +11,7 @@ enum class WithdrawResult {
 
 fun canWithdraw(player: Player, pet: Pet?): WithdrawResult {
     if (pet == null) return WithdrawResult.NO_ACTIVE
-    if (!pet.withdrawable) return WithdrawResult.NOT_WITHDRAWABLE
+    if (!pet.withdrawable || pet.spawnEgg == null) return WithdrawResult.NOT_WITHDRAWABLE
     if (!pet.withdrawPrice.canAfford(player)) return WithdrawResult.CANNOT_AFFORD
     return WithdrawResult.OK
 }
@@ -44,14 +44,19 @@ fun withdrawPet(player: Player, pet: Pet): Boolean {
         return false
     }
 
-    pet.withdrawPrice.pay(player)
-
     val level = player.getPetLevel(pet)
     val xp = player.getPetXP(pet)
     val egg = pet.makeSpawnEgg(level, xp) ?: run {
         player.sendMessage(plugin.langYml.getMessage("pet-not-withdrawable"))
         return false
     }
+
+    player.activePet = null
+    if (player.activePet == pet) {
+        return false
+    }
+
+    pet.withdrawPrice.pay(player)
 
     DropQueue(player)
         .addItem(egg)
@@ -60,7 +65,6 @@ fun withdrawPet(player: Player, pet: Pet): Boolean {
 
     player.setPetLevel(pet, 0)
     player.setPetXP(pet, 0.0)
-    player.activePet = null
 
     player.sendMessage(
         plugin.langYml.getMessage("pet-withdrawn", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
