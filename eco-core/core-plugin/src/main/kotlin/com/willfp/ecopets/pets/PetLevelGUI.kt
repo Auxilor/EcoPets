@@ -1,6 +1,7 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.menu.MenuLayer
@@ -91,45 +92,47 @@ class PetLevelGUI(
 
             addComponent(1, 1, component)
 
-            addComponent(
-                MenuLayer.LOWER,
-                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.row"),
-                plugin.configYml.getInt("level-gui.progression-slots.prev-page.location.column"),
-                slot(
-                    plugin.configYml.getStringOrNull("level-gui.progression-slots.prev-page.item")
-                        ?.let { Items.lookup(it).item }
-                        ?: ItemStackBuilder(Items.lookup("arrow")).build()
-                ) {
-                    onLeftClick { player, _, _, _ -> PetsGUI.open(player) }
-                }
-            )
+            for (location in plugin.configYml.getSlotLocations("level-gui.progression-slots.prev-page")) {
+                addComponent(
+                    MenuLayer.LOWER,
+                    location.row,
+                    location.column,
+                    slot(
+                        plugin.configYml.getStringOrNull("level-gui.progression-slots.prev-page.item")
+                            ?.let { Items.lookup(it).item }
+                            ?: ItemStackBuilder(Items.lookup("arrow")).build()
+                    ) {
+                        onLeftClick { player, _, _, _ -> PetsGUI.open(player) }
+                    }
+                )
+            }
 
             addPageChanger(plugin.configYml, "level-gui.progression-slots.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
             addPageChanger(plugin.configYml, "level-gui.progression-slots.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
             val closeEnabled = plugin.configYml.getBoolOrNull("level-gui.progression-slots.close.enabled") ?: true
             if (closeEnabled) {
-                setSlot(
-                    plugin.configYml.getInt("level-gui.progression-slots.close.location.row"),
-                    plugin.configYml.getInt("level-gui.progression-slots.close.location.column"),
-                    slot(
-                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))
-                            .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.close.name"))
-                            .build()
-                    ) {
-                        onLeftClick { event, _ ->
-                            event.whoClicked.closeInventory()
+                for (location in plugin.configYml.getSlotLocations("level-gui.progression-slots.close")) {
+                    setSlot(
+                        location.row,
+                        location.column,
+                        slot(
+                            ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))
+                                .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.close.name"))
+                                .build()
+                        ) {
+                            onLeftClick { event, _ ->
+                                event.whoClicked.closeInventory()
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
 
             for (config in plugin.configYml.getSubsections("level-gui.custom-slots")) {
-                setSlot(
-                    config.getInt("row"),
-                    config.getInt("column"),
-                    ConfigSlot(config)
-                )
+                for (location in config.getSlotLocations()) {
+                    setSlot(location.row, location.column, ConfigSlot(config))
+                }
             }
         }
     }

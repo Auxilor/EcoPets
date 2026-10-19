@@ -1,5 +1,6 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
@@ -27,47 +28,49 @@ object WithdrawConfirmGUI {
                 )
             )
 
-            setSlot(
-                confirmCfg.getInt("row"),
-                confirmCfg.getInt("column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(confirmCfg.getString("item")))
-                        .setDisplayName(confirmCfg.getFormattedString("name"))
-                        .addLoreLines(confirmCfg.getFormattedStrings("lore"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ ->
-                        val clicker = event.whoClicked as Player
-                        PlayableSound.create(confirmCfg.getSubsection("sound"))?.playTo(clicker)
-                        clicker.closeInventory()
-                        withdrawPet(clicker, pet)
+            for (location in confirmCfg.getSlotLocations()) {
+                setSlot(
+                    location.row,
+                    location.column,
+                    slot(
+                        ItemStackBuilder(Items.lookup(confirmCfg.getString("item")))
+                            .setDisplayName(confirmCfg.getFormattedString("name"))
+                            .addLoreLines(confirmCfg.getFormattedStrings("lore"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ ->
+                            val clicker = event.whoClicked as Player
+                            PlayableSound.create(confirmCfg.getSubsection("sound"))?.playTo(clicker)
+                            clicker.closeInventory()
+                            withdrawPet(clicker, pet)
+                        }
                     }
-                }
-            )
+                )
+            }
 
-            setSlot(
-                cancelCfg.getInt("row"),
-                cancelCfg.getInt("column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(cancelCfg.getString("item")))
-                        .setDisplayName(cancelCfg.getFormattedString("name"))
-                        .addLoreLines(cancelCfg.getFormattedStrings("lore"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ ->
-                        val clicker = event.whoClicked as Player
-                        PlayableSound.create(cancelCfg.getSubsection("sound"))?.playTo(clicker)
-                        PetsGUI.open(clicker)
+            for (location in cancelCfg.getSlotLocations()) {
+                setSlot(
+                    location.row,
+                    location.column,
+                    slot(
+                        ItemStackBuilder(Items.lookup(cancelCfg.getString("item")))
+                            .setDisplayName(cancelCfg.getFormattedString("name"))
+                            .addLoreLines(cancelCfg.getFormattedStrings("lore"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ ->
+                            val clicker = event.whoClicked as Player
+                            PlayableSound.create(cancelCfg.getSubsection("sound"))?.playTo(clicker)
+                            PetsGUI.open(clicker)
+                        }
                     }
-                }
-            )
+                )
+            }
 
             for (config in cfg.getSubsections("custom-slots")) {
-                setSlot(
-                    config.getInt("row"),
-                    config.getInt("column"),
-                    ConfigSlot(config)
-                )
+                for (location in config.getSlotLocations()) {
+                    setSlot(location.row, location.column, ConfigSlot(config))
+                }
             }
         }
 
