@@ -4,7 +4,9 @@ import com.willfp.eco.core.gui.SlotArea
 import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.component.PagedAreaComponent
+import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.addPagedArea
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotArea
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
@@ -90,22 +92,7 @@ object PetsGUI {
                 )
             }
 
-            val closeEnabled = plugin.configYml.getBoolOrNull("gui.close.enabled") ?: true
-            if (closeEnabled) {
-                for (location in plugin.configYml.getSlotLocations("gui.close")) {
-                    setSlot(
-                        location.row,
-                        location.column,
-                        slot(
-                            ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
-                                .setDisplayName(plugin.configYml.getString("gui.close.name"))
-                                .build()
-                        ) {
-                            onLeftClick { event, _ -> event.whoClicked.closeInventory() }
-                        }
-                    )
-                }
-            }
+            addComponent(closeButton(plugin.configYml.getSubsection("gui.close")))
 
             for (location in plugin.configYml.getSlotLocations("gui.deactivate-pet")) {
                 setSlot(

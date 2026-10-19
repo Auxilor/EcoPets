@@ -4,6 +4,8 @@ import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
 import com.willfp.eco.core.gui.component.LevelComponent
 import com.willfp.eco.core.gui.component.LevelState
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.closeButton
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
@@ -97,24 +99,7 @@ class PetLevelGUI(
             addPageChanger(plugin.configYml, "level-gui.progression-slots.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
             addPageChanger(plugin.configYml, "level-gui.progression-slots.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
-            val closeEnabled = plugin.configYml.getBoolOrNull("level-gui.progression-slots.close.enabled") ?: true
-            if (closeEnabled) {
-                for (location in plugin.configYml.getSlotLocations("level-gui.progression-slots.close")) {
-                    setSlot(
-                        location.row,
-                        location.column,
-                        slot(
-                            ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))
-                                .setDisplayName(plugin.configYml.getString("level-gui.progression-slots.close.name"))
-                                .build()
-                        ) {
-                            onLeftClick { event, _ ->
-                                event.whoClicked.closeInventory()
-                            }
-                        }
-                    )
-                }
-            }
+            addComponent(closeButton(plugin.configYml.getSubsection("level-gui.progression-slots.close")))
 
             addCustomSlots(plugin.configYml, "level-gui")
         }
