@@ -241,7 +241,7 @@ object PetsGUI {
                     slot(togglePetItemBuilder) {
                         onLeftClick { event, _ ->
                             val player = event.whoClicked as Player
-                    
+
                             // Toggling respawns/removes the pet entity, so rate-limit to prevent spam-click lag.
                             val now = System.currentTimeMillis()
                             val cooldown = plugin.configYml.getIntOrNull("gui.toggle.cooldown") ?: 500
@@ -250,7 +250,7 @@ object PetsGUI {
                                 return@onLeftClick
                             }
                             lastToggleTimes[player.uniqueId] = now
-                    
+
                             player.shouldHidePet = !player.shouldHidePet
                         }
                     }
