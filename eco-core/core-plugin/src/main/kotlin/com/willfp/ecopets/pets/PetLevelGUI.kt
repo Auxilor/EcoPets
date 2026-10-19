@@ -2,18 +2,16 @@ package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.ConfigButton
 import com.willfp.eco.core.gui.component.LevelComponent
 import com.willfp.eco.core.gui.component.LevelState
 import com.willfp.eco.core.gui.component.addComponent
 import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.menu.MenuLayer
-import com.willfp.eco.core.gui.onLeftClick
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -81,20 +79,13 @@ class PetLevelGUI(
 
             addComponent(1, 1, component)
 
-            for (location in plugin.configYml.getSlotLocations("level-gui.progression-slots.prev-page")) {
-                addComponent(
-                    MenuLayer.LOWER,
-                    location.row,
-                    location.column,
-                    slot(
-                        plugin.configYml.getStringOrNull("level-gui.progression-slots.prev-page.item")
-                            ?.let { Items.lookup(it).item }
-                            ?: ItemStackBuilder(Items.lookup("arrow")).build()
-                    ) {
-                        onLeftClick { player, _, _, _ -> PetsGUI.open(player) }
-                    }
-                )
-            }
+            addComponent(
+                ConfigButton(
+                    plugin.configYml.getSubsection("level-gui.progression-slots.prev-page"),
+                    defaultItem = "arrow",
+                    layer = MenuLayer.LOWER
+                ) { player, _, _, _ -> PetsGUI.open(player) }
+            )
 
             addPageChanger(plugin.configYml, "level-gui.progression-slots.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
             addPageChanger(plugin.configYml, "level-gui.progression-slots.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
