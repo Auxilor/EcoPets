@@ -2,6 +2,8 @@ package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.LevelComponent
+import com.willfp.eco.core.gui.component.LevelState
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
@@ -14,8 +16,6 @@ import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.eco.util.NumberUtils
-import com.willfp.ecomponent.components.LevelComponent
-import com.willfp.ecomponent.components.LevelState
 import com.willfp.ecopets.plugin
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -58,11 +58,7 @@ class PetLevelGUI(
             }
 
             override fun getLevelState(player: Player, level: Int): LevelState {
-                return when {
-                    level <= player.getPetLevel(pet) -> LevelState.UNLOCKED
-                    level == player.getPetLevel(pet) + 1 -> LevelState.IN_PROGRESS
-                    else -> LevelState.LOCKED
-                }
+                return LevelState.of(level, player.getPetLevel(pet))
             }
         }
 
