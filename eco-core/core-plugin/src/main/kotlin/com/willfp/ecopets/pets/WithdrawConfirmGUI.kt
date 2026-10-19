@@ -1,10 +1,10 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.ConfigSlot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -61,11 +61,7 @@ object WithdrawConfirmGUI {
                 )
             }
 
-            for (config in cfg.getSubsections("custom-slots")) {
-                for (location in config.getSlotLocations()) {
-                    setSlot(location.row, location.column, ConfigSlot(config))
-                }
-            }
+            addCustomSlots(cfg, "")
         }
 
         gui.open(player)
