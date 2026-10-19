@@ -1,14 +1,18 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.SlotArea
 import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.PagedAreaComponent
+import com.willfp.eco.core.gui.component.addPagedArea
+import com.willfp.eco.core.gui.getSlotArea
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
-import com.willfp.eco.core.gui.page.Page
 import com.willfp.eco.core.gui.page.PageChanger
 import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
+import com.willfp.eco.core.gui.slot.Slot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -19,37 +23,18 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.ceil
 
 object PetsGUI {
     @Volatile
     private lateinit var menu: Menu
 
-    @Volatile
-    private var petAreaSlots = emptyList<Pair<Int, Int>>()
-
     private val lastToggleTimes = ConcurrentHashMap<UUID, Long>()
 
     internal fun update() {
-        val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
-        val topLeftColumn = plugin.configYml.getInt("gui.pet-area.top-left.column")
-        val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
-        val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
-
-        petAreaSlots = buildList {
-            for (row in topLeftRow..bottomRightRow) {
-                for (column in topLeftColumn..bottomRightColumn) {
-                    add(Pair(row, column))
-                }
-            }
-        }
-
         menu = buildMenu()
     }
 
     private fun buildMenu(): Menu {
-        val petAreaSlots = petAreaSlots
-
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 
@@ -78,19 +63,6 @@ object PetsGUI {
 
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
-        val petIconBuilder = { player: Player, menu: Menu, index: Int ->
-            val page = menu.getPage(player)
-
-            val unlockedPets = Pets.values()
-                .sortedByDescending { player.getPetLevel(it) }
-                .filter { player.getPetLevel(it) > 0 }
-
-            val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
-
-            val pet = unlockedPets.getOrNull(pagedIndex)
-            pet?.getIcon(player) ?: ItemStack(Material.AIR)
-        }
-
         return menu(plugin.configYml.getInt("gui.rows")) {
             title = plugin.langYml.getString("menu.title")
 
@@ -98,45 +70,9 @@ object PetsGUI {
 
             onRender { player, menu ->
                 menu.setState(player, "ecopets", true)
-
-                if (menu.getPage(player) > menu.getMaxPage(player)) {
-                    menu.setState(player, Page.PAGE_KEY, 1)
-                }
             }
 
-            for ((index, pair) in petAreaSlots.withIndex()) {
-                val (row, column) = pair
-                setSlot(row, column, slot({ player, menu -> petIconBuilder(player, menu, index) }) {
-                    setUpdater { player, menu, _ ->
-                        petIconBuilder(player, menu, index)
-                    }
-
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        val page = menu.getPage(player)
-
-                        val unlockedPets = Pets.values()
-                            .sortedByDescending { player.getPetLevel(it) }
-                            .filter { player.getPetLevel(it) > 0 }
-
-                        val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
-
-                        val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
-
-                        if (player.activePet != pet) {
-                            if (!pet.canActivate(player)) {
-                                player.sendMessage(
-                                    plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                                        .replace("%pet%", pet.name)
-                                )
-                                return@onLeftClick
-                            }
-                            player.activePet = pet
-                        }
-                        PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(player)
-                    }
-                })
-            }
+            addPagedArea(PetAreaComponent(plugin.configYml.getSlotArea("gui.pet-area")))
 
             addPageChanger(plugin.configYml, "gui.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
             addPageChanger(plugin.configYml, "gui.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
@@ -252,21 +188,6 @@ object PetsGUI {
             }
 
             addCustomSlots(plugin.configYml, "gui")
-
-            maxPages { player ->
-                val unlockedPets = Pets.values()
-                    .sortedByDescending { player.getPetLevel(it) }
-                    .filter { player.getPetLevel(it) > 0 }
-
-                val perPage = petAreaSlots.size
-
-                val pages = if (unlockedPets.isEmpty()) {
-                    0
-                } else {
-                    ceil((unlockedPets.size.toDouble() / perPage)).toInt()
-                }
-                pages
-            }
         }
     }
 
@@ -274,4 +195,30 @@ object PetsGUI {
     fun open(player: Player) {
         menu.open(player)
     }
+}
+
+private class PetAreaComponent(area: SlotArea) : PagedAreaComponent<Pet>(area) {
+    override fun getEntries(player: Player, menu: Menu): List<Pet> = Pets.values()
+        .sortedByDescending { player.getPetLevel(it) }
+        .filter { player.getPetLevel(it) > 0 }
+
+    override fun getEntrySlot(player: Player, menu: Menu, entry: Pet): Slot = slot({ viewer, _ -> entry.getIcon(viewer) }) {
+        onLeftClick { event, _, _ ->
+            val clicker = event.whoClicked as Player
+
+            if (clicker.activePet != entry) {
+                if (!entry.canActivate(clicker)) {
+                    clicker.sendMessage(
+                        plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                            .replace("%pet%", entry.name)
+                    )
+                    return@onLeftClick
+                }
+                clicker.activePet = entry
+            }
+            PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(clicker)
+        }
+    }
+
+    override fun getEmptySlot(player: Player, menu: Menu): Slot = slot(ItemStack(Material.AIR))
 }
