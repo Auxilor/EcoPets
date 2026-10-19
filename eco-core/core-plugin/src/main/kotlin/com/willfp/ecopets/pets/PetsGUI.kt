@@ -6,10 +6,9 @@ import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
 import com.willfp.eco.core.gui.page.Page
 import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -95,12 +94,7 @@ object PetsGUI {
         return menu(plugin.configYml.getInt("gui.rows")) {
             title = plugin.langYml.getString("menu.title")
 
-            setMask(
-                FillerMask(
-                    MaskItems.fromItemNames(plugin.configYml.getStrings("gui.mask.materials")),
-                    *plugin.configYml.getStrings("gui.mask.pattern").toTypedArray()
-                )
-            )
+            setMask(plugin.configYml, "gui")
 
             onRender { player, menu ->
                 menu.setState(player, "ecopets", true)

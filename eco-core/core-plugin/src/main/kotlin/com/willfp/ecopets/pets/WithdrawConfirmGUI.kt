@@ -2,10 +2,9 @@ package com.willfp.ecopets.pets
 
 import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
 import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -21,12 +20,7 @@ object WithdrawConfirmGUI {
         val gui = menu(cfg.getInt("rows")) {
             title = cfg.getFormattedString("title")
 
-            setMask(
-                FillerMask(
-                    MaskItems.fromItemNames(cfg.getStrings("mask.materials")),
-                    *cfg.getStrings("mask.pattern").toTypedArray()
-                )
-            )
+            setMask(cfg)
 
             for (location in confirmCfg.getSlotLocations()) {
                 setSlot(
