@@ -1,0 +1,297 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BracesOnIfStatements:EcoPetsPlugin.kt:EcoPetsPlugin$if</ID>
+    <ID>BracesOnIfStatements:Pet.kt:Pet$if</ID>
+    <ID>BracesOnIfStatements:SpawnEggHandler.kt:SpawnEggHandler$if</ID>
+    <ID>BracesOnWhenStatements:PetDisplay.kt:PetDisplay.PetAnimation$when</ID>
+    <ID>C002:PetDisplay.kt:PetDisplay$entity.teleportAsync(location)</ID>
+    <ID>C005:PetDisplay.kt:PetDisplay.PetAnimation$Random(uuid.mostSignificantBits xor uuid.leastSignificantBits)</ID>
+    <ID>CX016:Pet.kt:com.willfp.ecopets.pets.Pet.kt</ID>
+    <ID>CX016:PetDisplay.kt:com.willfp.ecopets.pets.PetDisplay.kt</ID>
+    <ID>CascadingCallWrapping:DiscoverRecipeListener.kt:DiscoverRecipeListener$map { it.key }</ID>
+    <ID>CognitiveComplexMethod:PetDisplay.kt:PetDisplay$private fun tickPlayer</ID>
+    <ID>CognitiveComplexMethod:PetsGUI.kt:PetsGUI$private fun buildMenu: Menu</ID>
+    <ID>ComplexCondition:PetDisplay.kt:PetDisplay$abs(tracked.appliedScaleXZ - motion.scaleXZ) &lt; 0.001 &amp;&amp; abs(tracked.appliedScaleY - motion.scaleY) &lt; 0.001 &amp;&amp; abs(tracked.appliedPitch - motion.pitch) &lt; 0.1 &amp;&amp; abs(tracked.appliedRoll - motion.roll) &lt; 0.1</ID>
+    <ID>CouldBeSequence:DiscoverRecipeListener.kt:DiscoverRecipeListener$filterIsInstance&lt;Keyed&gt;()</ID>
+    <ID>CyclomaticComplexMethod:PetDisplay.kt:PetDisplay$private fun tickPlayer</ID>
+    <ID>CyclomaticComplexMethod:PetDisplay.kt:PetDisplay.PetAnimation$private fun startAction</ID>
+    <ID>CyclomaticComplexMethod:PetsGUI.kt:PetsGUI$private fun buildMenu: Menu</ID>
+    <ID>DocumentationOverPrivateFunction:Pet.kt:private fun validatePetXpAmount: Boolean</ID>
+    <ID>DocumentationOverPrivateFunction:PetDisplay.kt:PetDisplay$private fun getTrailAnchorY: Double</ID>
+    <ID>ExplicitCollectionElementAccessMethod:PetLevelGUI.kt:PetLevelGUI$plugin.langYml.set("menu.level-title", "%pet% (%page%/%max_page%)")</ID>
+    <ID>ExpressionBodySyntax:EffectPetXpMultiplier.kt:EffectPetXpMultiplier$return Pets.getByID(key.lowercase())</ID>
+    <ID>ExpressionBodySyntax:EffectPetXpMultiplier.kt:EffectPetXpMultiplier$return Pets.values()</ID>
+    <ID>ExpressionBodySyntax:FilterPet.kt:FilterPet$return config.getStrings(key)</ID>
+    <ID>ExpressionBodySyntax:LevelInjectable.kt:LevelInjectable$return</ID>
+    <ID>ExpressionBodySyntax:LevelInjectable.kt:LevelInjectable$return placeholders</ID>
+    <ID>ExpressionBodySyntax:Pet.kt:Pet$return Objects.hash(this.id)</ID>
+    <ID>ExpressionBodySyntax:Pet.kt:Pet$return PetEntity.create(this)</ID>
+    <ID>ExpressionBodySyntax:Pet.kt:Pet$return this.id</ID>
+    <ID>ExpressionBodySyntax:PetAdoptEvent.kt:PetAdoptEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PetAdoptEvent.kt:PetAdoptEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PetDisplay.kt:PetDisplay$return a + (b - a) * t</ID>
+    <ID>ExpressionBodySyntax:Pets.kt:Pets$return ImmutableList.copyOf(registry.values())</ID>
+    <ID>ExpressionBodySyntax:Pets.kt:Pets$return registry[name]</ID>
+    <ID>ExpressionBodySyntax:PlayerPetActivateEvent.kt:PlayerPetActivateEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPetActivateEvent.kt:PlayerPetActivateEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPetDeactivateEvent.kt:PlayerPetDeactivateEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPetDeactivateEvent.kt:PlayerPetDeactivateEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPetExpGainEvent.kt:PlayerPetExpGainEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPetExpGainEvent.kt:PlayerPetExpGainEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPetLevelUpEvent.kt:PlayerPetLevelUpEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PlayerPetSwapEvent.kt:PlayerPetSwapEvent$return cancelled</ID>
+    <ID>ExpressionBodySyntax:PlayerPetSwapEvent.kt:PlayerPetSwapEvent$return handlerList</ID>
+    <ID>ExpressionBodySyntax:PriceFactoryPetLevel.kt:PriceFactoryPetLevel$return PricePetLevel(baseContext) { function.get(it) }</ID>
+    <ID>ExpressionBodySyntax:PriceFactoryPetLevel.kt:PriceFactoryPetLevel.PricePetLevel$return "ecopets:${pet.id}_pet_level"</ID>
+    <ID>ExpressionBodySyntax:PriceFactoryPetLevel.kt:PriceFactoryPetLevel.PricePetLevel$return function(baseContext.copyWithPlayer(player)) * getMultiplier(player) * multiplier</ID>
+    <ID>ExpressionBodySyntax:PriceFactoryPetLevel.kt:PriceFactoryPetLevel.PricePetLevel$return multipliers[player.uniqueId] ?: 1.0</ID>
+    <ID>ExpressionBodySyntax:PriceFactoryPetLevel.kt:PriceFactoryPetLevel.PricePetLevel$return player.getPetLevel(pet) &gt;= getValue(player, multiplier)</ID>
+    <ID>F004:PetDisplay.kt:PetDisplay$teleport(location)</ID>
+    <ID>IC001:PetDisplay.kt:PetDisplay$// inverted</ID>
+    <ID>IC001:PetEntity.kt:// Only apply scale if it's a skull</ID>
+    <ID>IC001:SkullPetEntity.kt:SkullPetEntity$// Can be null.</ID>
+    <ID>IC002:CommandActivate.kt:CommandActivate$// Currently, this case is not ever reached</ID>
+    <ID>IC002:CommandActivateOther.kt:CommandActivateOther$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandDeactivateOther.kt:CommandDeactivateOther$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandGive.kt:CommandGive$// Currently, this case is not ever reached</ID>
+    <ID>IC002:CommandGive.kt:CommandGive$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandGiveCurrentXP.kt:CommandGiveCurrentXP$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandGiveEgg.kt:CommandGiveEgg$// Currently, this case is not ever reached</ID>
+    <ID>IC002:CommandGiveEgg.kt:CommandGiveEgg$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandGiveXP.kt:CommandGiveXP$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandReload.kt:CommandReload$// Reloading rebuilds shared registries, so it belongs on the global region.</ID>
+    <ID>IC002:CommandReset.kt:CommandReset$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:CommandTake.kt:CommandTake$// The console runs off the player's region on Folia.</ID>
+    <ID>IC002:EffectGivePetXp.kt:EffectGivePetXp$// givePetExperience already guards on the player having adopted the pet - do not add a</ID>
+    <ID>IC002:ItemDisplayPetEntity.kt:// Folia can't remove pets in other regions on disable, so they must not be saved.</ID>
+    <ID>IC002:Pet.kt:// One event per level crossed: a single grant spanning five levels must not swallow four</ID>
+    <ID>IC002:Pet.kt:Pet$// %level%, %level_numeral%, %previous_level%, %previous_level_numeral% and the</ID>
+    <ID>IC002:Pet.kt:Pet$// Egg lore was the only place that accepted an explicit sign, as in %level_+2%. The</ID>
+    <ID>IC002:Pet.kt:Pet$// Logged once at load, not per XP gain: a broken curve recurs on every grant.</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Calculate inverted Y-delta from default eye height</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Clamp to avoid wild swings</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Entity type depends on item-display.enabled, so recreate pets after config reloads.</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Player heads extend downward from the ItemDisplay origin. Keep their visual center fixed</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Removed per key: other regions may track new pets while this runs.</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Smooth it</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay$// Use base location, not eyeLocation, for static anchoring</ID>
+    <ID>IC002:PetDisplay.kt:PetDisplay.PetAnimation$// Signed z preserves custom offsets; opposite side angles interpolate behind the player.</ID>
+    <ID>IC002:PetLevelListener.kt:PetLevelListener$// Routed through the shared dispatcher so the chain gets %level_numeral%,</ID>
+    <ID>IC002:PetXPAccumulator.kt:// Highest matching permission, not the first one iterated: effectivePermissions is</ID>
+    <ID>IC002:PetsGUI.kt:PetsGUI$// Toggling respawns/removes the pet entity, so rate-limit to prevent spam-click lag.</ID>
+    <ID>ImplicitUnitReturnType:Pet.kt:fun OfflinePlayer.setPetLevel</ID>
+    <ID>ImplicitUnitReturnType:Pet.kt:fun OfflinePlayer.setPetXP</ID>
+    <ID>LabeledExpression:CommandActivateOther.kt:CommandActivateOther$@runOwnedIfOnline</ID>
+    <ID>LabeledExpression:CommandGive.kt:CommandGive$@runOwnedIfOnline</ID>
+    <ID>LabeledExpression:Pet.kt:Pet$@let</ID>
+    <ID>LabeledExpression:Pet.kt:Pet$@run</ID>
+    <ID>LabeledExpression:PetsGUI.kt:PetsGUI$@onLeftClick</ID>
+    <ID>LongMethod:PetDisplay.kt:PetDisplay$private fun tickPlayer</ID>
+    <ID>LongMethod:PetsGUI.kt:PetsGUI$private fun buildMenu: Menu</ID>
+    <ID>LongParameterList:PetDisplay.kt:PetDisplay.PetAnimation$private fun DisplaySettings.motion: PetMotion</ID>
+    <ID>LongParameterList:PetDisplay.kt:PetDisplay.PetDisplayEntity</ID>
+    <ID>LongParameterList:PetDisplay.kt:PetDisplay.PetDisplayEntity$private fun squaredDistance: Double</ID>
+    <ID>MagicNumber:CommandGiveEgg.kt:CommandGiveEgg$3</ID>
+    <ID>MagicNumber:CommandGiveEgg.kt:CommandGiveEgg$4</ID>
+    <ID>MagicNumber:CommandGiveXP.kt:CommandGiveXP$3</ID>
+    <ID>MagicNumber:EcoPetsPlugin.kt:EcoPetsPlugin$20</ID>
+    <ID>MagicNumber:Pet.kt:Pet$100</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay$0.001</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay$0.1</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay$100.0</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.12f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.14</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.18</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.20</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.30</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.4</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.58</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.76</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.85</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.86</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$0.90</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$10</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$11</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$140L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$15</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$180f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$3</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$32.0</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$360f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$5</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$540f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$6</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$60L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$64.0</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation$7</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.BACKFLIP$25L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.BARREL_ROLL$23L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.LOOK_AROUND$44L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.ORBIT$44L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.PIROUETTE$22L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.PUFF$32L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.REPOSITION$44L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetAnimation.PetAction.SWAY$40L</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetDisplayEntity$0.15f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetDisplayEntity$180f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetDisplayEntity$360f</ID>
+    <ID>MagicNumber:PetDisplay.kt:PetDisplay.PetDisplayEntity$540f</ID>
+    <ID>MagicNumber:PetXPAccumulator.kt:100</ID>
+    <ID>MatchingDeclarationName:PetWithdrawal.kt:WithdrawResult</ID>
+    <ID>MaxLineLength:EffectActivatePet.kt:EffectActivatePet$override val description = "Sets the specified pet as the player's active pet, if they own it and it isn't already active."</ID>
+    <ID>MaxLineLength:PetLevelGUI.kt:PetLevelGUI$ItemStackBuilder(Items.lookup(plugin.configYml.getString("level-gui.progression-slots.close.material")))</ID>
+    <ID>MaxLineLength:PetLevelGUI.kt:PetLevelGUI$addPageChanger(plugin.configYml, "level-gui.progression-slots.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)</ID>
+    <ID>MaxLineLength:PetLevelGUI.kt:PetLevelGUI$addPageChanger(plugin.configYml, "level-gui.progression-slots.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)</ID>
+    <ID>MaxLineLength:PetLevelGUI.kt:PetLevelGUI$val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("level-gui.progression-slots.page-change-sound"))</ID>
+    <ID>MaxLineLength:PetLevelGUI.kt:PetLevelGUI.&lt;no name provided&gt;$return</ID>
+    <ID>MaxLineLength:PetsGUI.kt:PetsGUI$plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)</ID>
+    <ID>MultilineLambdaItParameter:EcoPetsPlugin.kt:EcoPetsPlugin${ if (isDisabledIn(it.world)) emptyList() else it.activePetLevel?.let { p -&gt; listOf(SimpleProvidedHolder(p)) } ?: emptyList() }</ID>
+    <ID>MultilineLambdaItParameter:EcoPetsPlugin.kt:EcoPetsPlugin${ var pets = 0 for (pet in Pets.values()) { if (it.hasPet(pet)) pets++ } pets.toString() }</ID>
+    <ID>MultilineLambdaItParameter:ItemDisplayPetEntity.kt:{ it.setItemStack(item) it.itemDisplayTransform = ItemDisplay.ItemDisplayTransform.NONE it.isCustomNameVisible = true @Suppress("DEPRECATION") it.customName = pet.name // Folia can't remove pets in other regions on disable, so they must not be saved. if (Prerequisite.HAS_FOLIA.isMet) { it.isPersistent = false } val smoothingTicks = plugin.configYml .getInt("pet-entity.item-display.teleport-duration", DEFAULT_SMOOTHING_TICKS) .coerceIn(MIN_SMOOTHING_TICKS, MAX_SMOOTHING_TICKS) it.teleportDuration = smoothingTicks it.interpolationDuration = smoothingTicks val scale = plugin.configYml.getDouble("pet-entity.scale") if (scale in MIN_PET_SCALE..MAX_PET_SCALE) { val transform = it.transformation transform.scale.set(scale, scale, scale) it.transformation = transform } }</ID>
+    <ID>MultilineLambdaItParameter:Pet.kt:Pet${ evaluateExpression( sub.getString("value") .replace("%level%", it.toString()) ) }</ID>
+    <ID>MultilineLambdaItParameter:PetDisplay.kt:PetDisplay${ it.smoothYOffset = lerp(it.smoothYOffset, targetYOffset, 0.15) it.smoothYOffset }</ID>
+    <ID>NewLineAtEndOfFile:CommandEcoPets.kt:com.willfp.ecopets.commands.CommandEcoPets.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandGive.kt:com.willfp.ecopets.commands.CommandGive.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandGiveCurrentXP.kt:com.willfp.ecopets.commands.CommandGiveCurrentXP.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandGiveEgg.kt:com.willfp.ecopets.commands.CommandGiveEgg.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandGiveXP.kt:com.willfp.ecopets.commands.CommandGiveXP.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandReload.kt:com.willfp.ecopets.commands.CommandReload.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandReset.kt:com.willfp.ecopets.commands.CommandReset.kt</ID>
+    <ID>NewLineAtEndOfFile:CommandTake.kt:com.willfp.ecopets.commands.CommandTake.kt</ID>
+    <ID>NewLineAtEndOfFile:ConditionHasPet.kt:com.willfp.ecopets.libreforge.ConditionHasPet.kt</ID>
+    <ID>NewLineAtEndOfFile:DiscoverRecipeListener.kt:com.willfp.ecopets.pets.DiscoverRecipeListener.kt</ID>
+    <ID>NewLineAtEndOfFile:EcoPetsAPI.kt:com.willfp.ecopets.api.EcoPetsAPI.kt</ID>
+    <ID>NewLineAtEndOfFile:LevelInjectable.kt:com.willfp.ecopets.util.LevelInjectable.kt</ID>
+    <ID>NewLineAtEndOfFile:PetXPAccumulator.kt:com.willfp.ecopets.pets.PetXPAccumulator.kt</ID>
+    <ID>NewLineAtEndOfFile:SpawnEggHandler.kt:com.willfp.ecopets.pets.SpawnEggHandler.kt</ID>
+    <ID>NoNameShadowing:Pet.kt:Pet${ " ".repeat(whitespace) + it }</ID>
+    <ID>NoNameShadowing:Pet.kt:Pet${ it.toInt() }</ID>
+    <ID>NoNameShadowing:Pet.kt:Pet${ levelPlaceholders.format(it, level) }</ID>
+    <ID>NullableBooleanCheck:PetLevelGUI.kt:PetLevelGUI$plugin.configYml.getBoolOrNull("level-gui.progression-slots.close.enabled") ?: true</ID>
+    <ID>NullableBooleanCheck:PetsGUI.kt:PetsGUI$plugin.configYml.getBoolOrNull("gui.close.enabled") ?: true</ID>
+    <ID>NullableBooleanCheck:PetsGUI.kt:PetsGUI$plugin.configYml.getBoolOrNull("gui.withdraw-pet.confirm.enabled") ?: true</ID>
+    <ID>NullableBooleanCheck:PetsGUI.kt:PetsGUI$plugin.configYml.getBoolOrNull("gui.withdraw-pet.enabled") ?: true</ID>
+    <ID>PF012:EcoPetsPlugin.kt:EcoPetsPlugin$values()</ID>
+    <ID>PF012:PetsGUI.kt:PetsGUI$values()</ID>
+    <ID>ReplaceSafeCallChainWithRun:CommandGiveEgg.kt:CommandGiveEgg$pet?.getExpForLevel(level)?.takeIf { it.isFinite() }</ID>
+    <ID>ReplaceSafeCallChainWithRun:PetDisplay.kt:PetDisplay$tracked?.entity?.let(::removeEntity)</ID>
+    <ID>ReplaceSafeCallChainWithRun:PetDisplay.kt:PetDisplay$trackedEntities.remove(uuid)?.entity?.let(::removeEntity)</ID>
+    <ID>ReplaceSafeCallChainWithRun:PetWithdrawal.kt:pet?.withdrawPrice?.getDisplay(player)</ID>
+    <ID>ReplaceSafeCallChainWithRun:PetsGUI.kt:PetsGUI$pet?.withdrawPrice?.getDisplay(player)</ID>
+    <ID>ReplaceSafeCallChainWithRun:PetsGUI.kt:PetsGUI$player.activePet?.levelGUI?.open(player)</ID>
+    <ID>ReturnCount:ArgParserPetLevel.kt:ArgParserPetLevel$override fun parseArguments: Predicate&lt;ItemStack&gt;?</ID>
+    <ID>ReturnCount:ArgParserPetXp.kt:ArgParserPetXp$override fun parseArguments: Predicate&lt;ItemStack&gt;?</ID>
+    <ID>ReturnCount:CommandActivate.kt:CommandActivate$override fun onExecute</ID>
+    <ID>ReturnCount:CommandActivate.kt:CommandActivate$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandActivateOther.kt:CommandActivateOther$override fun onExecute</ID>
+    <ID>ReturnCount:CommandActivateOther.kt:CommandActivateOther$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandDeactivateOther.kt:CommandDeactivateOther$override fun onExecute</ID>
+    <ID>ReturnCount:CommandGive.kt:CommandGive$override fun onExecute</ID>
+    <ID>ReturnCount:CommandGive.kt:CommandGive$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandGiveCurrentXP.kt:CommandGiveCurrentXP$override fun onExecute</ID>
+    <ID>ReturnCount:CommandGiveCurrentXP.kt:CommandGiveCurrentXP$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandGiveEgg.kt:CommandGiveEgg$override fun onExecute</ID>
+    <ID>ReturnCount:CommandGiveEgg.kt:CommandGiveEgg$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandGiveXP.kt:CommandGiveXP$override fun onExecute</ID>
+    <ID>ReturnCount:CommandGiveXP.kt:CommandGiveXP$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandReset.kt:CommandReset$override fun onExecute</ID>
+    <ID>ReturnCount:CommandReset.kt:CommandReset$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:CommandTake.kt:CommandTake$override fun onExecute</ID>
+    <ID>ReturnCount:CommandTake.kt:CommandTake$override fun tabComplete: List&lt;String&gt;</ID>
+    <ID>ReturnCount:ConditionHasPet.kt:ConditionHasPet$override fun isMet: Boolean</ID>
+    <ID>ReturnCount:ConditionHasPetLevel.kt:ConditionHasPetLevel$override fun isMet: Boolean</ID>
+    <ID>ReturnCount:EffectActivatePet.kt:EffectActivatePet$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EffectDeactivatePet.kt:EffectDeactivatePet$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:EffectGivePetXp.kt:EffectGivePetXp$override fun onTrigger: Boolean</ID>
+    <ID>ReturnCount:Pet.kt:fun Player.giveExactPetExperience</ID>
+    <ID>ReturnCount:Pet.kt:fun Player.givePetExperience</ID>
+    <ID>ReturnCount:PetDisplay.kt:PetDisplay$private fun tickPlayer</ID>
+    <ID>ReturnCount:PetDisplay.kt:PetDisplay.PetAnimation$fun getMotion: PetMotion</ID>
+    <ID>ReturnCount:PetEntity.kt:PetEntity.Companion$@JvmStatic fun create: PetEntity</ID>
+    <ID>ReturnCount:PetEntity.kt:private fun ArmorStand.applyScale</ID>
+    <ID>ReturnCount:PetWithdrawal.kt:fun canWithdraw: WithdrawResult</ID>
+    <ID>ReturnCount:PetWithdrawal.kt:fun withdrawPet: Boolean</ID>
+    <ID>ReturnCount:PetXPAccumulator.kt:private fun Player.cachePetExperienceMultiplier: Double</ID>
+    <ID>ReturnCount:SpawnEggHandler.kt:SpawnEggHandler$@EventHandler( ignoreCancelled = true ) fun handle</ID>
+    <ID>SpreadOperator:PetLevelGUI.kt:PetLevelGUI$( maskItems, *maskPattern )</ID>
+    <ID>SpreadOperator:PetsGUI.kt:PetsGUI$( MaskItems.fromItemNames(plugin.configYml.getStrings("gui.mask.materials")), *plugin.configYml.getStrings("gui.mask.pattern").toTypedArray() )</ID>
+    <ID>SpreadOperator:WithdrawConfirmGUI.kt:WithdrawConfirmGUI$( MaskItems.fromItemNames(cfg.getStrings("mask.materials")), *cfg.getStrings("mask.pattern").toTypedArray() )</ID>
+    <ID>TooManyFunctions:Pet.kt:Pet : Registrable</ID>
+    <ID>TooManyFunctions:Pet.kt:com.willfp.ecopets.pets.Pet.kt</ID>
+    <ID>TooManyFunctions:PetDisplay.kt:PetDisplay : Listener</ID>
+    <ID>TooManyFunctions:PetDisplay.kt:PetDisplay$PetAnimation</ID>
+    <ID>UnderscoresInNumericLiterals:CommandGiveEgg.kt:CommandGiveEgg$10000.0</ID>
+    <ID>UnnamedParameterUse:CommandActivate.kt:CommandActivate$replace</ID>
+    <ID>UnnamedParameterUse:CommandActivateOther.kt:CommandActivateOther$replace</ID>
+    <ID>UnnamedParameterUse:CommandDeactivate.kt:CommandDeactivate$replace</ID>
+    <ID>UnnamedParameterUse:CommandDeactivateOther.kt:CommandDeactivateOther$replace</ID>
+    <ID>UnnamedParameterUse:CommandGive.kt:CommandGive$replace</ID>
+    <ID>UnnamedParameterUse:CommandGiveCurrentXP.kt:CommandGiveCurrentXP$replace</ID>
+    <ID>UnnamedParameterUse:CommandGiveEgg.kt:CommandGiveEgg$replace</ID>
+    <ID>UnnamedParameterUse:CommandGiveXP.kt:CommandGiveXP$replace</ID>
+    <ID>UnnamedParameterUse:CommandReload.kt:CommandReload$replace</ID>
+    <ID>UnnamedParameterUse:CommandReset.kt:CommandReset$replace</ID>
+    <ID>UnnamedParameterUse:CommandTake.kt:CommandTake$replace</ID>
+    <ID>UnnamedParameterUse:ConditionHasActivePet.kt:ConditionHasActivePet$require</ID>
+    <ID>UnnamedParameterUse:ConditionHasPet.kt:ConditionHasPet$require</ID>
+    <ID>UnnamedParameterUse:ConditionHasPetLevel.kt:ConditionHasPetLevel$require</ID>
+    <ID>UnnamedParameterUse:EcoPetsPlugin.kt:EcoPetsPlugin$replace</ID>
+    <ID>UnnamedParameterUse:EffectActivatePet.kt:EffectActivatePet$require</ID>
+    <ID>UnnamedParameterUse:EffectGivePetXp.kt:EffectGivePetXp$require</ID>
+    <ID>UnnamedParameterUse:EffectPetXpMultiplier.kt:EffectPetXpMultiplier$require</ID>
+    <ID>UnnamedParameterUse:ItemDisplayPetEntity.kt:coerceIn</ID>
+    <ID>UnnamedParameterUse:Pet.kt:Pet$inject</ID>
+    <ID>UnnamedParameterUse:Pet.kt:Pet$replace</ID>
+    <ID>UnnamedParameterUse:Pet.kt:progress</ID>
+    <ID>UnnamedParameterUse:Pet.kt:progressFraction</ID>
+    <ID>UnnamedParameterUse:Pet.kt:replace</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay$addLocalOffset</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay$coerceIn</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay$lerp</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay$replace</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$atan2</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$coerceIn</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$hypot</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$lerp</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$randomDelay</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetAnimation$shortestAngle</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetDisplayEntity$shortestAngle</ID>
+    <ID>UnnamedParameterUse:PetDisplay.kt:PetDisplay.PetDisplayEntity$squaredDistance</ID>
+    <ID>UnnamedParameterUse:PetLevelGUI.kt:PetLevelGUI$replace</ID>
+    <ID>UnnamedParameterUse:PetLevelGUI.kt:PetLevelGUI.&lt;no name provided&gt;$replace</ID>
+    <ID>UnnamedParameterUse:PetTrail.kt:PetTrail.Companion$PetTrail</ID>
+    <ID>UnnamedParameterUse:PetWithdrawal.kt:replace</ID>
+    <ID>UnnamedParameterUse:Pets.kt:Pets$LegacyLocation</ID>
+    <ID>UnnamedParameterUse:PetsGUI.kt:PetsGUI$Pair</ID>
+    <ID>UnnamedParameterUse:PetsGUI.kt:PetsGUI$replace</ID>
+    <ID>UnnamedParameterUse:PriceFactoryPetLevel.kt:PriceFactoryPetLevel.PricePetLevel$max</ID>
+    <ID>UnnamedParameterUse:SpawnEggHandler.kt:SpawnEggHandler$maxOf</ID>
+    <ID>UnnamedParameterUse:SpawnEggHandler.kt:SpawnEggHandler$replace</ID>
+    <ID>UnnecessaryParentheses:PetDisplay.kt:PetDisplay.PetAnimation$((to - from + 540f) % 360f)</ID>
+    <ID>UnnecessaryParentheses:PetDisplay.kt:PetDisplay.PetAnimation$(1.0 - smootherStep(settle))</ID>
+    <ID>UnnecessaryParentheses:PetDisplay.kt:PetDisplay.PetDisplayEntity$((to - from + 540f) % 360f)</ID>
+    <ID>UnnecessaryParentheses:PetsGUI.kt:PetsGUI$(unlockedPets.size.toDouble() / perPage)</ID>
+    <ID>UnusedImport:PetLevelListener.kt:import com.willfp.eco.util.SoundUtils</ID>
+    <ID>UnusedImport:PetLevelListener.kt:import com.willfp.ecopets.EcoPetsPlugin</ID>
+    <ID>UnusedParameter:PetDisplay.kt:PetDisplay.PetAnimation$displaySettings: DisplaySettings</ID>
+    <ID>UseOrEmpty:CommandDeactivate.kt:CommandDeactivate$player.activePet?.name ?: ""</ID>
+    <ID>UseOrEmpty:CommandDeactivateOther.kt:CommandDeactivateOther$player.activePet?.name ?: ""</ID>
+    <ID>UseOrEmpty:EcoPetsPlugin.kt:EcoPetsPlugin$it.activePet?.id ?: ""</ID>
+    <ID>UseOrEmpty:EcoPetsPlugin.kt:EcoPetsPlugin$it.activePet?.name ?: ""</ID>
+    <ID>UseOrEmpty:EcoPetsPlugin.kt:EcoPetsPlugin$it.activePetLevel?.let { p -&gt; listOf(SimpleProvidedHolder(p)) } ?: emptyList()</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.description ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.let { pet -&gt; (it.getPetProgress(pet) * 100).toNiceString() } ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.let { pet -&gt; it.getPetLevel(pet).toNumeral() } ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.let { pet -&gt; it.getPetLevel(pet).toString() } ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.let { pet -&gt; it.getPetXP(pet).toNiceString() } ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:Pet$it.activePet?.let { pet -&gt; pet.getFormattedExpForLevel(it.getPetLevel(pet) + 1) } ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:this.fast().persistentDataContainer.get(petEggKey, PersistentDataType.STRING) ?: ""</ID>
+    <ID>UseOrEmpty:Pet.kt:value?.id ?: ""</ID>
+    <ID>UseOrEmpty:PetWithdrawal.kt:pet?.withdrawPrice?.getDisplay(player) ?: ""</ID>
+    <ID>UseOrEmpty:PetsGUI.kt:PetsGUI$pet?.withdrawPrice?.getDisplay(player) ?: ""</ID>
+    <ID>WildcardImport:Pet.kt:import java.util.*</ID>
+    <ID>WildcardImport:PetDisplay.kt:import java.util.*</ID>
+  </CurrentIssues>
+</SmellBaseline>
