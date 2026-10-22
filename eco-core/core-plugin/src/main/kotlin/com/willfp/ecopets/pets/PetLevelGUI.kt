@@ -57,9 +57,8 @@ class PetLevelGUI(
                     .build()
             }
 
-            override fun getLevelState(player: Player, level: Int): LevelState {
-                return LevelState.of(level, player.getPetLevel(pet))
-            }
+            override fun getLevelState(player: Player, level: Int): LevelState =
+                LevelState.of(level, player.getPetLevel(pet))
         }
 
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("level-gui.progression-slots.page-change-sound"))

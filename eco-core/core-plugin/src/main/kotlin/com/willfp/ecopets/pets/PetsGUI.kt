@@ -125,7 +125,10 @@ object PetsGUI {
                                     .addLoreLines {
                                         val pet = player.activePet
                                         plugin.configYml.getStrings("gui.withdraw-pet.lore").map { line ->
-                                            line.replace("%withdraw_price%", pet?.withdrawPrice?.getDisplay(player) ?: "")
+                                            line.replace(
+                                                "%withdraw_price%",
+                                                pet?.withdrawPrice?.getDisplay(player) ?: ""
+                                            )
                                         }
                                     }
                                     .build()
@@ -189,23 +192,24 @@ private class PetAreaComponent(area: SlotArea) : PagedAreaComponent<Pet>(area) {
         .sortedByDescending { player.getPetLevel(it) }
         .filter { player.getPetLevel(it) > 0 }
 
-    override fun getEntrySlot(player: Player, menu: Menu, entry: Pet): Slot = slot({ viewer, _ -> entry.getIcon(viewer) }) {
-        onLeftClick { event, _, _ ->
-            val clicker = event.whoClicked as Player
+    override fun getEntrySlot(player: Player, menu: Menu, entry: Pet): Slot =
+        slot({ viewer, _ -> entry.getIcon(viewer) }) {
+            onLeftClick { event, _, _ ->
+                val clicker = event.whoClicked as Player
 
-            if (clicker.activePet != entry) {
-                if (!entry.canActivate(clicker)) {
+                if (clicker.activePet != entry && !entry.canActivate(clicker)) {
                     clicker.sendMessage(
                         plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                            .replace("%pet%", entry.name)
+                            .replace(oldValue = "%pet%", newValue = entry.name)
                     )
-                    return@onLeftClick
+                } else {
+                    if (clicker.activePet != entry) {
+                        clicker.activePet = entry
+                    }
+                    PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(clicker)
                 }
-                clicker.activePet = entry
             }
-            PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(clicker)
         }
-    }
 
     override fun getEmptySlot(player: Player, menu: Menu): Slot = slot(ItemStack(Material.AIR))
 }
