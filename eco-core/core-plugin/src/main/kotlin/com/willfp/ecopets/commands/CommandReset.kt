@@ -4,7 +4,6 @@ import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
-import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.pets.setPetXP
@@ -53,11 +52,8 @@ object CommandReset : Subcommand(
 
         // The console runs off the player's region on Folia.
         player.runOwned {
-            if (player.activePet == pet) {
-                player.activePet = null
-            }
             player.setPetXP(pet, 0.0)
-            player.setPetLevel(pet, 0)
+            player.setPetLevel(pet, 1)
 
             sender.sendMessage(
                 plugin.langYml.getMessage("reset-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)

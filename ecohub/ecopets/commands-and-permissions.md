@@ -9,7 +9,8 @@ Every EcoPets command and permission node, for giving, resetting, importing, and
 |-------------------------------------------|------------------------------------------------------|------------------------------|
 | `/ecopets give <player> <pet>`            | Give a pet                                           | `ecopets.command.give`       |
 | `/ecopets giveegg <player> <pet>`         | Give a pet egg                                       | `ecopets.command.give`       |
-| `/ecopets reset <player> <pet>`           | Reset a pet                                          | `ecopets.command.reset`      |
+| `/ecopets reset <player> <pet>`           | Reset a pet to level 1 with 0 XP                     | `ecopets.command.reset`      |
+| `/ecopets take <player> <pet>`            | Take a pet away                                      | `ecopets.command.take`       |
 | `/ecopets givexp <player> <pet> <amount>` | Give xp to a pet                                     | `ecopets.command.givexp`     |
 | `/pets`                                   | Open the pets menu                                   | `ecopets.command.pets`       |
 | `/pets activate <pet>`                    | Activate a pet                                       | `ecopets.command.activate`   |
