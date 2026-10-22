@@ -364,7 +364,9 @@ object PetDisplay : Listener {
 
     @EventHandler
     fun onTeleport(event: PlayerTeleportEvent) {
-        remove(event.player)
+        if (Prerequisite.HAS_FOLIA.isMet || event.to.world != event.from.world) {
+            remove(event.player)
+        }
     }
 
     @EventHandler
