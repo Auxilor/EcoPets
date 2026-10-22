@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "findings": [
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `getActivePet`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `getPetLevel`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `getPetProgress`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `getPetXPRequired`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `getPetXP`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `givePetExperience`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `hasPet`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/EcoPetsAPIImpl.kt",
+      "message": "Unused function `setActivePet`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `getActivePet`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `getPetLevel`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `getPetProgress`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `getPetXPRequired`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `getPetXP`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `givePetExperience`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `hasPet`"
+    },
+    {
+      "code": "U002",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/EcoPetsAPI.kt",
+      "message": "Unused function `setActivePet`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/event/PlayerPetExpGainEvent.kt",
+      "message": "Unused property `isMultiply`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/api/event/PlayerPetSwapEvent.kt",
+      "message": "Unused property `oldPet`"
+    },
+    {
+      "code": "U003",
+      "path": "eco-core/core-plugin/src/main/kotlin/com/willfp/ecopets/pets/Pet.kt",
+      "message": "Unused property `recipe`"
+    }
+  ]
+}
