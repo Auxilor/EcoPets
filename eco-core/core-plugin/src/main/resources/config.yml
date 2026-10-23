@@ -18,7 +18,7 @@ disabled-in-worlds: []
 discover-recipes: true
 
 # How redeeming a pet egg behaves when the player ALREADY owns that pet:
-# keep-higher - overwrite only if the egg's level is higher than the owned level, else reject
+# keep-higher - overwrite only if the egg's level is higher than the owned level, or the same level with more XP, else reject
 # reject - never redeem if the pet is already owned (player must withdraw theirs first)
 pet-egg:
   redeem-conflict: keep-higher
