@@ -676,7 +676,7 @@ fun OfflinePlayer.setPetXP(pet: Pet, xp: Double) =
     this.profile.write(pet.xpKey, xp)
 
 fun OfflinePlayer.getPetXPRequired(pet: Pet) =
-    this.profile.read(pet.xpKey)
+    pet.getExpForLevel(this.getPetLevel(pet) + 1)
 
 /**
  * Reject an XP amount that cannot be granted.
