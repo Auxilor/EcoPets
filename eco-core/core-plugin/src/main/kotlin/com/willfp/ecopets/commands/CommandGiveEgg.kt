@@ -72,11 +72,6 @@ object CommandGiveEgg : Subcommand(
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
         val completions = mutableListOf<String>()
-        if (args.isEmpty()) {
-            // Currently, this case is not ever reached
-            return Bukkit.getOnlinePlayers().map { it.name }
-        }
-
         if (args.size == 1) {
             StringUtil.copyPartialMatches(
                 args[0],

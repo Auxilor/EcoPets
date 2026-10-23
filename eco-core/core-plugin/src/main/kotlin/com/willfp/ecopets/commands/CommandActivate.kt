@@ -69,11 +69,6 @@ object CommandActivate : Subcommand(
         }
 
         val completions = mutableListOf<String>()
-        if (args.isEmpty()) {
-            // Currently, this case is not ever reached
-            return Pets.values().filter { sender.hasPet(it) }.map { it.id }
-        }
-
         if (args.size == 1) {
             StringUtil.copyPartialMatches(
                 args[0],
