@@ -138,6 +138,10 @@ trail: # A particle trail left behind by the pet as it follows the player
   y-offset: 0.0 # How far above the centre of the pet to spawn the trail
 ```
 
+:::tip ModelEngine pets
+Use `entity-texture: modelengine:<id>` for a ModelEngine model. Add `idle-animation:<name>` and `move-animation:<name>` after the ID to loop an animation while the owner stands still or moves, e.g. `modelengine:tiger idle-animation:idle move-animation:walk`. Both are optional, and they loop even if the model plays them once.
+:::
+
 ### Progression
 
 Controls the XP needed for each level and how the pet earns that XP. Pick one of two ways to define level requirements: a fixed list, or an infinite formula.
