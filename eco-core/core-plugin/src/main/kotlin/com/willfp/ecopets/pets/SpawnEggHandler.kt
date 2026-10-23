@@ -10,11 +10,14 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
 object SpawnEggHandler : Listener {
-    @EventHandler(
-        ignoreCancelled = true
-    )
+    @EventHandler
     fun handle(event: PlayerInteractEvent) {
-        if (event.action != Action.RIGHT_CLICK_BLOCK) {
+        if (event.action != Action.RIGHT_CLICK_BLOCK && event.action != Action.RIGHT_CLICK_AIR) {
+            return
+        }
+
+        // Air clicks always arrive cancelled, so a denied item use is what marks a cancel.
+        if (event.useItemInHand() == Event.Result.DENY) {
             return
         }
 
