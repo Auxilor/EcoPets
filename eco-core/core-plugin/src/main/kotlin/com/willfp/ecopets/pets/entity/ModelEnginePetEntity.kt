@@ -1,7 +1,7 @@
 package com.willfp.ecopets.pets.entity
 
+import com.willfp.eco.core.integrations.modelengine.ModelEngineManager
 import com.willfp.ecopets.pets.Pet
-import com.willfp.modelenginebridge.ModelEngineBridge
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 
@@ -12,9 +12,9 @@ class ModelEnginePetEntity(
     override fun spawn(location: Location): Entity {
         val stand = emptyArmorStandAt(location, pet, isSkull = false)
 
-        val model = ModelEngineBridge.instance.createActiveModel(modelID) ?: return stand
+        val model = ModelEngineManager.createActiveModel(modelID) ?: return stand
 
-        val modelled = ModelEngineBridge.instance.createModeledEntity(stand)
+        val modelled = ModelEngineManager.createModeledEntity(stand) ?: return stand
         modelled.addModel(model)
 
         return stand
