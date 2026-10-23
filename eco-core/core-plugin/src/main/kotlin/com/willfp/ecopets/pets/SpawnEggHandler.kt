@@ -11,6 +11,10 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
 object SpawnEggHandler : Listener {
+    private val PlayerInteractEvent.isUnblockedRightClick: Boolean
+        get() = (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) &&
+            useItemInHand() != Event.Result.DENY
+
     @EventHandler
     fun handle(event: PlayerInteractEvent) {
         val item = event.item
@@ -45,10 +49,6 @@ object SpawnEggHandler : Listener {
                 .replace("%pet%", pet.name)
         )
     }
-
-    private val PlayerInteractEvent.isUnblockedRightClick: Boolean
-        get() = (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) &&
-            useItemInHand() != Event.Result.DENY
 
     private fun Player.canRedeem(pet: Pet, eggLevel: Int, eggXp: Double): Boolean {
         val ownedLevel = this.getPetLevel(pet)
