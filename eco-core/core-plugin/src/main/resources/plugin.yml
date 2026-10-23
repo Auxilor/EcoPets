@@ -9,6 +9,8 @@ depend:
   - eco
 softdepend:
   - libreforge
+  - ModelEngine
+  - BetterModel
 commands:
   ecopets:
     description: Base Command

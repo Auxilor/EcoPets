@@ -104,7 +104,7 @@ activate-conditions: [ ]
 # Option 1: A base64 skull texture value
 # Option 2: A vanilla or custom item (prefix with item:)
 # entity-texture: item:diamond_sword
-# Option 3: A ModelEngine model (prefix with modelengine:)
+# Option 3: A ModelEngine model (prefix with modelengine:) or BetterModel model (prefix with bettermodel:)
 # entity-texture: modelengine:my_model
 # Optionally add idle-animation:<name> and move-animation:<name> to loop animations
 # while the owner stands still or moves:

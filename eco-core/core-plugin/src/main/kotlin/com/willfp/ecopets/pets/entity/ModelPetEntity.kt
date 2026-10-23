@@ -1,16 +1,18 @@
 package com.willfp.ecopets.pets.entity
 
-import com.willfp.eco.core.integrations.modelengine.ModelEngineManager
+import com.willfp.eco.core.integrations.model.ModelAnimation
+import com.willfp.eco.core.integrations.model.ModelManager
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 
 /**
- * A pet drawn by a ModelEngine model, from `modelengine:<id>` with the optional
- * `idle-animation:<name>` and `move-animation:<name>` keys after it.
+ * A pet drawn by a model from the model plugin [integrationId], from `<prefix>:<id>` with the
+ * optional `idle-animation:<name>` and `move-animation:<name>` keys after it.
  */
-class ModelEnginePetEntity(
+class ModelPetEntity(
     pet: Pet,
+    private val integrationId: String,
     texture: String
 ) : PetEntity(pet) {
     private val args = texture.trim().split(" ").filter { it.isNotBlank() }
@@ -26,10 +28,7 @@ class ModelEnginePetEntity(
     override fun spawn(location: Location): Entity {
         val stand = emptyArmorStandAt(location, pet, isSkull = false)
 
-        val model = ModelEngineManager.createActiveModel(modelID) ?: return stand
-
-        val modelled = ModelEngineManager.createModeledEntity(stand) ?: return stand
-        modelled.addModel(model)
+        ModelManager.attachModel(stand, integrationId, modelID)
 
         return stand
     }
@@ -40,11 +39,8 @@ class ModelEnginePetEntity(
             return
         }
 
-        for (model in ModelEngineManager.getModeledEntity(entity)?.models?.values.orEmpty()) {
-            val handler = model.animationHandler
-            playingAnimation?.let(handler::stopAnimation)
-            next?.let { handler.playAnimation(it, 0.0, 0.0, 1.0, false, true) }
-        }
+        playingAnimation?.let { ModelManager.stopAnimation(entity, null, it, true) }
+        next?.let { ModelManager.playAnimation(entity, null, it, LOOP) }
         playingAnimation = next
     }
 
@@ -53,4 +49,8 @@ class ModelEnginePetEntity(
             .firstOrNull { it.startsWith("$key:", ignoreCase = true) }
             ?.substringAfter(":")
             ?.takeIf { it.isNotBlank() }
+
+    private companion object {
+        val LOOP: ModelAnimation = ModelAnimation.builder().loopMode(ModelAnimation.LoopMode.LOOP).build()
+    }
 }
