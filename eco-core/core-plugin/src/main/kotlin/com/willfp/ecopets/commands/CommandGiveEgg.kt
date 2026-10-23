@@ -48,6 +48,16 @@ object CommandGiveEgg : Subcommand(
         val level = args.getOrNull(2)?.toIntOrNull() ?: 1
         val xp = args.getOrNull(3)?.toDoubleOrNull() ?: 0.0
 
+        if (level !in 1..pet.maxLevel) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-level"))
+            return
+        }
+
+        if (!xp.isFinite() || xp < 0.0) {
+            sender.sendMessage(plugin.langYml.getMessage("invalid-xp"))
+            return
+        }
+
         val egg = pet.makeSpawnEgg(level, xp)
 
         if (egg == null) {

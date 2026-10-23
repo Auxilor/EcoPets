@@ -53,7 +53,7 @@ object SpawnEggHandler : Listener {
             event.player.inventory.itemInOffHand.amount -= 1
         }
 
-        player.setPetLevel(pet, maxOf(eggLevel, 1))
+        player.setPetLevel(pet, eggLevel.coerceIn(1, pet.maxLevel))
         player.setPetXP(pet, eggXp)
         player.sendMessage(
             plugin.langYml.getMessage("pet-spawned", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
