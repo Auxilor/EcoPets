@@ -35,7 +35,10 @@ object SpawnEggHandler : Listener {
 
         if (ownedLevel > 0) {
             val policy = plugin.configYml.getString("pet-egg.redeem-conflict").lowercase()
-            if (policy == "reject" || eggLevel <= ownedLevel) {
+            val isUpgrade = eggLevel > ownedLevel ||
+                (eggLevel == ownedLevel && eggXp > player.getPetXP(pet))
+
+            if (policy == "reject" || !isUpgrade) {
                 player.sendMessage(
                     if (policy == "reject") plugin.langYml.getMessage("cannot-spawn-pet")
                     else plugin.langYml.getMessage("egg-lower-level")
