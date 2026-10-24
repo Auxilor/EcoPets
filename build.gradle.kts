@@ -114,7 +114,6 @@ allprojects {
         shadowJar {
             exclude("META-INF/**")
             relocate("com.willfp.libreforge.loader", "com.willfp.ecopets.libreforge.loader")
-            relocate("com.willfp.ecomponent", "com.willfp.ecopets.ecomponent")
             relocate("kotlin", "com.willfp.eco.libs.kotlin")
             relocate("kotlin.jvm", "com.willfp.eco.libs.kotlin.jvm")
             relocate("kotlin.coroutines", "com.willfp.eco.libs.kotlin.coroutines")

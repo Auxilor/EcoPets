@@ -60,6 +60,7 @@ gui:
   pet-info:
     row: 1
     column: 5
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     no-active:
       name: "&cNo Active Pet"
@@ -143,6 +144,7 @@ gui:
     location:
       row: 6
       column: 4
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
   next-page:
     item: arrow
@@ -150,6 +152,7 @@ gui:
     location:
       row: 6
       column: 6
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
   close:
     enabled: true
@@ -158,6 +161,7 @@ gui:
     location:
       row: 6
       column: 5
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
   deactivate-pet:
     item: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZDlhNDViOTY4MWNlYTViMjhjNzBmNzVhNjk1NmIxZjU5NGZlYzg0MGI5NjA3Nzk4ZmIxZTcwNzc2NDQzMCJ9fX0=
@@ -165,6 +169,7 @@ gui:
     location:
       row: 6
       column: 2
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
   toggle:
     hide-pet:
@@ -182,6 +187,7 @@ gui:
     location:
       row: 6
       column: 8
+    locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
   # Custom GUI slots; see here for a how-to: https://plugins.auxilor.io/all-plugins/custom-gui-slots
   custom-slots: [ ]
@@ -230,6 +236,7 @@ level-gui:
       location:
         row: 6
         column: 4
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     next-page:
       material: arrow
@@ -237,6 +244,7 @@ level-gui:
       location:
         row: 6
         column: 6
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     close:
       enabled: true
@@ -245,6 +253,7 @@ level-gui:
       location:
         row: 6
         column: 5
+      locations: [ ] # Optional list of row/column slots; if set, the button shows in each of them instead of row/column
 
     unlocked:
       item: lime_stained_glass_pane
