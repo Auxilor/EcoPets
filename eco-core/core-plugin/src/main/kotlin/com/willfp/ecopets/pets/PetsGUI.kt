@@ -1,14 +1,20 @@
 package com.willfp.ecopets.pets
 
+import com.willfp.eco.core.gui.SlotArea
+import com.willfp.eco.core.gui.addCustomSlots
 import com.willfp.eco.core.gui.addPageChanger
+import com.willfp.eco.core.gui.component.PagedAreaComponent
+import com.willfp.eco.core.gui.component.addComponent
+import com.willfp.eco.core.gui.component.addPagedArea
+import com.willfp.eco.core.gui.component.closeButton
+import com.willfp.eco.core.gui.getSlotArea
+import com.willfp.eco.core.gui.getSlotLocations
 import com.willfp.eco.core.gui.menu
 import com.willfp.eco.core.gui.menu.Menu
-import com.willfp.eco.core.gui.page.Page
 import com.willfp.eco.core.gui.page.PageChanger
+import com.willfp.eco.core.gui.setMask
 import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.ConfigSlot
-import com.willfp.eco.core.gui.slot.FillerMask
-import com.willfp.eco.core.gui.slot.MaskItems
+import com.willfp.eco.core.gui.slot.Slot
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.items.builder.ItemStackBuilder
 import com.willfp.eco.core.sound.PlayableSound
@@ -19,37 +25,18 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.ceil
 
 object PetsGUI {
     @Volatile
     private lateinit var menu: Menu
 
-    @Volatile
-    private var petAreaSlots = emptyList<Pair<Int, Int>>()
-
     private val lastToggleTimes = ConcurrentHashMap<UUID, Long>()
 
     internal fun update() {
-        val topLeftRow = plugin.configYml.getInt("gui.pet-area.top-left.row")
-        val topLeftColumn = plugin.configYml.getInt("gui.pet-area.top-left.column")
-        val bottomRightRow = plugin.configYml.getInt("gui.pet-area.bottom-right.row")
-        val bottomRightColumn = plugin.configYml.getInt("gui.pet-area.bottom-right.column")
-
-        petAreaSlots = buildList {
-            for (row in topLeftRow..bottomRightRow) {
-                for (column in topLeftColumn..bottomRightColumn) {
-                    add(Pair(row, column))
-                }
-            }
-        }
-
         menu = buildMenu()
     }
 
     private fun buildMenu(): Menu {
-        val petAreaSlots = petAreaSlots
-
         val petInfoItemBuilder = { player: Player, _: Menu ->
             val pet = player.activePet
 
@@ -78,196 +65,119 @@ object PetsGUI {
 
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
-        val petIconBuilder = { player: Player, menu: Menu, index: Int ->
-            val page = menu.getPage(player)
-
-            val unlockedPets = Pets.values()
-                .sortedByDescending { player.getPetLevel(it) }
-                .filter { player.getPetLevel(it) > 0 }
-
-            val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
-
-            val pet = unlockedPets.getOrNull(pagedIndex)
-            pet?.getIcon(player) ?: ItemStack(Material.AIR)
-        }
-
         return menu(plugin.configYml.getInt("gui.rows")) {
             title = plugin.langYml.getString("menu.title")
 
-            setMask(
-                FillerMask(
-                    MaskItems.fromItemNames(plugin.configYml.getStrings("gui.mask.materials")),
-                    *plugin.configYml.getStrings("gui.mask.pattern").toTypedArray()
-                )
-            )
+            setMask(plugin.configYml, "gui")
 
             onRender { player, menu ->
                 menu.setState(player, "ecopets", true)
-
-                if (menu.getPage(player) > menu.getMaxPage(player)) {
-                    menu.setState(player, Page.PAGE_KEY, 1)
-                }
             }
 
-            for ((index, pair) in petAreaSlots.withIndex()) {
-                val (row, column) = pair
-                setSlot(row, column, slot({ player, menu -> petIconBuilder(player, menu, index) }) {
-                    setUpdater { player, menu, _ ->
-                        petIconBuilder(player, menu, index)
-                    }
-
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        val page = menu.getPage(player)
-
-                        val unlockedPets = Pets.values()
-                            .sortedByDescending { player.getPetLevel(it) }
-                            .filter { player.getPetLevel(it) > 0 }
-
-                        val pagedIndex = page * petAreaSlots.size - petAreaSlots.size + index
-
-                        val pet = unlockedPets.getOrNull(pagedIndex) ?: return@onLeftClick
-
-                        if (player.activePet != pet) {
-                            if (!pet.canActivate(player)) {
-                                player.sendMessage(
-                                    plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                                        .replace("%pet%", pet.name)
-                                )
-                                return@onLeftClick
-                            }
-                            player.activePet = pet
-                        }
-                        PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(player)
-                    }
-                })
-            }
+            addPagedArea(PetAreaComponent(plugin.configYml.getSlotArea("gui.pet-area")))
 
             addPageChanger(plugin.configYml, "gui.prev-page", PageChanger.Direction.BACKWARDS, pageChangeSound)
             addPageChanger(plugin.configYml, "gui.next-page", PageChanger.Direction.FORWARDS, pageChangeSound)
 
-            setSlot(
-                plugin.configYml.getInt("gui.pet-info.row"),
-                plugin.configYml.getInt("gui.pet-info.column"),
-                slot(petInfoItemBuilder) {
-                    onLeftClick { event, _, _ ->
-                        val player = event.whoClicked as Player
-                        player.activePet?.levelGUI?.open(player)
-                    }
-                }
-            )
-
-            val closeEnabled = plugin.configYml.getBoolOrNull("gui.close.enabled") ?: true
-            if (closeEnabled) {
+            for (location in plugin.configYml.getSlotLocations("gui.pet-info")) {
                 setSlot(
-                    plugin.configYml.getInt("gui.close.location.row"),
-                    plugin.configYml.getInt("gui.close.location.column"),
-                    slot(
-                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.close.item")))
-                            .setDisplayName(plugin.configYml.getString("gui.close.name"))
-                            .build()
-                    ) {
-                        onLeftClick { event, _ -> event.whoClicked.closeInventory() }
+                    location.row,
+                    location.column,
+                    slot(petInfoItemBuilder) {
+                        onLeftClick { event, _, _ ->
+                            val player = event.whoClicked as Player
+                            player.activePet?.levelGUI?.open(player)
+                        }
                     }
                 )
             }
 
-            setSlot(
-                plugin.configYml.getInt("gui.deactivate-pet.location.row"),
-                plugin.configYml.getInt("gui.deactivate-pet.location.column"),
-                slot(
-                    ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
-                        .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
-                        .build()
-                ) {
-                    onLeftClick { event, _ ->
-                        val player = event.whoClicked as Player
-                        player.activePet = null
+            addComponent(closeButton(plugin.configYml.getSubsection("gui.close")))
+
+            for (location in plugin.configYml.getSlotLocations("gui.deactivate-pet")) {
+                setSlot(
+                    location.row,
+                    location.column,
+                    slot(
+                        ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
+                            .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
+                            .build()
+                    ) {
+                        onLeftClick { event, _ ->
+                            val player = event.whoClicked as Player
+                            player.activePet = null
+                        }
                     }
-                }
-            )
+                )
+            }
 
             val withdrawEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.enabled") ?: true
             if (withdrawEnabled) {
                 val confirmEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.confirm.enabled") ?: true
-                setSlot(
-                    plugin.configYml.getInt("gui.withdraw-pet.location.row"),
-                    plugin.configYml.getInt("gui.withdraw-pet.location.column"),
-                    slot(
-                        { player: Player, _: Menu ->
-                            ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.withdraw-pet.item")))
-                                .setDisplayName(plugin.configYml.getFormattedString("gui.withdraw-pet.name"))
-                                .addLoreLines {
-                                    val pet = player.activePet
-                                    plugin.configYml.getStrings("gui.withdraw-pet.lore").map { line ->
-                                        line.replace("%withdraw_price%", pet?.withdrawPrice?.getDisplay(player) ?: "")
+                for (location in plugin.configYml.getSlotLocations("gui.withdraw-pet")) {
+                    setSlot(
+                        location.row,
+                        location.column,
+                        slot(
+                            { player: Player, _: Menu ->
+                                ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.withdraw-pet.item")))
+                                    .setDisplayName(plugin.configYml.getFormattedString("gui.withdraw-pet.name"))
+                                    .addLoreLines {
+                                        val pet = player.activePet
+                                        plugin.configYml.getStrings("gui.withdraw-pet.lore").map { line ->
+                                            line.replace(
+                                                "%withdraw_price%",
+                                                pet?.withdrawPrice?.getDisplay(player) ?: ""
+                                            )
+                                        }
                                     }
+                                    .build()
+                            }
+                        ) {
+                            onLeftClick { event, _ ->
+                                val player = event.whoClicked as Player
+                                val pet = player.activePet
+                                val result = canWithdraw(player, pet)
+                                if (result != WithdrawResult.OK || pet == null) {
+                                    result.notifyFail(player, pet)
+                                    return@onLeftClick
                                 }
-                                .build()
+                                if (confirmEnabled) {
+                                    WithdrawConfirmGUI.open(player, pet)
+                                } else {
+                                    player.closeInventory()
+                                    withdrawPet(player, pet)
+                                }
+                            }
                         }
-                    ) {
+                    )
+                }
+            }
+
+            for (location in plugin.configYml.getSlotLocations("gui.toggle")) {
+                setSlot(
+                    location.row,
+                    location.column,
+                    slot(togglePetItemBuilder) {
                         onLeftClick { event, _ ->
                             val player = event.whoClicked as Player
-                            val pet = player.activePet
-                            val result = canWithdraw(player, pet)
-                            if (result != WithdrawResult.OK || pet == null) {
-                                result.notifyFail(player, pet)
+
+                            // Toggling respawns/removes the pet entity, so rate-limit to prevent spam-click lag.
+                            val now = System.currentTimeMillis()
+                            val cooldown = plugin.configYml.getIntOrNull("gui.toggle.cooldown") ?: 500
+                            val lastToggle = lastToggleTimes[player.uniqueId]
+                            if (lastToggle != null && now - lastToggle < cooldown) {
                                 return@onLeftClick
                             }
-                            if (confirmEnabled) {
-                                WithdrawConfirmGUI.open(player, pet)
-                            } else {
-                                player.closeInventory()
-                                withdrawPet(player, pet)
-                            }
+                            lastToggleTimes[player.uniqueId] = now
+
+                            player.shouldHidePet = !player.shouldHidePet
                         }
                     }
                 )
             }
 
-            setSlot(
-                plugin.configYml.getInt("gui.toggle.location.row"),
-                plugin.configYml.getInt("gui.toggle.location.column"),
-                slot(togglePetItemBuilder) {
-                    onLeftClick { event, _ ->
-                        val player = event.whoClicked as Player
-
-                        // Toggling respawns/removes the pet entity, so rate-limit to prevent spam-click lag.
-                        val now = System.currentTimeMillis()
-                        val cooldown = plugin.configYml.getIntOrNull("gui.toggle.cooldown") ?: 500
-                        val lastToggle = lastToggleTimes[player.uniqueId]
-                        if (lastToggle != null && now - lastToggle < cooldown) {
-                            return@onLeftClick
-                        }
-                        lastToggleTimes[player.uniqueId] = now
-
-                        player.shouldHidePet = !player.shouldHidePet
-                    }
-                }
-            )
-
-            for (config in plugin.configYml.getSubsections("gui.custom-slots")) {
-                setSlot(
-                    config.getInt("row"),
-                    config.getInt("column"),
-                    ConfigSlot(config)
-                )
-            }
-
-            maxPages { player ->
-                val unlockedPets = Pets.values()
-                    .sortedByDescending { player.getPetLevel(it) }
-                    .filter { player.getPetLevel(it) > 0 }
-
-                val perPage = petAreaSlots.size
-
-                val pages = if (unlockedPets.isEmpty()) {
-                    0
-                } else {
-                    ceil((unlockedPets.size.toDouble() / perPage)).toInt()
-                }
-                pages
-            }
+            addCustomSlots(plugin.configYml, "gui")
         }
     }
 
@@ -275,4 +185,31 @@ object PetsGUI {
     fun open(player: Player) {
         menu.open(player)
     }
+}
+
+private class PetAreaComponent(area: SlotArea) : PagedAreaComponent<Pet>(area) {
+    override fun getEntries(player: Player, menu: Menu): List<Pet> = Pets.values()
+        .sortedByDescending { player.getPetLevel(it) }
+        .filter { player.getPetLevel(it) > 0 }
+
+    override fun getEntrySlot(player: Player, menu: Menu, entry: Pet): Slot =
+        slot({ viewer, _ -> entry.getIcon(viewer) }) {
+            onLeftClick { event, _, _ ->
+                val clicker = event.whoClicked as Player
+
+                if (clicker.activePet != entry && !entry.canActivate(clicker)) {
+                    clicker.sendMessage(
+                        plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                            .replace(oldValue = "%pet%", newValue = entry.name)
+                    )
+                } else {
+                    if (clicker.activePet != entry) {
+                        clicker.activePet = entry
+                    }
+                    PlayableSound.create(plugin.configYml.getSubsection("gui.pet-icon.click"))?.playTo(clicker)
+                }
+            }
+        }
+
+    override fun getEmptySlot(player: Player, menu: Menu): Slot = slot(ItemStack(Material.AIR))
 }
