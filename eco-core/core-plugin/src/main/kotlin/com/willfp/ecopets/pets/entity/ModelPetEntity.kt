@@ -47,8 +47,7 @@ class ModelPetEntity(
     private fun argument(key: String): String? =
         args.drop(1)
             .firstOrNull { it.startsWith("$key:", ignoreCase = true) }
-            ?.substringAfter(":")
-            ?.takeIf { it.isNotBlank() }
+            ?.run { substringAfter(":").takeIf { it.isNotBlank() } }
 
     private companion object {
         val LOOP: ModelAnimation = ModelAnimation.builder().loopMode(ModelAnimation.LoopMode.LOOP).build()

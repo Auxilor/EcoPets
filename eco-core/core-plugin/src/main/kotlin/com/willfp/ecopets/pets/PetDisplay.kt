@@ -434,7 +434,14 @@ object PetDisplay : Listener {
         /** If the owner moved sideways within the last few ticks, so brief stops do not flicker the animation. */
         fun isOwnerMoving(location: Location, tick: Long): Boolean {
             if (!lastOwnerX.isNaN() &&
-                squaredDistance(lastOwnerX, 0.0, lastOwnerZ, location.x, 0.0, location.z) > OWNER_MOVING_SQUARED_DISTANCE
+                squaredDistance(
+                    lastOwnerX,
+                    0.0,
+                    lastOwnerZ,
+                    location.x,
+                    0.0,
+                    location.z
+                ) > OWNER_MOVING_SQUARED_DISTANCE
             ) {
                 lastOwnerMoveTick = tick
             }

@@ -156,10 +156,14 @@ class EcoPetsPlugin : LibreforgePlugin() {
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("ModelEngine") {
-                PetEntity.registerPetEntity("modelengine") { pet, texture -> ModelPetEntity(pet, "model-engine", texture) }
+                PetEntity.registerPetEntity("modelengine") { pet, texture ->
+                    ModelPetEntity(pet, "model-engine", texture)
+                }
             },
             IntegrationLoader("BetterModel") {
-                PetEntity.registerPetEntity("bettermodel") { pet, texture -> ModelPetEntity(pet, "better-model", texture) }
+                PetEntity.registerPetEntity("bettermodel") { pet, texture ->
+                    ModelPetEntity(pet, "better-model", texture)
+                }
             }
         )
     }
