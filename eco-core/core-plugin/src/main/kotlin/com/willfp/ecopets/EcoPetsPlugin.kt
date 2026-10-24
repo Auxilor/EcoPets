@@ -32,7 +32,7 @@ import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
-import com.willfp.ecopets.pets.entity.ModelEnginePetEntity
+import com.willfp.ecopets.pets.entity.ModelPetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.libreforge.SimpleProvidedHolder
@@ -156,8 +156,13 @@ class EcoPetsPlugin : LibreforgePlugin() {
     override fun loadIntegrationLoaders(): List<IntegrationLoader> {
         return listOf(
             IntegrationLoader("ModelEngine") {
-                PetEntity.registerPetEntity("modelengine") { pet, id ->
-                    ModelEnginePetEntity(pet, id)
+                PetEntity.registerPetEntity("modelengine") { pet, texture ->
+                    ModelPetEntity(pet, "model-engine", texture)
+                }
+            },
+            IntegrationLoader("BetterModel") {
+                PetEntity.registerPetEntity("bettermodel") { pet, texture ->
+                    ModelPetEntity(pet, "better-model", texture)
                 }
             }
         )

@@ -24,6 +24,9 @@ abstract class PetEntity(
 ) {
     abstract fun spawn(location: Location): Entity
 
+    /** Runs every tick for a spawned pet [entity], with whether its owner is moving. */
+    open fun tick(entity: Entity, isOwnerMoving: Boolean) {}
+
     companion object {
         private val registrations = ConcurrentHashMap<String, (Pet, String) -> PetEntity>()
 

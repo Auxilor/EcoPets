@@ -46,7 +46,7 @@ Here is one complete pet with every part in place:
 # === Display: name, icon, and in-world appearance ===
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# Texture of the floating pet entity; use modelengine:id for ModelEngine
+# Texture of the floating pet entity; use modelengine:id or bettermodel:id for a model
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 
@@ -127,7 +127,7 @@ Sets the pet's name, description, GUI icon, the texture of the floating entity, 
 ```yaml
 name: "&6Tiger" # Display name of the pet
 description: "&8&oLevel up by dealing melee damage" # Shown in the pet GUIs
-# Texture of the floating pet entity; use modelengine:id for ModelEngine
+# Texture of the floating pet entity; use modelengine:id or bettermodel:id for a model
 entity-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0="
 icon: player_head texture:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTA5NWZjYzFlM2Q3Y2JkMzUwZjE5YjM4OTQ5OGFiOGJiOTZjNjVhZDE4NWQzNDU5MjA2N2E3ZDAzM2FjNDhkZSJ9fX0= # Icon shown in GUIs
 trail: # A particle trail left behind by the pet as it follows the player
@@ -137,6 +137,10 @@ trail: # A particle trail left behind by the pet as it follows the player
   amount: 1 # How many particles to spawn each time
   y-offset: 0.0 # How far above the centre of the pet to spawn the trail
 ```
+
+:::tip Model pets
+Use `entity-texture: modelengine:<id>` for a ModelEngine model, or `bettermodel:<id>` for a BetterModel model. Add `idle-animation:<name>` and `move-animation:<name>` after the ID to loop an animation while the owner stands still or moves, e.g. `modelengine:tiger idle-animation:idle move-animation:walk`. Both are optional, and they loop even if the model plays them once.
+:::
 
 ### Progression
 

@@ -7,6 +7,7 @@ import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.pets.entity.DEFAULT_PET_SCALE
 import com.willfp.ecopets.pets.entity.MAX_PET_SCALE
 import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
+import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.plugin
 import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
@@ -39,6 +40,8 @@ object PetDisplay : Listener {
     private const val ITEM_DISPLAY_YAW_OFFSET = 180f
     private const val PLAYER_HEAD_VISUAL_CENTER_Y = -0.25f
     private const val SMALL_ARMOR_STAND_HEAD_Y = 0.75
+    private const val OWNER_MOVING_SQUARED_DISTANCE = 0.0004
+    private const val OWNER_MOVING_GRACE_TICKS = 5L
 
     @Volatile
     private var tick = 0L
@@ -182,6 +185,8 @@ object PetDisplay : Listener {
             if (trail != null && trail.shouldSpawnOn(tick)) {
                 trail.spawn(location, getTrailAnchorY(entity, pet))
             }
+
+            tracked.petEntity.tick(entity, tracked.isOwnerMoving(player.location, tick))
         }
     }
 
@@ -315,11 +320,13 @@ object PetDisplay : Listener {
             }
 
             val location = getLocation(player)
-            val entity = pet.makePetEntity().spawn(location)
+            val petEntity = pet.makePetEntity()
+            val entity = petEntity.spawn(location)
 
             trackedEntities[player.uniqueId] = PetDisplayEntity(
                 entity,
                 pet,
+                petEntity,
                 getTargetYOffset(player),
                 if (entity is ItemDisplay) {
                     PetAnimation(player.uniqueId, settings.playfulAnimationChance)
@@ -397,6 +404,7 @@ object PetDisplay : Listener {
     private class PetDisplayEntity(
         val entity: Entity,
         val pet: Pet,
+        val petEntity: PetEntity,
         var smoothYOffset: Double,
         val animation: PetAnimation?,
         var lastHologramUpdate: Long = -1L,
@@ -404,6 +412,9 @@ object PetDisplay : Listener {
         var appliedScaleY: Double = 1.0,
         var appliedPitch: Float = 0f,
         var appliedRoll: Float = 0f,
+        private var lastOwnerX: Double = Double.NaN,
+        private var lastOwnerZ: Double = Double.NaN,
+        private var lastOwnerMoveTick: Long = -OWNER_MOVING_GRACE_TICKS - 1,
         private var lastSentX: Double = Double.NaN,
         private var lastSentY: Double = Double.NaN,
         private var lastSentZ: Double = Double.NaN,
@@ -418,6 +429,25 @@ object PetDisplay : Listener {
                 lastSentZ = location.z
             }
             return changed
+        }
+
+        /** If the owner moved sideways within the last few ticks, so brief stops do not flicker the animation. */
+        fun isOwnerMoving(location: Location, tick: Long): Boolean {
+            if (!lastOwnerX.isNaN() &&
+                squaredDistance(
+                    lastOwnerX,
+                    0.0,
+                    lastOwnerZ,
+                    location.x,
+                    0.0,
+                    location.z
+                ) > OWNER_MOVING_SQUARED_DISTANCE
+            ) {
+                lastOwnerMoveTick = tick
+            }
+            lastOwnerX = location.x
+            lastOwnerZ = location.z
+            return tick - lastOwnerMoveTick <= OWNER_MOVING_GRACE_TICKS
         }
 
         fun shouldRotate(yaw: Float): Boolean {
