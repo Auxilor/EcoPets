@@ -3,6 +3,7 @@ package com.willfp.ecopets.pets
 import com.google.common.collect.ImmutableList
 import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.eco.core.price.Prices
+import com.willfp.eco.core.recipe.Recipes
 import com.willfp.eco.core.registry.Registry
 import com.willfp.libreforge.loader.LibreforgePlugin
 import com.willfp.libreforge.loader.configs.ConfigCategory
@@ -40,6 +41,7 @@ object Pets : ConfigCategory("pet", "pets") {
     override fun clear(plugin: LibreforgePlugin) {
         for (pet in registry.values()) {
             Prices.unregisterPriceFactory(pet.priceFactory)
+            pet.recipe?.let { Recipes.unregister(it) }
         }
         registry.clear()
     }
