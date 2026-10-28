@@ -625,6 +625,10 @@ var ItemStack.petEggXp: Double
 var OfflinePlayer.activePet: Pet?
     get() = Pets.getByID(this.profile.read(activePetKey))
     set(value) {
+        if (value != null && !this.hasPet(value)) {
+            return
+        }
+
         if (value == null) {
             val deactivateEvent = PlayerPetDeactivateEvent(this)
             Bukkit.getPluginManager().callEvent(deactivateEvent)
