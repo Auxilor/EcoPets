@@ -6,6 +6,8 @@ import com.willfp.eco.core.integrations.IntegrationLoader
 import com.willfp.eco.core.items.Items
 import com.willfp.eco.core.placeholder.PlayerPlaceholder
 import com.willfp.eco.util.StringUtils
+import com.willfp.eco.util.toNiceString
+import com.willfp.eco.util.toNumeral
 import com.willfp.ecopets.commands.CommandEcoPets
 import com.willfp.ecopets.commands.CommandPets
 import com.willfp.ecopets.items.ArgParserPetLevel
@@ -32,6 +34,9 @@ import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
+import com.willfp.ecopets.pets.getPetLevel
+import com.willfp.ecopets.pets.getPetProgress
+import com.willfp.ecopets.pets.getPetXP
 import com.willfp.ecopets.pets.entity.ModelPetEntity
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.pets.hasPet
@@ -113,7 +118,52 @@ class EcoPetsPlugin : LibreforgePlugin() {
         }.register()
     }
 
+    private fun registerActivePetPlaceholders() {
+        PlayerPlaceholder(
+            this,
+            "active_pet_level"
+        ) {
+            it.activePet?.let { pet -> it.getPetLevel(pet).toString() }.orEmpty()
+        }.register()
+
+        PlayerPlaceholder(
+            this,
+            "active_pet_level_numeral"
+        ) {
+            it.activePet?.let { pet -> it.getPetLevel(pet).toNumeral() }.orEmpty()
+        }.register()
+
+        PlayerPlaceholder(
+            this,
+            "active_pet_current_xp"
+        ) {
+            it.activePet?.let { pet -> it.getPetXP(pet).toNiceString() }.orEmpty()
+        }.register()
+
+        PlayerPlaceholder(
+            this,
+            "active_pet_required_xp"
+        ) {
+            it.activePet?.let { pet -> pet.getFormattedExpForLevel(it.getPetLevel(pet) + 1) }.orEmpty()
+        }.register()
+
+        PlayerPlaceholder(
+            this,
+            "active_pet_percentage_progress"
+        ) {
+            it.activePet?.let { pet -> (it.getPetProgress(pet) * PERCENT).toNiceString() }.orEmpty()
+        }.register()
+
+        PlayerPlaceholder(
+            this,
+            "active_pet_description"
+        ) {
+            it.activePet?.description.orEmpty()
+        }.register()
+    }
+
     override fun handleReload() {
+        registerActivePetPlaceholders()
         PetsGUI.update()
         petDisplay.reload()
 
@@ -203,3 +253,5 @@ class EcoPetsPlugin : LibreforgePlugin() {
         }
     )
 }
+
+private const val PERCENT = 100
