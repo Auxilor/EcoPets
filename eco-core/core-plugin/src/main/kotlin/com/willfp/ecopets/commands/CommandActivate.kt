@@ -48,10 +48,6 @@ object CommandActivate : Subcommand(
             return
         }
 
-        player.sendMessage(
-            plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%pet%", pet.name)
-        )
         player.activePet?.let { oldPet ->
             val event = PlayerPetSwapEvent(player, pet, oldPet)
             Bukkit.getServer().pluginManager.callEvent(event)
@@ -61,6 +57,13 @@ object CommandActivate : Subcommand(
             }
         }
         player.activePet = pet
+
+        if (player.activePet == pet) {
+            player.sendMessage(
+                plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                    .replace("%pet%", pet.name)
+            )
+        }
     }
 
     override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
