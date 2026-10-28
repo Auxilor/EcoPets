@@ -88,11 +88,10 @@ object CommandTake : Subcommand(
         }
 
         if (args.size == 2) {
-            @Suppress("DEPRECATION")
-            val player = Bukkit.getOfflinePlayer(args[0])
+            val player = Bukkit.getPlayerExact(args[0])
             StringUtil.copyPartialMatches(
                 args[1],
-                Pets.values().filter { player.hasPet(it) }.map { it.id },
+                Pets.values().filter { player == null || player.hasPet(it) }.map { it.id },
                 completions
             )
             return completions
