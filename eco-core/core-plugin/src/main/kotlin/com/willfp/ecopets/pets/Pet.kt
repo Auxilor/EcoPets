@@ -636,7 +636,7 @@ var OfflinePlayer.activePet: Pet?
         } else {
             val activateEvent = PlayerPetActivateEvent(this, value)
             Bukkit.getPluginManager().callEvent(activateEvent)
-            if (activateEvent.isCancelled) return
+            if (activateEvent.isCancelled || !this.hasPet(value)) return
         }
         this.profile.write(activePetKey, value?.id ?: "")
     }
