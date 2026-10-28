@@ -105,8 +105,6 @@ class EcoPetsPlugin : LibreforgePlugin() {
             "pet_id"
         ) { it.activePet?.id ?: "" }.register()
 
-        registerActivePetPlaceholders()
-
         PlayerPlaceholder(
             this,
             "total_pets"
@@ -165,6 +163,7 @@ class EcoPetsPlugin : LibreforgePlugin() {
     }
 
     override fun handleReload() {
+        registerActivePetPlaceholders()
         PetsGUI.update()
         petDisplay.reload()
 
