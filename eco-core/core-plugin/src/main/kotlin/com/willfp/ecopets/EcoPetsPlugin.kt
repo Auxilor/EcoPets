@@ -142,6 +142,9 @@ class EcoPetsPlugin : LibreforgePlugin() {
         val activePet = player.activePet ?: return
         if (!activePet.canActivate(player)) {
             player.activePet = null
+        }
+
+        if (player.activePet == null) {
             player.sendMessage(
                 this.langYml.getMessage("pet-auto-deactivated", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
                     .replace("%pet%", activePet.name)
