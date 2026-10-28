@@ -70,11 +70,6 @@ object CommandActivateOther : Subcommand(
 
         // The console runs off the player's region on Folia.
         player.runOwnedIfOnline {
-            sender.sendMessage(
-                plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%pet%", pet.name)
-                    .replace("%player%", playerName)
-            )
             player.activePet?.let { oldPet ->
                 val event = PlayerPetSwapEvent(player, pet, oldPet)
                 Bukkit.getServer().pluginManager.callEvent(event)
@@ -84,6 +79,14 @@ object CommandActivateOther : Subcommand(
                 }
             }
             player.activePet = pet
+
+            if (player.activePet == pet) {
+                sender.sendMessage(
+                    plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
+                        .replace("%pet%", pet.name)
+                        .replace("%player%", playerName)
+                )
+            }
         }
     }
 
