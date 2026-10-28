@@ -583,6 +583,10 @@ var ItemStack.petEggXp: Double
 var OfflinePlayer.activePet: Pet?
     get() = Pets.getByID(this.profile.read(activePetKey))
     set(value) {
+        if (value != null && !this.hasPet(value)) {
+            return
+        }
+
         if (value == null) {
             val deactivateEvent = PlayerPetDeactivateEvent(this)
             Bukkit.getPluginManager().callEvent(deactivateEvent)
@@ -590,7 +594,7 @@ var OfflinePlayer.activePet: Pet?
         } else {
             val activateEvent = PlayerPetActivateEvent(this, value)
             Bukkit.getPluginManager().callEvent(activateEvent)
-            if (activateEvent.isCancelled) return
+            if (activateEvent.isCancelled || !this.hasPet(value)) return
         }
         this.profile.write(activePetKey, value?.id ?: "")
     }
