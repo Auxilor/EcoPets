@@ -91,7 +91,7 @@ class Pet(
     private val eggBaseItem: ItemStack? = run {
         if (!config.getBool("spawn-egg.enabled")) return@run null
         val lookup = Items.lookup(config.getString("spawn-egg.item"))
-        if (lookup is EmptyTestableItem) null else lookup.item.clone()
+        if (lookup is EmptyTestableItem) null else lookup.getItem().clone()
     }
 
     private val eggBaseName = config.getFormattedStringOrNull("spawn-egg.name")
@@ -190,7 +190,7 @@ class Pet(
 
     val levelGUI = PetLevelGUI(this)
 
-    private val baseItem: ItemStack = Items.lookup(config.getString("icon")).item
+    private val baseItem: ItemStack = Items.lookup(config.getString("icon")).getItem()
 
     private val effects: EffectList
 
@@ -318,10 +318,7 @@ class Pet(
 
         makeSpawnEgg(1, 0.0)?.let { representative ->
             val key = plugin.namespacedKeyFactory.create("${this.id}_spawn_egg")
-            Items.registerCustomItem(
-                key,
-                CustomItem(key, { it.petEgg == this }, representative)
-            )
+            CustomItem(key, { it.petEgg == this }, representative).register()
         }
     }
 

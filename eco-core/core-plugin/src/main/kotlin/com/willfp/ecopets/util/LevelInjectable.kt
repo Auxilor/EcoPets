@@ -17,7 +17,7 @@ class LevelInjectable(
         return placeholders
     }
 
-    override fun addInjectablePlaceholder(p0: Iterable<InjectablePlaceholder>) {
+    override fun addInjectablePlaceholder(placeholders: Iterable<InjectablePlaceholder>) {
         return
     }
 
