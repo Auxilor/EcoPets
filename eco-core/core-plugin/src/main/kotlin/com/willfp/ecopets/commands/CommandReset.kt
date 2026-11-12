@@ -1,77 +1,50 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.pets.setPetXP
-import com.willfp.ecopets.plugin
-import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import wiki.ecohub.ui.text.StringUtils
+import wiki.ecohub.core.command.CommandBuilder
+import wiki.ecohub.game.entity.player.PlayerUtils
+import wiki.ecohub.game.entity.runOwned
 
-object CommandReset : Subcommand(
-    plugin,
-    "reset",
-    "ecopets.command.reset",
-    false
+/**
+ * Resets on the player's region, as the console runs off it on Folia.
+ */
+internal fun CommandBuilder<CommandSender>.resetCommand() = subcommand(
+    name = "reset",
+    permission = "ecopets.command.reset"
 ) {
-    override fun onExecute(sender: CommandSender, args: List<String>) {
-        if (args.isEmpty()) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-player"))
-            return
-        }
+    executes {
+        val playerName = argument(0, "needs-player")
+        val petId = argument(1, "needs-pet")
 
-        if (args.size == 1) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-pet"))
-            return
-        }
-
-        val playerName = args[0]
-
-        val player = Bukkit.getPlayer(playerName)
-
-        if (player == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
-            return
-        }
-
-        val pet = Pets.getByID(args[1])
-
-        if (pet == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
-            return
-        }
+        val player = Bukkit.getPlayer(playerName) ?: fail("invalid-player")
+        val pet = Pets.getByID(petId) ?: fail("invalid-pet")
 
         if (!player.hasPet(pet)) {
-            sender.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
-            return
+            fail("doesnt-have-pet")
         }
 
-        // The console runs off the player's region on Folia.
         player.runOwned {
             player.setPetXP(pet, 0.0)
             player.setPetLevel(pet, 1)
 
-            sender.sendMessage(
-                plugin.langYml.getMessage("reset-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%player%", player.savedDisplayName)
-                    .replace("%pet%", pet.name)
+            replyWithoutPlaceholders(
+                "reset-xp",
+                "player" to PlayerUtils.getSavedDisplayName(player),
+                "pet" to pet.name
             )
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        if (args.size == 1) {
-            return Bukkit.getOnlinePlayers().map { it.name }
+    completes {
+        when (args.size) {
+            1 -> playerNames()
+            2 -> Pets.values().map { it.id }
+            else -> emptyList()
         }
-
-        if (args.size == 2) {
-            return Pets.values().map { it.id }
-        }
-
-        return emptyList()
     }
 }

@@ -1,65 +1,39 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
 import com.willfp.ecopets.pets.activePet
-import com.willfp.ecopets.plugin
 import com.willfp.ecopets.runOwnedIfOnline
-import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import wiki.ecohub.ui.text.StringUtils
+import wiki.ecohub.core.command.CommandBuilder
+import wiki.ecohub.core.command.CommandContext
 
-object CommandDeactivateOther : Subcommand(
-    plugin,
-    "deactivate",
-    "ecopets.command.deactivateother",
-    false
+/**
+ * Deactivates on the player's region, as the console runs off it on Folia.
+ */
+internal fun CommandBuilder<CommandSender>.deactivateOtherCommand() = subcommand(
+    name = "deactivate",
+    permission = "ecopets.command.deactivateother"
 ) {
+    executes {
+        val playerName = argument(0, "needs-player")
+        val player = knownPlayer(playerName)
 
-    override fun onExecute(sender: CommandSender, args: List<String>) {
-        if (args.isEmpty()) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-player"))
-            return
-        }
-
-        val playerName = args[0]
-
-        @Suppress("DEPRECATION")
-        val player = Bukkit.getOfflinePlayer(playerName)
-
-        if (!player.hasPlayedBefore() && player !is Player) {
-            sender.sendMessage(
-                plugin.langYml.getMessage("invalid-player")
-                    .replace("%player%", playerName)
-            )
-            return
-        }
-
-        if (player.activePet == null) {
-            sender.sendMessage(
-                plugin.langYml.getMessage("no-pet-active")
-                    .replace("%player%", playerName)
-            )
-            return
-        }
-
-        // The console runs off the player's region on Folia.
-        player.runOwnedIfOnline {
-            sender.sendMessage(
-                plugin.langYml.getMessage("deactivated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%pet%", player.activePet?.name ?: "")
-                    .replace("%player%", playerName)
-            )
-
-            player.activePet = null
+        when {
+            player == null -> reply("invalid-player", "player" to playerName)
+            player.activePet == null -> reply("no-pet-active", "player" to playerName)
+            else -> deactivateFor(player, playerName)
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        if (args.size == 1) {
-            return Bukkit.getOnlinePlayers().map { it.name }
-        }
+    completes {
+        if (args.size == 1) playerNames() else emptyList()
+    }
+}
 
-        return emptyList()
+private fun CommandContext<CommandSender>.deactivateFor(player: OfflinePlayer, playerName: String) {
+    player.runOwnedIfOnline {
+        replyWithoutPlaceholders("deactivated-pet", "pet" to player.activePet?.name.orEmpty(), "player" to playerName)
+
+        player.activePet = null
     }
 }

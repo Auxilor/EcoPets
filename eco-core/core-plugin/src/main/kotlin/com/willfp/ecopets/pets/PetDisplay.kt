@@ -5,7 +5,6 @@ import com.willfp.ecopets.pets.entity.MAX_PET_SCALE
 import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.plugin
-import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -21,6 +20,7 @@ import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
 import wiki.ecohub.core.Eco
 import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.game.entity.runOwned
 import wiki.ecohub.math.NumberUtils
 import wiki.ecohub.ui.text.formatEco
 import java.util.*
