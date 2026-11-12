@@ -18,15 +18,15 @@ object WithdrawConfirmGUI {
         val cancelCfg = cfg.getSubsection("cancel")
 
         val gui = menu(cfg.getInt("rows")) {
-            title = cfg.getFormattedString("title")
+            setTitle(cfg.getFormattedString("title"))
 
             setMask(cfg)
 
             for (location in confirmCfg.getSlotLocations()) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(
                         ItemStackBuilder(Items.lookup(confirmCfg.getString("item")))
                             .setDisplayName(confirmCfg.getFormattedString("name"))
                             .addLoreLines(confirmCfg.getFormattedStrings("lore"))
@@ -44,9 +44,9 @@ object WithdrawConfirmGUI {
 
             for (location in cancelCfg.getSlotLocations()) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(
                         ItemStackBuilder(Items.lookup(cancelCfg.getString("item")))
                             .setDisplayName(cancelCfg.getFormattedString("name"))
                             .addLoreLines(cancelCfg.getFormattedStrings("lore"))

@@ -66,7 +66,7 @@ object PetsGUI {
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
         return menu(plugin.configYml.getInt("gui.rows")) {
-            title = plugin.langYml.getString("menu.title")
+            setTitle(plugin.langYml.getString("menu.title"))
 
             setMask(plugin.configYml, "gui")
 
@@ -81,9 +81,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.pet-info")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(petInfoItemBuilder) {
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(petInfoItemBuilder) {
                         onLeftClick { event, _, _ ->
                             val player = event.whoClicked as Player
                             player.activePet?.levelGUI?.open(player)
@@ -96,9 +96,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.deactivate-pet")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(
                         ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
                             .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
                             .build()
@@ -116,9 +116,9 @@ object PetsGUI {
                 val confirmEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.confirm.enabled") ?: true
                 for (location in plugin.configYml.getSlotLocations("gui.withdraw-pet")) {
                     setSlot(
-                        location.row,
-                        location.column,
-                        slot(
+                        row = location.row,
+                        column = location.column,
+                        slot = slot(
                             { player: Player, _: Menu ->
                                 ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.withdraw-pet.item")))
                                     .setDisplayName(plugin.configYml.getFormattedString("gui.withdraw-pet.name"))
@@ -156,9 +156,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.toggle")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(togglePetItemBuilder) {
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(togglePetItemBuilder) {
                         onLeftClick { event, _ ->
                             val player = event.whoClicked as Player
 

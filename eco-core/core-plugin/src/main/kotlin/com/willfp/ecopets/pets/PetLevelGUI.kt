@@ -64,13 +64,13 @@ class PetLevelGUI(
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("level-gui.progression-slots.page-change-sound"))
 
         menu = menu(plugin.configYml.getInt("level-gui.rows")) {
-            title = plugin.langYml.getString("menu.level-title").takeIf { it.isNotEmpty() } ?: run {
-                plugin.langYml.set("menu.level-title", "%pet% (%page%/%max_page%)")
+            val levelTitle = plugin.langYml.getString("menu.level-title").takeIf { it.isNotEmpty() } ?: run {
+                plugin.langYml["menu.level-title"] = "%pet% (%page%/%max_page%)"
                 plugin.langYml.save()
                 plugin.langYml.getString("menu.level-title")
             }
 
-            title = title.replace("%pet%", pet.name)
+            setTitle(levelTitle.replace("%pet%", pet.name))
 
             maxPages(component.pages)
 
