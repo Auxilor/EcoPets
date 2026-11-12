@@ -7,6 +7,7 @@ import com.willfp.ecopets.pets.petEggLevelKey
 import com.willfp.ecopets.pets.petEggXpKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.game.item.getPersistentData
 import wiki.ecohub.game.item.lookup.LookupArgParser
 import java.util.function.Predicate
 
@@ -34,7 +35,7 @@ object ArgParserPetLevel : LookupArgParser {
     }
 
     override fun serializeBack(item: ItemStack): String? {
-        val level = item.persistentDataContainer.get(petEggLevelKey, PersistentDataType.INTEGER) ?: return null
+        val level = item.getPersistentData(petEggLevelKey, PersistentDataType.INTEGER) ?: return null
         return "pet-level:$level"
     }
 }

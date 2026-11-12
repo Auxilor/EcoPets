@@ -7,6 +7,7 @@ import com.willfp.ecopets.pets.petEggXp
 import com.willfp.ecopets.pets.petEggXpKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.game.item.getPersistentData
 import wiki.ecohub.game.item.lookup.LookupArgParser
 import java.util.function.Predicate
 
@@ -34,7 +35,7 @@ object ArgParserPetXp : LookupArgParser {
     }
 
     override fun serializeBack(item: ItemStack): String? {
-        val xp = item.persistentDataContainer.get(petEggXpKey, PersistentDataType.DOUBLE) ?: return null
+        val xp = item.getPersistentData(petEggXpKey, PersistentDataType.DOUBLE) ?: return null
         return "pet-xp:$xp"
     }
 }
