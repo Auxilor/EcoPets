@@ -1,9 +1,7 @@
 package com.willfp.ecopets
 
-import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.core.integrations.IntegrationLoader
-import com.willfp.ecopets.commands.CommandEcoPets
-import com.willfp.ecopets.commands.CommandPets
+import com.willfp.ecopets.commands.ecoPetsCommand
+import com.willfp.ecopets.commands.petsCommand
 import com.willfp.ecopets.items.ArgParserPetLevel
 import com.willfp.ecopets.items.ArgParserPetXp
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
@@ -28,8 +26,7 @@ import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
-import com.willfp.ecopets.pets.entity.ModelPetEntity
-import com.willfp.ecopets.pets.entity.PetEntity
+import com.willfp.ecopets.pets.entity.ModelPetEntityProvider
 import com.willfp.ecopets.pets.getPetLevel
 import com.willfp.ecopets.pets.getPetProgress
 import com.willfp.ecopets.pets.getPetXP
@@ -38,10 +35,13 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.command.EcoCommand
 import wiki.ecohub.core.plugin.EcoPlugin
 import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.game.entity.runOwned
 import wiki.ecohub.game.item.Items
 import wiki.ecohub.math.toNumeral
+import wiki.ecohub.provider.ExternalProviderLoader
 import wiki.ecohub.provider.metrics.EcoMetricsChart
 import wiki.ecohub.rules.condition.Conditions
 import wiki.ecohub.rules.effect.Effects
@@ -56,14 +56,14 @@ import wiki.ecohub.ui.text.StringUtils
 internal lateinit var plugin: EcoPetsPlugin
     private set
 
-class EcoPetsPlugin : LibreforgePlugin() {
+class EcoPetsPlugin : EcoPlugin() {
     private val petDisplay = PetDisplay
 
     init {
         plugin = this
     }
 
-    override fun loadConfigCategories(): List<ConfigCategory> {
+    override fun loadConfigCategories(): List<NativeConfigCategory> {
         return listOf(
             Pets
         )
@@ -206,25 +206,21 @@ class EcoPetsPlugin : LibreforgePlugin() {
         petDisplay.shutdown()
     }
 
-    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
+    override fun getExternalProviderLoaders(): List<ExternalProviderLoader> {
         return listOf(
-            IntegrationLoader("ModelEngine") {
-                PetEntity.registerPetEntity("modelengine") { pet, texture ->
-                    ModelPetEntity(pet, "model-engine", texture)
-                }
+            ExternalProviderLoader("ModelEngine") {
+                ModelPetEntityProvider(prefix = "modelengine", integrationId = "model-engine")
             },
-            IntegrationLoader("BetterModel") {
-                PetEntity.registerPetEntity("bettermodel") { pet, texture ->
-                    ModelPetEntity(pet, "better-model", texture)
-                }
+            ExternalProviderLoader("BetterModel") {
+                ModelPetEntityProvider(prefix = "bettermodel", integrationId = "better-model")
             }
         )
     }
 
-    override fun loadPluginCommands(): List<PluginCommand> {
+    override fun loadPluginCommands(): List<EcoCommand> {
         return listOf(
-            CommandEcoPets,
-            CommandPets
+            ecoPetsCommand(),
+            petsCommand()
         )
     }
 
