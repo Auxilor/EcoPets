@@ -1,9 +1,5 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.Eco
-import com.willfp.eco.core.Prerequisite
-import com.willfp.eco.util.NumberUtils
-import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.pets.entity.DEFAULT_PET_SCALE
 import com.willfp.ecopets.pets.entity.MAX_PET_SCALE
 import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
@@ -23,6 +19,10 @@ import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
+import wiki.ecohub.core.Eco
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.math.NumberUtils
+import wiki.ecohub.ui.text.formatEco
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI

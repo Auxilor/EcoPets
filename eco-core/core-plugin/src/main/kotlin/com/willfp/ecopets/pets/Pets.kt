@@ -1,13 +1,13 @@
 package com.willfp.ecopets.pets
 
 import com.google.common.collect.ImmutableList
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.price.Prices
-import com.willfp.eco.core.recipe.Recipes
-import com.willfp.eco.core.registry.Registry
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.ConfigCategory
-import com.willfp.libreforge.loader.configs.LegacyLocation
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.LegacyLocation
+import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.plugin.EcoPlugin
+import wiki.ecohub.core.price.Prices
+import wiki.ecohub.core.registry.Registry
+import wiki.ecohub.modules.recipe.Recipes
 
 object Pets : ConfigCategory("pet", "pets") {
     private val registry = Registry<Pet>()

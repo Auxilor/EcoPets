@@ -1,13 +1,13 @@
 package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.plugin
 import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import wiki.ecohub.ui.text.StringUtils
 
 object CommandDeactivateOther : Subcommand(
     plugin,

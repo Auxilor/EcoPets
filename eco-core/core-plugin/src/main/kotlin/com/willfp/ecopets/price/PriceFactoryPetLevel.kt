@@ -1,13 +1,13 @@
 package com.willfp.ecopets.price
 
-import com.willfp.eco.core.placeholder.context.PlaceholderContext
-import com.willfp.eco.core.placeholder.context.PlaceholderContextSupplier
-import com.willfp.eco.core.price.Price
-import com.willfp.eco.core.price.PriceFactory
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.pets.getPetLevel
 import com.willfp.ecopets.pets.setPetLevel
 import org.bukkit.entity.Player
+import wiki.ecohub.core.price.Price
+import wiki.ecohub.core.price.PriceFactory
+import wiki.ecohub.ui.placeholder.PlaceholderContext
+import wiki.ecohub.ui.placeholder.PlaceholderContextSupplier
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max

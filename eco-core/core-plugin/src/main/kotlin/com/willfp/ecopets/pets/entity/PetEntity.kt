@@ -1,7 +1,5 @@
 package com.willfp.ecopets.pets.entity
 
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.recipe.parts.EmptyTestableItem
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.plugin
 import org.bukkit.Location
@@ -12,6 +10,8 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.lookup.EmptyTestableItem
 import java.util.concurrent.ConcurrentHashMap
 
 // Shared range matches Bukkit's SCALE attribute limits used by ArmorStand pets.

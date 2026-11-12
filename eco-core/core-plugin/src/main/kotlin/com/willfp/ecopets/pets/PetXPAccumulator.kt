@@ -1,11 +1,11 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.cache.EcoCache
 import com.willfp.ecopets.plugin
-import com.willfp.libreforge.counters.Accumulator
 import org.bukkit.entity.Player
+import wiki.ecohub.core.platform.NumericalPermissions
+import wiki.ecohub.data.cache.EcoCache
+import wiki.ecohub.rules.counter.Accumulator
 import java.time.Duration
-import com.willfp.eco.util.NumericalPermissions
 
 class PetXPAccumulator(
     private val pet: Pet

@@ -1,6 +1,5 @@
 package com.willfp.ecopets.items
 
-import com.willfp.eco.core.items.args.LookupArgParser
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.petEggKey
 import com.willfp.ecopets.pets.petEggLevelKey
@@ -9,6 +8,7 @@ import com.willfp.ecopets.pets.petEggXpKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
+import wiki.ecohub.game.item.lookup.LookupArgParser
 import java.util.function.Predicate
 
 object ArgParserPetXp : LookupArgParser {

@@ -1,7 +1,6 @@
 package com.willfp.ecopets.commands
 
 import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
 import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
@@ -14,6 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
+import wiki.ecohub.ui.text.StringUtils
 
 object CommandTake : Subcommand(
     plugin,
