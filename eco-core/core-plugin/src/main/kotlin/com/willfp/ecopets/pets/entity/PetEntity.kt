@@ -4,12 +4,12 @@ import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.plugin
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.entity.getAttribute
 import wiki.ecohub.game.item.Items
 import wiki.ecohub.game.item.lookup.EmptyTestableItem
 import java.util.concurrent.ConcurrentHashMap
@@ -70,7 +70,7 @@ private fun ArmorStand.applyScale(isSkull: Boolean) {
         return
     }
 
-    val scaleAttribute = getAttribute(Attribute.SCALE)
+    val scaleAttribute = getAttribute("minecraft:scale")
     if (scaleAttribute == null) {
         plugin.logger.warning("Failed to set scale - SCALE attribute not found on ArmorStand")
         return
