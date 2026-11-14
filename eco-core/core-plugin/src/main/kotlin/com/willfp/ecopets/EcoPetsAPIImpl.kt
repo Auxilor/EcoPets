@@ -11,6 +11,7 @@ import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
+import wiki.ecohub.game.entity.runOwned
 
 internal object EcoPetsAPIImpl : EcoPetsAPI {
     override fun hasPet(player: OfflinePlayer, pet: Pet) = player.hasPet(pet)

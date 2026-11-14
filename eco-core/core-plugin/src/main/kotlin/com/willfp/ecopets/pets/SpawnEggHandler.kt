@@ -1,6 +1,5 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.plugin
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -9,6 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
+import wiki.ecohub.ui.text.StringUtils
 
 object SpawnEggHandler : Listener {
     private val PlayerInteractEvent.isUnblockedRightClick: Boolean

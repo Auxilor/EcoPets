@@ -1,10 +1,10 @@
 package com.willfp.ecopets.pets.entity
 
-import com.willfp.eco.core.integrations.model.ModelAnimation
-import com.willfp.eco.core.integrations.model.ModelManager
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.Entity
+import wiki.ecohub.provider.content.ExternalModelService
+import wiki.ecohub.provider.content.ModelAnimation
 
 /**
  * A pet drawn by a model from the model plugin [integrationId], from `<prefix>:<id>` with the
@@ -28,7 +28,7 @@ class ModelPetEntity(
     override fun spawn(location: Location): Entity {
         val stand = emptyArmorStandAt(location, pet, isSkull = false)
 
-        ModelManager.attachModel(stand, integrationId, modelID)
+        ExternalModelService.attachModel(entity = stand, providerId = integrationId, modelId = modelID)
 
         return stand
     }
@@ -39,8 +39,8 @@ class ModelPetEntity(
             return
         }
 
-        playingAnimation?.let { ModelManager.stopAnimation(entity, null, it, true) }
-        next?.let { ModelManager.playAnimation(entity, null, it, LOOP) }
+        playingAnimation?.let { ExternalModelService.stopAnimation(entity, null, it, true) }
+        next?.let { ExternalModelService.playAnimation(entity, null, it, LOOP) }
         playingAnimation = next
     }
 

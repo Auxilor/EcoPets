@@ -1,13 +1,13 @@
 package com.willfp.ecopets.pets.entity
 
-import com.willfp.eco.core.Prerequisite
-import com.willfp.eco.core.items.builder.SkullBuilder
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.plugin
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.game.item.builder.SkullBuilder
 
 // Paper rejects ItemDisplay teleport durations outside 0 to 59 ticks.
 private const val DEFAULT_SMOOTHING_TICKS = 3

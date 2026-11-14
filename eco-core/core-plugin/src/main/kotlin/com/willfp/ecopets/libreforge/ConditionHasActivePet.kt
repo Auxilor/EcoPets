@@ -1,16 +1,16 @@
 package com.willfp.ecopets.libreforge
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.Dispatcher
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.ProvidedHolder
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.conditions.Condition
-import com.willfp.libreforge.get
 import org.bukkit.entity.Player
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.arguments
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.condition.Condition
+import wiki.ecohub.rules.holder.Dispatcher
+import wiki.ecohub.rules.holder.ProvidedHolder
+import wiki.ecohub.rules.holder.get
 
 object ConditionHasActivePet : Condition<NoCompileData>("has_active_pet") {
     override val description = "Passes when the player's currently active pet is the specified pet."

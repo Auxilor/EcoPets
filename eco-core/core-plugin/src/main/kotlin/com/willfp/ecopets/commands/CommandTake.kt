@@ -1,60 +1,34 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.savedDisplayName
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
 import com.willfp.ecopets.pets.setPetLevel
 import com.willfp.ecopets.pets.setPetXP
-import com.willfp.ecopets.plugin
 import com.willfp.ecopets.runOwnedIfOnline
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandBuilder
+import wiki.ecohub.game.entity.player.PlayerUtils
 
-object CommandTake : Subcommand(
-    plugin,
-    "take",
-    "ecopets.command.take",
-    false
+/**
+ * Takes on the player's region, as the console runs off it on Folia.
+ */
+internal fun CommandBuilder<CommandSender>.takeCommand() = subcommand(
+    name = "take",
+    permission = "ecopets.command.take"
 ) {
-    override fun onExecute(sender: CommandSender, args: List<String>) {
-        if (args.isEmpty()) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-player"))
-            return
-        }
+    executes {
+        val playerName = argument(0, "needs-player")
+        val petId = argument(1, "needs-pet")
 
-        if (args.size == 1) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-pet"))
-            return
-        }
-
-        val playerName = args[0]
-
-        @Suppress("DEPRECATION")
-        val player = Bukkit.getOfflinePlayer(playerName)
-
-        if (!player.hasPlayedBefore() && player !is Player) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
-            return
-        }
-
-        val pet = Pets.getByID(args[1])
-
-        if (pet == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-pet"))
-            return
-        }
+        val player = knownPlayer(playerName) ?: fail("invalid-player")
+        val pet = Pets.getByID(petId) ?: fail("invalid-pet")
 
         if (!player.hasPet(pet)) {
-            sender.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
-            return
+            fail("doesnt-have-pet")
         }
 
-        // The console runs off the player's region on Folia.
         player.runOwnedIfOnline {
             val onlinePlayer = player.player
             if (onlinePlayer != null && onlinePlayer.activePet == pet) {
@@ -64,39 +38,21 @@ object CommandTake : Subcommand(
             player.setPetXP(pet, 0.0)
             player.setPetLevel(pet, 0)
 
-            sender.sendMessage(
-                plugin.langYml.getMessage("took-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%player%", player.savedDisplayName)
-                    .replace("%pet%", pet.name)
+            replyWithoutPlaceholders(
+                "took-pet",
+                "player" to PlayerUtils.getSavedDisplayName(player),
+                "pet" to pet.name
             )
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        val completions = mutableListOf<String>()
-        if (args.isEmpty()) {
-            return Bukkit.getOnlinePlayers().map { it.name }
+    completes {
+        when (args.size) {
+            1 -> playerNames()
+            2 -> Bukkit.getPlayerExact(args[0]).let { player ->
+                Pets.values().filter { player == null || player.hasPet(it) }.map { it.id }
+            }
+            else -> emptyList()
         }
-
-        if (args.size == 1) {
-            StringUtil.copyPartialMatches(
-                args[0],
-                Bukkit.getOnlinePlayers().map { it.name },
-                completions
-            )
-            return completions
-        }
-
-        if (args.size == 2) {
-            val player = Bukkit.getPlayerExact(args[0])
-            StringUtil.copyPartialMatches(
-                args[1],
-                Pets.values().filter { player == null || player.hasPet(it) }.map { it.id },
-                completions
-            )
-            return completions
-        }
-
-        return emptyList()
     }
 }

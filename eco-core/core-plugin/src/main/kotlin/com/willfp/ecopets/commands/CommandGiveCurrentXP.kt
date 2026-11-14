@@ -1,86 +1,54 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.savedDisplayName
-import com.willfp.eco.util.toNiceString
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.givePetExperience
 import com.willfp.ecopets.pets.hasPet
-import com.willfp.ecopets.plugin
-import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import wiki.ecohub.core.command.CommandBuilder
+import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.game.entity.player.PlayerUtils
+import wiki.ecohub.game.entity.runOwned
 
-object CommandGiveCurrentXP : Subcommand(
-    plugin,
-    "givecurrentxp",
-    "ecopets.command.givecurrentxp",
-    false
+/**
+ * Gives on the player's region, as the console runs off it on Folia.
+ */
+internal fun CommandBuilder<CommandSender>.giveCurrentXPCommand() = subcommand(
+    name = "givecurrentxp",
+    permission = "ecopets.command.givecurrentxp"
 ) {
-    override fun onExecute(sender: CommandSender, args: List<String>) {
-        if (args.isEmpty()) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-player"))
-            return
-        }
+    executes {
+        val playerName = argument(0, "needs-player")
+        val amountArgument = argument(1, "needs-amount")
 
-        if (args.size == 1) {
-            sender.sendMessage(plugin.langYml.getMessage("needs-amount"))
-            return
-        }
-
-        val playerName = args[0]
-
-        val player = Bukkit.getPlayer(playerName)
-
-        if (player == null) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-player"))
-            return
-        }
-
-        val pet = player.activePet
-
-        if (pet == null) {
-            sender.sendMessage(plugin.langYml.getMessage("no-pet"))
-            return
-        }
+        val player = Bukkit.getPlayer(playerName) ?: fail("invalid-player")
+        val pet = player.activePet ?: fail("no-pet")
 
         if (!player.hasPet(pet)) {
-            sender.sendMessage(plugin.langYml.getMessage("doesnt-have-pet"))
-            return
+            fail("doesnt-have-pet")
         }
 
-        val amount = args[1].toDoubleOrNull()
+        val amount = amountArgument.toDoubleOrNull()?.takeIf { it.isFinite() && it > 0.0 } ?: fail("invalid-amount")
 
-        if (amount == null || !amount.isFinite() || amount <= 0.0) {
-            sender.sendMessage(plugin.langYml.getMessage("invalid-amount"))
-            return
-        }
-
-        // The console runs off the player's region on Folia.
         player.runOwned {
             player.givePetExperience(
                 pet,
                 amount
             )
 
-            sender.sendMessage(
-                plugin.langYml.getMessage("gave-current-xp", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%player%", player.savedDisplayName)
-                    .replace("%xp%", amount.toNiceString())
+            replyWithoutPlaceholders(
+                "gave-current-xp",
+                "player" to PlayerUtils.getSavedDisplayName(player),
+                "xp" to amount.toNiceString()
             )
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        if (args.size == 1) {
-            return Bukkit.getOnlinePlayers().map { it.name }
+    completes {
+        when (args.size) {
+            1 -> playerNames()
+            2 -> xpCompletions
+            else -> emptyList()
         }
-
-        if (args.size == 2) {
-            return listOf("10", "100", "1000", "10000")
-        }
-
-        return emptyList()
     }
 }
