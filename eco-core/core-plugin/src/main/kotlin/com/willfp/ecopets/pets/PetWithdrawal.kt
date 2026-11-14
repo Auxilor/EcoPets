@@ -60,7 +60,7 @@ fun withdrawPet(player: Player, pet: Pet): Boolean {
 
     DropQueue(player)
         .addItem(egg)
-        .forceTelekinesis()
+        .giveDirectly()
         .push()
 
     player.setPetLevel(pet, 0)

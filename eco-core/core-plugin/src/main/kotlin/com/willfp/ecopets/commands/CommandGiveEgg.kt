@@ -69,7 +69,7 @@ object CommandGiveEgg : Subcommand(
         player.runOwned {
             DropQueue(player)
                 .addItem(egg)
-                .forceTelekinesis()
+                .giveDirectly()
                 .push()
 
             sender.sendMessage(
