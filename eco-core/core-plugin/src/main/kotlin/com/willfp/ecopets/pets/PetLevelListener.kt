@@ -1,17 +1,16 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.sound.PlayableSound
 import com.willfp.ecopets.EcoPetsPlugin
-import com.willfp.eco.util.SoundUtils
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
-import com.willfp.ecopets.plugin
 import com.willfp.ecopets.libreforge.TriggerLevelUpPet
-import com.willfp.libreforge.levels.LevelUpDispatcher
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.TriggerData
+import com.willfp.ecopets.plugin
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.modules.progression.LevelUpDispatcher
+import wiki.ecohub.rules.trigger.TriggerData
 
 object PetLevelListener : Listener {
     @EventHandler(priority = EventPriority.MONITOR)

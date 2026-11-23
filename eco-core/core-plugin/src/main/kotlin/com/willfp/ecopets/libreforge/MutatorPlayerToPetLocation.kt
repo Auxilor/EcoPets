@@ -1,12 +1,12 @@
 package com.willfp.ecopets.libreforge
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.pets.PetDisplay
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.mutators.Mutator
-import com.willfp.libreforge.mutators.parameterTransformers
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
+import wiki.ecohub.config.Config
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.mutator.Mutator
+import wiki.ecohub.rules.mutator.parameterTransformers
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object MutatorPlayerToPetLocation : Mutator<NoCompileData>("player_to_pet_location") {
     override val description = "Re-maps the location to the position of the player's active pet display entity."

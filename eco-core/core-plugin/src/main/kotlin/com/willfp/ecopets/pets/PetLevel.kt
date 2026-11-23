@@ -1,9 +1,9 @@
 package com.willfp.ecopets.pets
 
 import com.willfp.ecopets.plugin
-import com.willfp.libreforge.Holder
-import com.willfp.libreforge.conditions.ConditionList
-import com.willfp.libreforge.effects.EffectList
+import wiki.ecohub.rules.condition.ConditionList
+import wiki.ecohub.rules.effect.EffectList
+import wiki.ecohub.rules.holder.Holder
 
 class PetLevel(
     val pet: Pet,

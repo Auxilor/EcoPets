@@ -1,9 +1,9 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.drops.DropQueue
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.plugin
 import org.bukkit.entity.Player
+import wiki.ecohub.game.drop.DropQueue
+import wiki.ecohub.ui.text.StringUtils
 
 enum class WithdrawResult {
     OK, NO_ACTIVE, NOT_WITHDRAWABLE, CANNOT_AFFORD

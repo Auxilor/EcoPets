@@ -1,10 +1,10 @@
 package com.willfp.ecopets.pets.entity
 
-import com.willfp.eco.core.items.builder.SkullBuilder
 import com.willfp.ecopets.pets.Pet
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.builder.SkullBuilder
 
 class SkullPetEntity(pet: Pet) : PetEntity(pet) {
     override fun spawn(location: Location): Entity {

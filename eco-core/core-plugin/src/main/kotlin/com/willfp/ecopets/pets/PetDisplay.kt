@@ -1,15 +1,10 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.Eco
-import com.willfp.eco.core.Prerequisite
-import com.willfp.eco.util.NumberUtils
-import com.willfp.eco.util.formatEco
 import com.willfp.ecopets.pets.entity.DEFAULT_PET_SCALE
 import com.willfp.ecopets.pets.entity.MAX_PET_SCALE
 import com.willfp.ecopets.pets.entity.MIN_PET_SCALE
 import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.plugin
-import com.willfp.ecopets.runOwned
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -23,6 +18,12 @@ import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
+import wiki.ecohub.core.Eco
+import wiki.ecohub.core.plugin.startup.Prerequisite
+import wiki.ecohub.game.entity.runOwned
+import wiki.ecohub.game.entity.teleportRegionAware
+import wiki.ecohub.math.NumberUtils
+import wiki.ecohub.ui.text.formatEco
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.PI
@@ -85,7 +86,7 @@ object PetDisplay : Listener {
         val currentTick = tick
         for (player in Bukkit.getOnlinePlayers()) {
             player.runOwned {
-                val chunk = player.chunk
+                val chunk = player.location.chunk
                 if (player.isOnline && chunk.isLoaded && chunk.isEntitiesLoaded) {
                     tickPlayer(player, currentTick)
                 } else {
@@ -171,11 +172,7 @@ object PetDisplay : Listener {
 
             val teleported = location.world != null && tracked.shouldTeleport(location)
             if (teleported) {
-                if (Prerequisite.HAS_FOLIA.isMet) {
-                    entity.teleportAsync(location)
-                } else {
-                    entity.teleport(location)
-                }
+                entity.teleportRegionAware(location)
                 desiredYaw?.let(tracked::recordYaw)
             } else if (desiredYaw != null && tracked.shouldRotate(desiredYaw)) {
                 entity.setRotation(desiredYaw, 0f)
@@ -383,7 +380,7 @@ object PetDisplay : Listener {
 
     @EventHandler
     fun onPlayerDeath(event: PlayerDeathEvent) {
-        remove(event.player)
+        remove(event.entity)
     }
 
     @EventHandler
@@ -394,7 +391,7 @@ object PetDisplay : Listener {
             if (!Eco.get().isOwnedByCurrentRegion(tracked.entity)) {
                 continue
             }
-            if (event.chunk == tracked.entity.chunk) {
+            if (event.chunk == tracked.entity.location.chunk) {
                 tracked.entity.remove()
                 iterator.remove()
             }

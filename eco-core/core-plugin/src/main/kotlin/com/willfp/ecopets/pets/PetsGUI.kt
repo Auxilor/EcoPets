@@ -1,28 +1,28 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.gui.SlotArea
-import com.willfp.eco.core.gui.addCustomSlots
-import com.willfp.eco.core.gui.addPageChanger
-import com.willfp.eco.core.gui.component.PagedAreaComponent
-import com.willfp.eco.core.gui.component.addComponent
-import com.willfp.eco.core.gui.component.addPagedArea
-import com.willfp.eco.core.gui.component.closeButton
-import com.willfp.eco.core.gui.getSlotArea
-import com.willfp.eco.core.gui.getSlotLocations
-import com.willfp.eco.core.gui.menu
-import com.willfp.eco.core.gui.menu.Menu
-import com.willfp.eco.core.gui.page.PageChanger
-import com.willfp.eco.core.gui.setMask
-import com.willfp.eco.core.gui.slot
-import com.willfp.eco.core.gui.slot.Slot
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.items.builder.ItemStackBuilder
-import com.willfp.eco.core.sound.PlayableSound
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.plugin
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.game.item.builder.ItemStackBuilder
+import wiki.ecohub.game.sound.PlayableSound
+import wiki.ecohub.modules.menus.addCustomSlots
+import wiki.ecohub.modules.menus.addPageChanger
+import wiki.ecohub.modules.menus.component.PagedAreaComponent
+import wiki.ecohub.modules.menus.component.addComponent
+import wiki.ecohub.modules.menus.component.addPagedArea
+import wiki.ecohub.modules.menus.component.closeButton
+import wiki.ecohub.modules.menus.getSlotLocations
+import wiki.ecohub.modules.menus.menu
+import wiki.ecohub.modules.menus.menu.Menu
+import wiki.ecohub.modules.menus.page.PageChanger
+import wiki.ecohub.modules.menus.setMask
+import wiki.ecohub.modules.menus.slot
+import wiki.ecohub.modules.menus.slot.Slot
+import wiki.ecohub.modules.menus.slot.SlotArea
+import wiki.ecohub.modules.menus.slot.getSlotArea
+import wiki.ecohub.ui.text.StringUtils
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -66,7 +66,7 @@ object PetsGUI {
         val pageChangeSound = PlayableSound.create(plugin.configYml.getSubsection("gui.page-change-sound"))
 
         return menu(plugin.configYml.getInt("gui.rows")) {
-            title = plugin.langYml.getString("menu.title")
+            setTitle(plugin.langYml.getString("menu.title"))
 
             setMask(plugin.configYml, "gui")
 
@@ -81,9 +81,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.pet-info")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(petInfoItemBuilder) {
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(petInfoItemBuilder) {
                         onLeftClick { event, _, _ ->
                             val player = event.whoClicked as Player
                             player.activePet?.levelGUI?.open(player)
@@ -96,9 +96,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.deactivate-pet")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(
                         ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.deactivate-pet.item")))
                             .setDisplayName(plugin.configYml.getString("gui.deactivate-pet.name"))
                             .build()
@@ -116,9 +116,9 @@ object PetsGUI {
                 val confirmEnabled = plugin.configYml.getBoolOrNull("gui.withdraw-pet.confirm.enabled") ?: true
                 for (location in plugin.configYml.getSlotLocations("gui.withdraw-pet")) {
                     setSlot(
-                        location.row,
-                        location.column,
-                        slot(
+                        row = location.row,
+                        column = location.column,
+                        slot = slot(
                             { player: Player, _: Menu ->
                                 ItemStackBuilder(Items.lookup(plugin.configYml.getString("gui.withdraw-pet.item")))
                                     .setDisplayName(plugin.configYml.getFormattedString("gui.withdraw-pet.name"))
@@ -156,9 +156,9 @@ object PetsGUI {
 
             for (location in plugin.configYml.getSlotLocations("gui.toggle")) {
                 setSlot(
-                    location.row,
-                    location.column,
-                    slot(togglePetItemBuilder) {
+                    row = location.row,
+                    column = location.column,
+                    slot = slot(togglePetItemBuilder) {
                         onLeftClick { event, _ ->
                             val player = event.whoClicked as Player
 

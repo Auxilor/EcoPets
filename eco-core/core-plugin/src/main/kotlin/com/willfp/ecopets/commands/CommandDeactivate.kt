@@ -1,31 +1,18 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
 import com.willfp.ecopets.pets.activePet
-import com.willfp.ecopets.plugin
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import wiki.ecohub.core.command.CommandBuilder
 
-object CommandDeactivate : Subcommand(
-    plugin,
-    "deactivate",
-    "ecopets.command.deactivate",
-    true
+internal fun CommandBuilder<Player>.deactivateCommand() = playerSubcommand(
+    name = "deactivate",
+    permission = "ecopets.command.deactivate"
 ) {
-    override fun onExecute(player: CommandSender, args: List<String>) {
-        player as Player
+    executes {
+        val pet = sender.activePet ?: fail("no-pet-active")
 
-        if (player.activePet == null) {
-            player.sendMessage(plugin.langYml.getMessage("no-pet-active"))
-            return
-        }
+        replyWithoutPlaceholders("deactivated-pet", "pet" to pet.name)
 
-        player.sendMessage(
-            plugin.langYml.getMessage("deactivated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                .replace("%pet%", player.activePet?.name ?: "")
-        )
-
-        player.activePet = null
+        sender.activePet = null
     }
 }

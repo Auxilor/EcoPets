@@ -1,86 +1,44 @@
 package com.willfp.ecopets.commands
 
-import com.willfp.eco.core.command.impl.Subcommand
-import com.willfp.eco.util.StringUtils
-import com.willfp.ecopets.api.event.PlayerPetSwapEvent
+import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.hasPet
-import com.willfp.ecopets.plugin
-import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import wiki.ecohub.core.command.CommandBuilder
+import wiki.ecohub.core.command.CommandContext
 
-object CommandActivate : Subcommand(
-    plugin,
-    "activate",
-    "ecopets.command.activate",
-    true
+internal fun CommandBuilder<Player>.activateCommand() = playerSubcommand(
+    name = "activate",
+    permission = "ecopets.command.activate"
 ) {
-    override fun onExecute(player: CommandSender, args: List<String>) {
-        player as Player
+    executes {
+        val pet = Pets.getByID(argument(0, "needs-pet"))?.takeIf { sender.hasPet(it) } ?: fail("invalid-pet")
 
-        if (args.isEmpty()) {
-            player.sendMessage(plugin.langYml.getMessage("needs-pet"))
-            return
+        if (sender.activePet == pet) {
+            fail("pet-already-active")
         }
 
-        val id = args[0]
-
-        val pet = Pets.getByID(id)
-
-        if (pet == null || !player.hasPet(pet)) {
-            player.sendMessage(plugin.langYml.getMessage("invalid-pet"))
-            return
-        }
-
-        if (player.activePet == pet) {
-            player.sendMessage(plugin.langYml.getMessage("pet-already-active"))
-            return
-        }
-
-        if (!pet.canActivate(player)) {
-            player.sendMessage(
-                plugin.langYml.getMessage("cannot-activate-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%pet%", pet.name)
-            )
-            return
-        }
-
-        player.activePet?.let { oldPet ->
-            val event = PlayerPetSwapEvent(player, pet, oldPet)
-            Bukkit.getServer().pluginManager.callEvent(event)
-            if (event.isCancelled) {
-                player.sendMessage(plugin.langYml.getMessage("cancelled-swap"))
-                return
-            }
-        }
-        player.activePet = pet
-
-        if (player.activePet == pet) {
-            player.sendMessage(
-                plugin.langYml.getMessage("activated-pet", StringUtils.FormatOption.WITHOUT_PLACEHOLDERS)
-                    .replace("%pet%", pet.name)
-            )
+        if (pet.canActivate(sender)) {
+            activate(pet)
+        } else {
+            replyWithoutPlaceholders("cannot-activate-pet", "pet" to pet.name)
         }
     }
 
-    override fun tabComplete(sender: CommandSender, args: List<String>): List<String> {
-        if (sender !is Player) {
-            return emptyList()
-        }
+    completes {
+        if (args.size == 1) Pets.values().filter { sender.hasPet(it) }.map { it.id } else emptyList()
+    }
+}
 
-        val completions = mutableListOf<String>()
-        if (args.size == 1) {
-            StringUtil.copyPartialMatches(
-                args[0],
-                Pets.values().filter { sender.hasPet(it) }.map { it.id },
-                completions
-            )
-            return completions
-        }
+private fun CommandContext<Player>.activate(pet: Pet) {
+    if (!canSwapTo(sender, pet)) {
+        fail("cancelled-swap")
+    }
 
-        return emptyList()
+    sender.activePet = pet
+
+    if (sender.activePet == pet) {
+        replyWithoutPlaceholders("activated-pet", "pet" to pet.name)
     }
 }

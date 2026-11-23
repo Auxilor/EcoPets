@@ -1,9 +1,9 @@
 package com.willfp.ecopets.pets
 
-import com.willfp.eco.core.config.interfaces.Config
-import com.willfp.eco.core.particle.Particles
-import com.willfp.eco.core.particle.SpawnableParticle
 import org.bukkit.Location
+import wiki.ecohub.config.Config
+import wiki.ecohub.game.particle.Particles
+import wiki.ecohub.game.particle.SpawnableParticle
 
 /**
  * A particle trail left behind by a pet as it follows its owner.

@@ -3,11 +3,11 @@ package com.willfp.ecopets.libreforge
 import com.willfp.ecopets.api.event.PlayerPetExpGainEvent
 import com.willfp.ecopets.pets.Pet
 import com.willfp.ecopets.pets.Pets
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.effects.templates.MultiMultiplierEffect
-import com.willfp.libreforge.toDispatcher
 import org.bukkit.event.EventHandler
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.arguments
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.effect.MultiMultiplierEffect
 
 object EffectPetXpMultiplier : MultiMultiplierEffect<Pet>("pet_xp_multiplier") {
     override val description = "Multiplies XP gained for one or all EcoPets pets while the holder is active."

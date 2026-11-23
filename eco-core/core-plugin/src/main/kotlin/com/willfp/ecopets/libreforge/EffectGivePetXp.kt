@@ -1,15 +1,15 @@
 package com.willfp.ecopets.libreforge
 
-import com.willfp.eco.core.config.interfaces.Config
 import com.willfp.ecopets.pets.Pets
 import com.willfp.ecopets.pets.givePetExperience
-import com.willfp.libreforge.ArgType
-import com.willfp.libreforge.NoCompileData
-import com.willfp.libreforge.arguments
-import com.willfp.libreforge.effects.Effect
-import com.willfp.libreforge.getFormattedString
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
+import wiki.ecohub.config.ArgType
+import wiki.ecohub.config.Config
+import wiki.ecohub.config.arguments
+import wiki.ecohub.config.section.getFormattedString
+import wiki.ecohub.core.registry.NoCompileData
+import wiki.ecohub.rules.effect.Effect
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object EffectGivePetXp : Effect<NoCompileData>("give_pet_xp") {
     override val description = "Gives the player experience towards the specified pet. " +

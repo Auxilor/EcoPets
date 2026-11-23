@@ -1,11 +1,11 @@
 package com.willfp.ecopets.libreforge
 
 import com.willfp.ecopets.api.event.PlayerPetLevelUpEvent
-import com.willfp.libreforge.toDispatcher
-import com.willfp.libreforge.triggers.Trigger
-import com.willfp.libreforge.triggers.TriggerData
-import com.willfp.libreforge.triggers.TriggerParameter
 import org.bukkit.event.EventHandler
+import wiki.ecohub.game.entity.toDispatcher
+import wiki.ecohub.rules.trigger.Trigger
+import wiki.ecohub.rules.trigger.TriggerData
+import wiki.ecohub.rules.trigger.TriggerParameter
 
 object TriggerLevelUpPet : Trigger("level_up_pet") {
     override val description = "Fires when one of the player's pets levels up."

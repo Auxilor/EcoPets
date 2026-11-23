@@ -1,15 +1,7 @@
 package com.willfp.ecopets
 
-import com.willfp.eco.core.bstats.EcoMetricsChart
-import com.willfp.eco.core.command.impl.PluginCommand
-import com.willfp.eco.core.integrations.IntegrationLoader
-import com.willfp.eco.core.items.Items
-import com.willfp.eco.core.placeholder.PlayerPlaceholder
-import com.willfp.eco.util.StringUtils
-import com.willfp.eco.util.toNiceString
-import com.willfp.eco.util.toNumeral
-import com.willfp.ecopets.commands.CommandEcoPets
-import com.willfp.ecopets.commands.CommandPets
+import com.willfp.ecopets.commands.ecoPetsCommand
+import com.willfp.ecopets.commands.petsCommand
 import com.willfp.ecopets.items.ArgParserPetLevel
 import com.willfp.ecopets.items.ArgParserPetXp
 import com.willfp.ecopets.libreforge.ConditionHasActivePet
@@ -34,36 +26,44 @@ import com.willfp.ecopets.pets.PetsGUI
 import com.willfp.ecopets.pets.SpawnEggHandler
 import com.willfp.ecopets.pets.activePet
 import com.willfp.ecopets.pets.activePetLevel
+import com.willfp.ecopets.pets.entity.ModelPetEntityProvider
 import com.willfp.ecopets.pets.getPetLevel
 import com.willfp.ecopets.pets.getPetProgress
 import com.willfp.ecopets.pets.getPetXP
-import com.willfp.ecopets.pets.entity.ModelPetEntity
-import com.willfp.ecopets.pets.entity.PetEntity
 import com.willfp.ecopets.pets.hasPet
-import com.willfp.libreforge.SimpleProvidedHolder
-import com.willfp.libreforge.conditions.Conditions
-import com.willfp.libreforge.effects.Effects
-import com.willfp.libreforge.filters.Filters
-import com.willfp.libreforge.loader.LibreforgePlugin
-import com.willfp.libreforge.loader.configs.ConfigCategory
-import com.willfp.libreforge.mutators.Mutators
-import com.willfp.libreforge.registerSpecificHolderProvider
-import com.willfp.libreforge.triggers.Triggers
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
+import wiki.ecohub.config.category.NativeConfigCategory
+import wiki.ecohub.core.command.EcoCommand
+import wiki.ecohub.core.plugin.EcoPlugin
+import wiki.ecohub.core.stdlib.toNiceString
+import wiki.ecohub.game.entity.runOwned
+import wiki.ecohub.game.item.Items
+import wiki.ecohub.math.toNumeral
+import wiki.ecohub.provider.ExternalProviderLoader
+import wiki.ecohub.provider.metrics.EcoMetricsChart
+import wiki.ecohub.rules.condition.Conditions
+import wiki.ecohub.rules.effect.Effects
+import wiki.ecohub.rules.filter.Filters
+import wiki.ecohub.rules.holder.SimpleProvidedHolder
+import wiki.ecohub.rules.holder.registerSpecificHolderProvider
+import wiki.ecohub.rules.mutator.Mutators
+import wiki.ecohub.rules.trigger.Triggers
+import wiki.ecohub.ui.placeholder.type.PlayerPlaceholder
+import wiki.ecohub.ui.text.StringUtils
 
 internal lateinit var plugin: EcoPetsPlugin
     private set
 
-class EcoPetsPlugin : LibreforgePlugin() {
+class EcoPetsPlugin : EcoPlugin() {
     private val petDisplay = PetDisplay
 
     init {
         plugin = this
     }
 
-    override fun loadConfigCategories(): List<ConfigCategory> {
+    override fun loadConfigCategories(): List<NativeConfigCategory> {
         return listOf(
             Pets
         )
@@ -206,25 +206,21 @@ class EcoPetsPlugin : LibreforgePlugin() {
         petDisplay.shutdown()
     }
 
-    override fun loadIntegrationLoaders(): List<IntegrationLoader> {
+    override fun getExternalProviderLoaders(): List<ExternalProviderLoader> {
         return listOf(
-            IntegrationLoader("ModelEngine") {
-                PetEntity.registerPetEntity("modelengine") { pet, texture ->
-                    ModelPetEntity(pet, "model-engine", texture)
-                }
+            ExternalProviderLoader("ModelEngine") {
+                ModelPetEntityProvider(prefix = "modelengine", integrationId = "model-engine")
             },
-            IntegrationLoader("BetterModel") {
-                PetEntity.registerPetEntity("bettermodel") { pet, texture ->
-                    ModelPetEntity(pet, "better-model", texture)
-                }
+            ExternalProviderLoader("BetterModel") {
+                ModelPetEntityProvider(prefix = "bettermodel", integrationId = "better-model")
             }
         )
     }
 
-    override fun loadPluginCommands(): List<PluginCommand> {
+    override fun loadPluginCommands(): List<EcoCommand> {
         return listOf(
-            CommandEcoPets,
-            CommandPets
+            ecoPetsCommand(),
+            petsCommand()
         )
     }
 
