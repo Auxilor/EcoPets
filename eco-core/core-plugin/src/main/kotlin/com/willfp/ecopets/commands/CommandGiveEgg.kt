@@ -48,7 +48,7 @@ internal fun CommandBuilder<CommandSender>.giveEggCommand() = subcommand(
         player.runOwned {
             DropQueue(player)
                 .addItem(egg)
-                .forceTelekinesis()
+                .giveDirectly()
                 .push()
 
             replyWithoutPlaceholders(
